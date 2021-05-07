@@ -1,10 +1,10 @@
-import React from 'react';
-import { emphasize, withStyles } from '@material-ui/core/styles';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Chip from '@material-ui/core/Chip';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import {URL} from '../../config'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import React from "react";
+import { emphasize, withStyles } from "@material-ui/core/styles";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Chip from "@material-ui/core/Chip";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import { URL } from "../../config";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const StyledBreadcrumb = withStyles((theme) => ({
   root: {
@@ -12,10 +12,10 @@ const StyledBreadcrumb = withStyles((theme) => ({
     height: theme.spacing(3),
     color: theme.palette.grey[800],
     fontWeight: theme.typography.fontWeightRegular,
-    '&:hover, &:focus': {
+    "&:hover, &:focus": {
       backgroundColor: theme.palette.grey[300],
     },
-    '&:active': {
+    "&:active": {
       boxShadow: theme.shadows[1],
       backgroundColor: emphasize(theme.palette.grey[300], 0.12),
     },
@@ -24,7 +24,7 @@ const StyledBreadcrumb = withStyles((theme) => ({
 
 function handleClick(event) {
   //event.preventDefault();
-  console.info('You clicked a breadcrumb.');
+  console.info("You clicked a breadcrumb.");
 }
 
 export default function CustomizedBreadcrumbs(props) {
@@ -32,11 +32,10 @@ export default function CustomizedBreadcrumbs(props) {
     <Breadcrumbs aria-label="breadcrumb">
       <StyledBreadcrumb
         component="a"
-        href= {props.url ? URL+props.url : URL+"/configuration"}
+        href={props.url ? URL + props.url : URL + "configuration"}
         label={props.name ? props.name : "Configuration"}
         icon={<ArrowBackIosIcon fontSize="small" />}
       />
-      
     </Breadcrumbs>
   );
 }
