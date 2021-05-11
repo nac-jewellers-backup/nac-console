@@ -100,6 +100,11 @@ const ProductSync = (props) => {
       if (data.status !== "completed") {
         setProgress(data?.completed * 100);
       } else {
+        setData({
+          action_type: "price_sync",
+          Product_lists: "",
+          new_tagno: [],
+        });
         snack.setSnack({
           severity: AlertProps.severity.info,
           msg: `Process Completed ${data.timeElapsed}`,
@@ -147,11 +152,6 @@ const ProductSync = (props) => {
       { ...data, ...JSON.parse(Product_lists) }
     )
       .then((res) => {
-        setData({
-          action_type: "price_sync",
-          Product_lists: "",
-          new_tagno: [],
-        });
         snack.setSnack({
           open: true,
           severity: "success",
