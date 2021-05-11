@@ -19,7 +19,7 @@ import {
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import ChipInput from "material-ui-chip-input";
-import { AlertContext } from "../../context";
+import { AlertContext, AlertProps } from "../../context";
 import socketIOClient from "socket.io-client";
 import { API_URL } from "../../config";
 import { NetworkContext } from "../../context/NetworkContext";
@@ -97,7 +97,14 @@ const ProductSync = (props) => {
   React.useEffect(() => {
     const socket = socketIOClient(API_URL);
     socket.on("sync_data", (data) => {
-      setProgress(data?.completed * 100);
+      if (data.status !== "completed") {
+        setProgress(data?.completed * 100);
+      } else {
+        snack.setSnack({
+          severity: AlertProps.severity.info,
+          msg: `Process Completed ${data.timeElapsed}`,
+        });
+      }
     });
   }, []);
 
@@ -135,7 +142,7 @@ const ProductSync = (props) => {
     var Product_lists = data.Product_lists;
     delete data.Product_lists;
     sendNetworkRequest(
-      "/product_upload",
+      "/product_sync",
       {},
       { ...data, ...JSON.parse(Product_lists) }
     )
@@ -148,7 +155,7 @@ const ProductSync = (props) => {
         snack.setSnack({
           open: true,
           severity: "success",
-          msg: "Completed Successfully",
+          msg: res.message,
         });
       })
       .catch((err) => {
