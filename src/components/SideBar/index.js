@@ -1,31 +1,31 @@
-import React from 'react';
-import clsx from 'clsx';
-import {  useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-  import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import { withRouter } from 'react-router-dom';
-import { useStyles } from './styles';
-import Collapse from '@material-ui/core/Collapse';
-import StarBorder from '@material-ui/icons/StarBorder';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import { ProductContext } from '../../context';
-import { Link as RouterLink } from 'react-router-dom'
-import Link from '@material-ui/core/Link'
-import { GlobalContext } from '../../context';
-import {NetworkContext}  from '../../context/NetworkContext';
+import React from "react";
+import clsx from "clsx";
+import { useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import MailIcon from "@material-ui/icons/Mail";
+import { withRouter } from "react-router-dom";
+import { useStyles } from "./styles";
+import Collapse from "@material-ui/core/Collapse";
+import StarBorder from "@material-ui/icons/StarBorder";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import { ProductContext } from "../../context";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@material-ui/core/Link";
+import { GlobalContext } from "../../context";
+import { NetworkContext } from "../../context/NetworkContext";
 
-import {  Paper, Avatar, Typography } from '@material-ui/core';
-import data from "../menupages.json"
+import { Paper, Avatar, Typography } from "@material-ui/core";
+import data from "../menupages.json";
 
 function SideBar() {
   const classes = useStyles();
@@ -33,64 +33,58 @@ function SideBar() {
   const { globalCtx, setGlobalCtx } = React.useContext(GlobalContext);
   const { productCtx, setProductCtx } = React.useContext(ProductContext);
   const { sendNetworkRequest } = React.useContext(NetworkContext);
-  const { isreload,setIsreload } = React.useState(false);
-  let accesspages = localStorage.getItem('accesspages')
+  const { isreload, setIsreload } = React.useState(false);
+  let accesspages = localStorage.getItem("accesspages");
   const handleDrawer = () => {
-    setGlobalCtx({ ...globalCtx, sideBarOpen: !globalCtx.sideBarOpen })
-  }
-  const handleClick = type => e => {
-    if(type === 'Pricing')
-    {
-      setGlobalCtx({ ...globalCtx, "optionname": type,selectedIndex: 5 , isExpand: !globalCtx.isExpand})
-
-    }else{
-      setGlobalCtx({ ...globalCtx, "optionname": type , isExpand: false})
-
+    setGlobalCtx({ ...globalCtx, sideBarOpen: !globalCtx.sideBarOpen });
+  };
+  const handleClick = (type) => (e) => {
+    if (type === "Pricing" || type == "Inventory & Shipping Setup") {
+      setGlobalCtx({
+        ...globalCtx,
+        optionname: type,
+        selectedIndex: 5,
+        isExpand: !globalCtx.isExpand,
+      });
+    } else {
+      setGlobalCtx({ ...globalCtx, optionname: type, isExpand: false });
     }
-
-  }
-  async function getmasterpages()
-  {
-    let pageaccess =   await sendNetworkRequest('/getpageaccess', {}, {}, true)
+  };
+  async function getmasterpages() {
+    let pageaccess = await sendNetworkRequest("/getpageaccess", {}, {}, true);
     let pages = [];
     let pagepermissions = [];
 
-    pageaccess.pages.forEach(element => {
-      pages.push(element.pageurl)
-      if(element.is_write)
-      {
-        pagepermissions.push(element.pageurl)
+    pageaccess.pages.forEach((element) => {
+      pages.push(element.pageurl);
+      if (element.is_write) {
+        pagepermissions.push(element.pageurl);
       }
     });
-   // setPages(pageaccess)
-  // setGlobalCtx({ ...globalCtx, pageaccess: pages })
-   //setIsreload(true)
+    // setPages(pageaccess)
+    // setGlobalCtx({ ...globalCtx, pageaccess: pages })
+    //setIsreload(true)
 
-   localStorage.setItem('accesspages', pages);
-   localStorage.setItem('pagepermissions', pagepermissions);
+    localStorage.setItem("accesspages", pages);
+    localStorage.setItem("pagepermissions", pagepermissions);
 
-    window.location.reload()
+    window.location.reload();
   }
-  React.useEffect( () => {
-   //alert(globalCtx.accesspages)
-   if(!accesspages)
-   {
-   // getmasterpages()
-
-   }else{
-   //  setIsreload(true)
-   }
- //setGlobalCtx({...globalCtx,"accesspages":pages})
-},[])
-  function handleListItemClick(event, index)
-  {
-    setGlobalCtx({ ...globalCtx, selectedIndex: index})
-
+  React.useEffect(() => {
+    //alert(globalCtx.accesspages)
+    if (!accesspages) {
+      // getmasterpages()
+    } else {
+      //  setIsreload(true)
+    }
+    //setGlobalCtx({...globalCtx,"accesspages":pages})
+  }, []);
+  function handleListItemClick(event, index) {
+    setGlobalCtx({ ...globalCtx, selectedIndex: index });
   }
 
   return (
-      <>
-     
+    <>
       <Drawer
         variant="permanent"
         className={clsx(classes.drawer, {
@@ -107,57 +101,102 @@ function SideBar() {
       >
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawer}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </div>
         <Divider />
-       
+
         <List>
-          {
-            data.menus.map((menuobj, index) => (
-              <>
-             {menuobj.submenu  ?  
-             <>
-          {accesspages && accesspages.indexOf(menuobj.url) > -1 ?
-              <>
-             <ListItem button  onClick={handleClick(menuobj.name)}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary={menuobj.name} />
-              {globalCtx.isExpand  && globalCtx.optionname === menuobj.name ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={globalCtx.isExpand  && globalCtx.optionname === menuobj.name} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-            {menuobj.submenu.map((submenuobj, subindex) => (
-              <>
-              {accesspages && accesspages.indexOf(submenuobj.url) > -1 ?
-                          <Link underline='none' component={RouterLink} to={submenuobj.url}>
-              <ListItem button className={classes.nested} selected={globalCtx.selectedIndex === subindex} onClick={event => handleListItemClick(event, subindex)}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary={submenuobj.name} />
-              </ListItem>
-              </Link> : null }
-
-              </>
-            ))}
-
-            </List>
-            </Collapse> </>: null}
-            </>
-             :<> {accesspages && accesspages.indexOf(menuobj.url) > -1 ?
-              <Link underline='none' component={RouterLink} to={menuobj.url}>
-              <ListItem button key={"Product List"} selected={globalCtx.optionname === menuobj.name} onClick={handleClick(menuobj.name)} >
-              <ListItemIcon><InboxIcon /> </ListItemIcon>
-                <ListItemText primary={menuobj.name} />
-              </ListItem>
-              </Link> : null
-             } </>}
-              </>
-            ))
-          }
+          {data.menus.map((menuobj, index) => (
+            <React.Fragment key={index}>
+              {menuobj.submenu ? (
+                <>
+                  {accesspages && accesspages.indexOf(menuobj.url) > -1 ? (
+                    <>
+                      <ListItem button onClick={handleClick(menuobj.name)}>
+                        <ListItemIcon>
+                          <InboxIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={menuobj.name} />
+                        {globalCtx.isExpand &&
+                        globalCtx.optionname === menuobj.name ? (
+                          <ExpandLess />
+                        ) : (
+                          <ExpandMore />
+                        )}
+                      </ListItem>
+                      <Collapse
+                        in={
+                          globalCtx.isExpand &&
+                          globalCtx.optionname === menuobj.name
+                        }
+                        timeout="auto"
+                        unmountOnExit
+                      >
+                        <List component="div" disablePadding>
+                          {menuobj.submenu.map((submenuobj, subindex) => (
+                            <React.Fragment key={subindex}>
+                              {accesspages &&
+                              accesspages.indexOf(submenuobj.url) > -1 ? (
+                                <Link
+                                  underline="none"
+                                  component={RouterLink}
+                                  to={submenuobj.url}
+                                >
+                                  <ListItem
+                                    button
+                                    className={classes.nested}
+                                    selected={
+                                      globalCtx.selectedIndex === subindex
+                                    }
+                                    onClick={(event) =>
+                                      handleListItemClick(event, subindex)
+                                    }
+                                  >
+                                    <ListItemIcon>
+                                      <StarBorder />
+                                    </ListItemIcon>
+                                    <ListItemText primary={submenuobj.name} />
+                                  </ListItem>
+                                </Link>
+                              ) : null}
+                            </React.Fragment>
+                          ))}
+                        </List>
+                      </Collapse>{" "}
+                    </>
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  {" "}
+                  {accesspages && accesspages.indexOf(menuobj.url) > -1 ? (
+                    <Link
+                      underline="none"
+                      component={RouterLink}
+                      to={menuobj.url}
+                    >
+                      <ListItem
+                        button
+                        key={"Product List"}
+                        selected={globalCtx.optionname === menuobj.name}
+                        onClick={handleClick(menuobj.name)}
+                      >
+                        <ListItemIcon>
+                          <InboxIcon />{" "}
+                        </ListItemIcon>
+                        <ListItemText primary={menuobj.name} />
+                      </ListItem>
+                    </Link>
+                  ) : null}{" "}
+                </>
+              )}
+            </React.Fragment>
+          ))}
           {/* <Link underline='none' component={RouterLink} to={'/productlist'}>
 
             <ListItem button key={"Product List"} selected={globalCtx.optionname === 'productlist'} onClick={handleClick('productlist')} >
@@ -269,7 +308,7 @@ function SideBar() {
         <ListItemText primary="User and Roles Management" />
       </ListItem> 
       </Link> */}
-      {/* <Collapse in={globalCtx.isExpand && globalCtx.optionname === 'Discounts'} timeout="auto" unmountOnExit>
+          {/* <Collapse in={globalCtx.isExpand && globalCtx.optionname === 'Discounts'} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
         <Link underline='none' component={RouterLink} to={'/voucherdiscount'}>
 
@@ -291,8 +330,6 @@ function SideBar() {
           </Link>
         </List>
       </Collapse> */}
-
-
         </List>
       </Drawer>
     </>

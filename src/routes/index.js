@@ -63,6 +63,9 @@ import {
   VoucherdiscountListing,
   Mastercollections,
   Masterpages,
+  HolidayManager,
+  Inventory,
+  Warehouse,
 } from "../screens";
 import PrivateRoute from "./PrivateRoute";
 import { NetworkProvider } from "../context/NetworkContext";
@@ -257,6 +260,12 @@ const MainApp = () => {
             path={route.shipmentsettings}
             component={Shipmentsettings}
           />
+          <PrivateRoute
+            path={route.holiday_manager}
+            component={HolidayManager}
+          />
+          <PrivateRoute path={route.warehouse} component={Warehouse} />
+          <PrivateRoute path={route.inventory} component={Inventory} />
         </Switch>
       </NetworkProvider>
       {/* </ProductProvider> */}

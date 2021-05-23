@@ -76,6 +76,10 @@ const route = {
   customerdetails: "/customerdetails/:id",
 
   category: "/categories",
+
+  warehouse: "/warehouse",
+  holiday_manager: "/holiday-manager",
+  inventory: "/inventory",
 };
 
 export default route;

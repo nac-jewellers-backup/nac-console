@@ -233,7 +233,7 @@ const ALLPRODUCTLIST = gql`
   }
 `;
 const PRODUCTLIST = (category) => gql`
-  query($Veiw: Int!, $Offset: Int!) {
+  query ($Veiw: Int!, $Offset: Int!) {
     allProductLists(first: $Veiw, offset: $Offset) {
       nodes {
         id
@@ -1244,143 +1244,142 @@ query{
   }
 }
 `;
-const PRODUCTEDIT = `
-query MyQuery($productId: String!) {
-  productListByProductId(productId: $productId) {
-    productMetalcoloursByProductId {
-      nodes {
-        productColor
-        id
+const PRODUCTEDIT = gql`
+  query MyQuery($productId: String!) {
+    productListByProductId(productId: $productId) {
+      productMetalcoloursByProductId {
+        nodes {
+          productColor
+          id
+        }
       }
-    }
-    productName
-    productType
-    vendorCode
-    gender
-    isactive
-    productMaterialsByProductSku {
-      nodes {
-        materialName
+      productName
+      productType
+      vendorCode
+      gender
+      isactive
+      productMaterialsByProductSku {
+        nodes {
+          materialName
+        }
       }
-    }
-    productDiamondsByProductSku {
-      nodes {
-        diamondClarity
-        diamondColour
-        diamondSettings
-        diamondShape
-        diamondType
-        id
-        stoneCount
-        stoneWeight
+      productDiamondsByProductSku {
+        nodes {
+          diamondClarity
+          diamondColour
+          diamondSettings
+          diamondShape
+          diamondType
+          id
+          stoneCount
+          stoneWeight
+        }
       }
-    }
-    productGemstonesByProductSku {
-      nodes {
-        gemstoneSetting
-        gemstoneShape
-        gemstoneSize
-        gemstoneType
-        gemstonsSize
-        id
-        stoneCount
-        stoneWeight
+      productGemstonesByProductSku {
+        nodes {
+          gemstoneSetting
+          gemstoneShape
+          gemstoneSize
+          gemstoneType
+          gemstonsSize
+          id
+          stoneCount
+          stoneWeight
+        }
       }
-    }
-    productImagesByProductId(orderBy: IMAGE_POSITION_ASC) {
-      nodes {
-        id
-        imagePosition
-        productId
-        imageUrl
-        ishover
-        isdefault
-        productColor
+      productImagesByProductId(orderBy: IMAGE_POSITION_ASC) {
+        nodes {
+          id
+          imagePosition
+          productId
+          imageUrl
+          ishover
+          isdefault
+          productColor
+        }
       }
-    }
-    productPuritiesByProductId {
-      nodes {
-        purity
-        id
+      productPuritiesByProductId {
+        nodes {
+          purity
+          id
+        }
       }
-    }
-    productThemesByProductId(condition: {isActive: true}) {
-      nodes {
-        themeName
-        id
+      productThemesByProductId(condition: { isActive: true }) {
+        nodes {
+          themeName
+          id
+        }
       }
-    }
-    productStonecolorsByProductId {
-      nodes {
-        id
-        stonecolor
+      productStonecolorsByProductId {
+        nodes {
+          id
+          stonecolor
+        }
       }
-    }
-    productStylesByProductId(condition: {isActive: true}) {
-      nodes {
-        styleName
-        id
+      productStylesByProductId(condition: { isActive: true }) {
+        nodes {
+          styleName
+          id
+        }
       }
-    }
-    productCollectionsByProductId {
-      nodes {
-        collectionName
-        id
+      productCollectionsByProductId {
+        nodes {
+          collectionName
+          id
+        }
       }
-    }
-    productOccassionsByProductId(condition: {isActive: true}) {
-      nodes {
-        occassionName
-        id
+      productOccassionsByProductId(condition: { isActive: true }) {
+        nodes {
+          occassionName
+          id
+        }
       }
-    }
-    productStonecountsByProductId {
-      nodes {
-        id
-        stonecount
+      productStonecountsByProductId {
+        nodes {
+          id
+          stonecount
+        }
       }
-    }
-    transSkuListsByProductId {
-      nodes {
-        skuSize
-        diamondType
-        metalColor
-        purity
-        productId
-        skuWeight
-        generatedSku,
-        costPrice
-        costPriceTax
-        discountPrice
-        discountPriceTax
-        markupPrice
-        marginOnSalePercentage
-        markupPriceTax
-        marginOnSalePercentage
-        sellingPrice
-        discountDesc
-        sellingPriceTax
-        isReadyToShip
-        discount
-        isActive
-        isdefault,
-        vendorDeliveryTime
-        id
-        isActive
-        transSkuDescriptionsBySkuId {
-          nodes {
-            skuDescription
-            certificate
-            ringsizeImage
+      transSkuListsByProductId {
+        nodes {
+          skuSize
+          diamondType
+          metalColor
+          purity
+          productId
+          skuWeight
+          generatedSku
+          costPrice
+          costPriceTax
+          discountPrice
+          discountPriceTax
+          markupPrice
+          marginOnSalePercentage
+          markupPriceTax
+          marginOnSalePercentage
+          sellingPrice
+          discountDesc
+          sellingPriceTax
+          isReadyToShip
+          discount
+          isActive
+          isdefault
+          vendorDeliveryTime
+          id
+          isActive
+          transSkuDescriptionsBySkuId {
+            nodes {
+              skuDescription
+              certificate
+              ringsizeImage
+            }
           }
         }
       }
+      productCategory
+      sizeVarient
     }
-    productCategory
-    sizeVarient
   }
-}
-
 `;
 
 const ALLMASTERRINGSIZE = `
@@ -1392,6 +1391,88 @@ const ALLMASTERRINGSIZE = `
         name
         size
         sizeValue
+      }
+    }
+  }
+`;
+
+const HOLIDAYLIST = gql`
+  query ($first: Int, $offset: Int, $filter: HolidayManagerFilter) {
+    allHolidayManagers(
+      first: $first
+      offset: $offset
+      filter: $filter
+      orderBy: DATE_ASC
+    ) {
+      nodes {
+        id
+        holiday
+        date
+        createdAt
+        updatedAt
+      }
+      totalCount
+    }
+  }
+`;
+
+const WAREHOUSELIST = gql`
+  query {
+    allWarehouses(orderBy: ID_ASC) {
+      nodes {
+        id
+        name
+        shippingInDays
+        isActive
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+const INVENTORYLIST = gql`
+  query ($first: Int, $offset: Int, $filter: InventoryFilter) {
+    allInventories(first: $first, offset: $offset, filter: $filter) {
+      nodes {
+        id
+        generatedSku
+        numberOfItems
+        createdAt
+        updatedAt
+        warehouse: warehouseByWarehouseId {
+          id
+          name
+        }
+      }
+      totalCount
+    }
+  }
+`;
+
+const VALIDATEGENERATEDSKU = gql`
+  query ($generatedSku: String!) {
+    allTransSkuLists(condition: { generatedSku: $generatedSku }) {
+      nodes {
+        id
+      }
+    }
+  }
+`;
+
+const STOCKSTATUS = gql`
+  query {
+    allWarehouses {
+      nodes {
+        name
+        isActive
+        inventoriesByWarehouseId {
+          aggregates {
+            sum {
+              numberOfItems
+            }
+          }
+        }
       }
     }
   }
@@ -1466,4 +1547,9 @@ export {
   MASTERPAGES,
   GOLDPRICESETUPMASTER,
   ALLMASTERRINGSIZE,
+  HOLIDAYLIST,
+  WAREHOUSELIST,
+  INVENTORYLIST,
+  VALIDATEGENERATEDSKU,
+  STOCKSTATUS,
 };

@@ -149,7 +149,7 @@ const ProductSync = (props) => {
     sendNetworkRequest(
       "/product_sync",
       {},
-      { ...data, ...JSON.parse(Product_lists) }
+      { ...data, Product_lists: JSON.parse(Product_lists) }
     )
       .then((res) => {
         snack.setSnack({
