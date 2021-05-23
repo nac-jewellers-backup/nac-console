@@ -1478,6 +1478,16 @@ const STOCKSTATUS = gql`
   }
 `;
 
+const VERIFYTAGNO = gql`
+  query ($tagno: String!) {
+    list: allTransSkuLists(condition: { generatedSku: $tagno }) {
+      nodes {
+        id
+      }
+    }
+  }
+`;
+
 export {
   PRODUCTCATEGORY,
   PRODUCTLIST,
@@ -1552,4 +1562,5 @@ export {
   INVENTORYLIST,
   VALIDATEGENERATEDSKU,
   STOCKSTATUS,
+  VERIFYTAGNO,
 };

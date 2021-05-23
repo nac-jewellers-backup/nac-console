@@ -16,6 +16,7 @@ import {
   TextField,
   LinearProgress,
   Box,
+  CircularProgress,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import ChipInput from "material-ui-chip-input";
@@ -24,6 +25,9 @@ import socketIOClient from "socket.io-client";
 import { API_URL } from "../../config";
 import { NetworkContext } from "../../context/NetworkContext";
 import SyncIcon from "@material-ui/icons/Sync";
+import { Autocomplete } from "@material-ui/lab";
+import { useApolloClient, useQuery } from "react-apollo";
+import { VERIFYTAGNO, WAREHOUSELIST } from "../../graphql/query";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -65,8 +69,46 @@ function LinearProgressWithLabel(props) {
   );
 }
 
+const ChooseWareHouse = (props) => {
+  const { loading, data } = useQuery(WAREHOUSELIST);
+  return (
+    <Autocomplete
+      id={"warehouse-id"}
+      getOptionSelected={(option, value) => option.name === value.name}
+      getOptionLabel={(option) => option.name}
+      options={data?.allWarehouses?.nodes ?? []}
+      value={props.warehouse || null}
+      onChange={(event, newValue) => {
+        props.setWarehouse(newValue);
+      }}
+      loading={loading}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Warehouse"
+          fullWidth
+          required
+          variant="outlined"
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <React.Fragment>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </React.Fragment>
+            ),
+          }}
+        />
+      )}
+    />
+  );
+};
+
 const ProductSync = (props) => {
   const classes = useStyles();
+  const client = useApolloClient();
   const snack = React.useContext(AlertContext);
   const { sendNetworkRequest } = React.useContext(NetworkContext);
   var [data, setData] = React.useState({
@@ -75,6 +117,8 @@ const ProductSync = (props) => {
     new_tagno: [],
   });
   const [progress, setProgress] = React.useState(0);
+  const [warehouse, setWarehouse] = React.useState(null);
+  const [errorTagNo, setErrorTagNo] = React.useState([]);
   var handleChange = (event) => {
     var { name, value } = event.target;
     setData({ ...data, [name]: value });
@@ -84,6 +128,16 @@ const ProductSync = (props) => {
     var _ = data;
     _.new_tagno.push(chip);
     setData({ ..._ });
+    client
+      .query({ query: VERIFYTAGNO, variables: { tagno: chip } })
+      .then(({ data }) => {
+        if (data?.list?.nodes && data?.list?.nodes.length >= 1) {
+          setErrorTagNo([...errorTagNo, chip]);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   var handleDeleteChip = (chip, index) => {
@@ -143,13 +197,25 @@ const ProductSync = (props) => {
         }
       }
     }
+    if (!warehouse?.id && data.action_type === "new_uploads") {
+      snack.setSnack({
+        open: true,
+        severity: "error",
+        msg: "Warehouse is mandatory!",
+      });
+      return;
+    }
     setProgress(0);
     var Product_lists = data.Product_lists;
     delete data.Product_lists;
     sendNetworkRequest(
       "/product_sync",
       {},
-      { ...data, Product_lists: JSON.parse(Product_lists) }
+      {
+        ...data,
+        Product_lists: JSON.parse(Product_lists),
+        warehouse: warehouse?.id,
+      }
     )
       .then((res) => {
         snack.setSnack({
@@ -169,12 +235,7 @@ const ProductSync = (props) => {
   };
 
   return (
-    <Dialog
-      fullScreen
-      open={open}
-      TransitionComponent={Transition}
-      close={handleClose}
-    >
+    <Dialog fullScreen open={open} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton
@@ -246,17 +307,34 @@ const ProductSync = (props) => {
           />
         </Grid>
         {data.action_type === "new_uploads" && (
-          <Grid item xs={12}>
-            <ChipInput
-              value={data.new_tagno}
-              onAdd={handleAddChip}
-              onDelete={handleDeleteChip}
-              fullWidth
-              newChipKeyCodes={[13, 32]}
-              variant="outlined"
-              label={"TAG Number"}
-            />
-          </Grid>
+          <>
+            <Grid item xs={12}>
+              <ChooseWareHouse
+                warehouse={warehouse}
+                setWarehouse={setWarehouse}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <ChipInput
+                value={data.new_tagno}
+                onAdd={handleAddChip}
+                onDelete={handleDeleteChip}
+                fullWidth
+                newChipKeyCodes={[13, 32]}
+                variant="outlined"
+                label={"TAG Number"}
+                error={errorTagNo.length > 0}
+                helperText={
+                  errorTagNo.length > 0
+                    ? `${errorTagNo.join(
+                        ","
+                      )} already exists these could not be synced again!`
+                    : ``
+                }
+              />
+              {console.log(errorTagNo)}
+            </Grid>
+          </>
         )}
         {progress > 0 && (
           <Grid item xs={12}>
