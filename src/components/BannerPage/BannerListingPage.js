@@ -18,7 +18,7 @@ import {
   DialogActions,
 } from "@material-ui/core";
 import {Something} from "./dummySS";
-import {CREATEALLBANNERS,ALLBANNERS,DELETEALLBANNER} from "../../graphql/query";
+import {CREATELISTINGBANNERS,ALLLISTINGBANNERS,DELETEALLBANNER} from "../../graphql/query";
 import { GRAPHQL_DEV_CLIENT } from "../../config"
 
 const useStyles = makeStyles((theme) => ({
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-function BannerPage(props) {
+function BannerListingPage(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [allbanner, setallbanner] = useState([]);
@@ -68,7 +68,7 @@ function BannerPage(props) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: ALLBANNERS,
+          query: ALLLISTINGBANNERS,
         }),
       };
 
@@ -113,7 +113,7 @@ function BannerPage(props) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: CREATEALLBANNERS,
+        query: CREATELISTINGBANNERS,
         variables: create_banner_data,
       }),
     };
@@ -151,7 +151,7 @@ function BannerPage(props) {
         <Grid container item xs={12} style={{ padding: "16px" }} sm={12} alignItems={"flex-end"}>
           <Grid fullwidth item xs={9} sm={9}>
             <Typography component="h6" variant="h6" style={{ fontWeight: "bold" }}>
-              NAC All Banners
+              NAC Listing Page 
             </Typography>
           </Grid>
 
@@ -261,4 +261,4 @@ function BannerPage(props) {
     );
 }
 
-export default BannerPage;
+export default BannerListingPage;

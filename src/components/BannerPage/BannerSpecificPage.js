@@ -18,7 +18,7 @@ import {
   DialogActions,
 } from "@material-ui/core";
 import {Something} from "./dummySS";
-import {CREATEALLBANNERS,ALLBANNERS,DELETEALLBANNER} from "../../graphql/query";
+import {CREATESPECIFICLISTINGPAGE,ALLSPECIFICLISTINGPAGE,DELETEALLBANNER} from "../../graphql/query";
 import { GRAPHQL_DEV_CLIENT } from "../../config"
 
 const useStyles = makeStyles((theme) => ({
@@ -51,13 +51,13 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-function BannerPage(props) {
+function BannerSpecificPage(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [allbanner, setallbanner] = useState([]);
   const [createlandingbanner, setCreatelandingbanner] = useState({
     position: "",
-    link: "",
+    urlParam: "",
     mobile: "",
     web: "",
   });
@@ -68,7 +68,7 @@ function BannerPage(props) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          query: ALLBANNERS,
+          query: ALLSPECIFICLISTINGPAGE,
         }),
       };
 
@@ -101,8 +101,7 @@ function BannerPage(props) {
 
   const onsubmitvalue = async () => {
     let create_banner_data = {
-      position: Number(createlandingbanner.position),
-      url: createlandingbanner.link,
+      urlParam: createlandingbanner.urlParam,
       mobile: createlandingbanner.mobile,
       web: createlandingbanner.web,
       now: new Date().toISOString(),
@@ -113,15 +112,17 @@ function BannerPage(props) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: CREATEALLBANNERS,
+        query: CREATESPECIFICLISTINGPAGE,
         variables: create_banner_data,
       }),
     };
+    console.log("ffff", opts);
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
         setOpen(false);
         window.location.reload();
+        console.log("fff", fatchvalue);
       })
       .catch(console.error);
   }
@@ -151,7 +152,7 @@ function BannerPage(props) {
         <Grid container item xs={12} style={{ padding: "16px" }} sm={12} alignItems={"flex-end"}>
           <Grid fullwidth item xs={9} sm={9}>
             <Typography component="h6" variant="h6" style={{ fontWeight: "bold" }}>
-              NAC All Banners
+              NAC Specific Page 
             </Typography>
           </Grid>
 
@@ -167,25 +168,14 @@ function BannerPage(props) {
           <DialogTitle id="form-dialog-title">Stylori Landing Page : </DialogTitle>
           <DialogContent>
             <TextField
-              autoFocus
               margin="dense"
-              id="position"
-              label="Position"
-              variant="outlined"
-              fullWidth
-              onChange={onChangeData}
-              value={createlandingbanner.position}
-              name="position"
-            />
-            <TextField
-              margin="dense"
-              id="link"
+              id="urlParam"
               label="Link"
               variant="outlined"
               fullWidth
               onChange={onChangeData}
-              value={createlandingbanner.link}
-              name="link"
+              value={createlandingbanner.urlParam}
+              name="urlParam"
             />
             <TextField
               margin="dense"
@@ -218,8 +208,7 @@ function BannerPage(props) {
           <Table className={classes.table} border={1} borderColor={"#ddd"} size="small" stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell>Position</TableCell>
-                <TableCell>Link</TableCell>
+                <TableCell>Specific Routing Link</TableCell>
                 <TableCell>Mobile URL</TableCell>
                 <TableCell>Web URL</TableCell>
                 <TableCell>Action</TableCell>
@@ -228,10 +217,9 @@ function BannerPage(props) {
             <TableBody>
               {allbanner.map((val, index) => (
                 <TableRow key={val.id}>
-                  <TableCell>{val.position}</TableCell>
                   <TableCell>
                     <Link href={val.url} target="_blank" className={classes.link_style}>
-                      {val.url}
+                      {val.urlParam}
                     </Link>
                   </TableCell>
                   <TableCell>
@@ -261,4 +249,4 @@ function BannerPage(props) {
     );
 }
 
-export default BannerPage;
+export default BannerSpecificPage;
