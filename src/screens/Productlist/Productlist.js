@@ -3,7 +3,12 @@ import { withRouter } from "react-router-dom";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Query, withApollo } from "react-apollo";
-import { PRODUCTLIST, PRODUCTCATEGORY, PRODUCTFILTERMASTER, PRODUCTLISTSTATUSEDIT } from "../../graphql/query";
+import {
+  PRODUCTLIST,
+  PRODUCTCATEGORY,
+  PRODUCTFILTERMASTER,
+  PRODUCTLISTSTATUSEDIT,
+} from "../../graphql/query";
 
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
@@ -13,6 +18,7 @@ import Button from "@material-ui/core/Button";
 import FullLoader from "../../components/Loader";
 import { ProductFilter } from "../../components";
 import { NetworkContext } from "../../context/NetworkContext";
+import ProductSync from "./ProductSync";
 
 export const Productlist = withRouter(
   withApollo((props) => {
@@ -20,6 +26,17 @@ export const Productlist = withRouter(
     const [filterparams, setFilterparams] = useState({});
     const [dataCSV, setDataCSV] = useState({ keyCSV: [], valueCSV: [] });
     const { sendNetworkRequest } = React.useContext(NetworkContext);
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+
     let responseCSV;
     function onFilter(filterobj) {
       let filtercontent = {};
@@ -100,10 +117,24 @@ export const Productlist = withRouter(
                 Add New Product
               </Button>
             </Link>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleClickOpen}
+              style={{ marginLeft: 2 }}
+            >
+              Product Sync
+            </Button>
           </Grid>
         </Grid>
-        <ProductFilter masters={masters} onSearch={onSearch} onFilter={onFilter} dataCSV={dataCSV} />
+        <ProductFilter
+          masters={masters}
+          onSearch={onSearch}
+          onFilter={onFilter}
+          dataCSV={dataCSV}
+        />
         <Product filterparams={filterparams} />
+        <ProductSync open={open} handleClose={handleClose} />
       </Grid>
     );
   })

@@ -13,7 +13,7 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions";
 import { productCategory } from "../../services/mapper";
-import { useQuery } from "react-apollo";
+import { useApolloClient, useQuery } from "react-apollo";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import "../Productupload/Productupload.css";
 import AddIcon from "@material-ui/icons/Add";
@@ -92,11 +92,21 @@ const useStyle = makeStyles((theme) => ({
 export function Component(props) {
   const [open, setOpen] = React.useState(false);
   const [expand, setExpand] = React.useState(false);
-  const [varientcolumns, setVarientcolumns] = React.useState(columnnames.defaultvarients);
-  const [displycolumns, setDisplycolumns] = React.useState(columnnames.defaultvarientnames);
-  const [pricingcolumns, setPricingcolumns] = React.useState(columnnames.pricing);
-  const [displypricingcolumns, setDisplypricingcolumns] = React.useState(columnnames.defaultpricing);
-  const [displycolumnnames, setDisplycolumnnames] = React.useState(columnnames.defaultpricingnames);
+  const [varientcolumns, setVarientcolumns] = React.useState(
+    columnnames.defaultvarients
+  );
+  const [displycolumns, setDisplycolumns] = React.useState(
+    columnnames.defaultvarientnames
+  );
+  const [pricingcolumns, setPricingcolumns] = React.useState(
+    columnnames.pricing
+  );
+  const [displypricingcolumns, setDisplypricingcolumns] = React.useState(
+    columnnames.defaultpricing
+  );
+  const [displycolumnnames, setDisplycolumnnames] = React.useState(
+    columnnames.defaultpricingnames
+  );
   const [isshowpricesummary, setIsshowpricesummary] = React.useState(false);
   const [pricesummaryvalues, setPricesummaryvalue] = React.useState([]);
 
@@ -131,7 +141,9 @@ export function Component(props) {
   let prod_id = props.location.pathname.split("/")[2];
   const classes = useStyle();
   function keyPress(evt) {
-    const productname = evt.target.validity.valid ? evt.target.value : productCtx.productname;
+    const productname = evt.target.validity.valid
+      ? evt.target.value
+      : productCtx.productname;
     setProductCtx({ ...productCtx, productname });
   }
   function changeVariant() {
@@ -171,6 +183,9 @@ export function Component(props) {
       setDisplycolumnnames(displycolumnnames);
     }
   }
+
+  let client = useApolloClient();
+
   function createVariant() {
     let diamondTypesArray = [];
     // let diamondClaritySku = [];
@@ -180,7 +195,9 @@ export function Component(props) {
           id: diamond_type.id,
           diamondType: diamond_type.diamondType,
         };
-        let status = diamondTypesArray.some((store_dia) => store_dia.diamondType == diamond_type.diamondType)
+        let status = diamondTypesArray.some(
+          (store_dia) => store_dia.diamondType == diamond_type.diamondType
+        )
           ? ""
           : diamondTypesArray.push(diamond_data);
         return diamond_type;
@@ -192,21 +209,38 @@ export function Component(props) {
       ...productCtx,
       productCtx,
     });
-    let params = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: PRODUCTDIAMONDTYPES }),
-    };
-    fetch(GRAPHQL_DEV_CLIENT, params)
-      .then((res) => res.json())
-      .then((diamondtypesData) => {
-        console.log(diamondtypesData.data.allMasterDiamondTypes.nodes, "diamondtypesdata");
+
+    client
+      .query({ query: PRODUCTDIAMONDTYPES })
+      .then((res) => {
         setProductCtx({
           ...productCtx,
-          productDiamondTypes: diamondtypesData.data.allMasterDiamondTypes.nodes,
+          productDiamondTypes: res.data.allMasterDiamondTypes.nodes,
         });
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // let params = {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ query: PRODUCTDIAMONDTYPES }),
+    // };
+    // fetch(GRAPHQL_DEV_CLIENT, params)
+    //   .then((res) => res.json())
+    //   .then((diamondtypesData) => {
+    //     console.log(
+    //       diamondtypesData.data.allMasterDiamondTypes.nodes,
+    //       "diamondtypesdata"
+    //     );
+    //     setProductCtx({
+    //       ...productCtx,
+    //       productDiamondTypes:
+    //         diamondtypesData.data.allMasterDiamondTypes.nodes,
+    //     });
+    //   })
+    //   .catch(console.error);
 
     //setstate({ ...state, create_variant: true })
   }
@@ -227,7 +261,11 @@ export function Component(props) {
       // productImages:productCtx.productImages,
       // createVariants: productCtx.createVariantList
     };
-    let response = await sendNetworkRequest("/editproduct", {}, productEditItem);
+    let response = await sendNetworkRequest(
+      "/editproduct",
+      {},
+      productEditItem
+    );
 
     console.log("************");
     console.log(JSON.stringify(productEditItem));
@@ -281,7 +319,11 @@ export function Component(props) {
     let response = await sendNetworkRequest("/disableproduct", {}, bodycontent);
 
     let esresponse = await sendNetworkRequest(endpoint, {}, esbody);
-    let updateproductattr = await sendNetworkRequest("/updateproductattribute", {}, esbody);
+    let updateproductattr = await sendNetworkRequest(
+      "/updateproductattribute",
+      {},
+      esbody
+    );
 
     console.log("************");
     console.log(JSON.stringify(bodycontent));
@@ -303,7 +345,11 @@ export function Component(props) {
     }
   };
   async function showpricesummary(sku) {
-    let response = await sendNetworkRequest("/viewskupricesummary/" + sku, {}, null);
+    let response = await sendNetworkRequest(
+      "/viewskupricesummary/" + sku,
+      {},
+      null
+    );
     let price_summary = [];
     let skuprice = response.price_summary.skuprice;
     // let cost_obj = {
@@ -385,21 +431,12 @@ export function Component(props) {
     window.location = "/productlist";
   }
   useEffect(() => {
-    const url = GRAPHQL_DEV_CLIENT;
-    const opts = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: PRODUCTEDIT,
-        variables: { productId: prod_id },
-      }),
-    };
-    // console.log("helo",setProductCtx)
-    fetch(url, opts)
-      .then((res) => res.json())
-      .then((fatchvalue) => {
-        var genders = fatchvalue.data.productListByProductId.gender;
-        var size_obj = fatchvalue.data.productListByProductId.sizeVarient;
+    client
+      .query({ query: PRODUCTEDIT, variables: { productId: prod_id } })
+      .then((res) => {
+        var { productListByProductId } = res.data;
+        var genders = productListByProductId.gender;
+        var size_obj = productListByProductId.sizeVarient;
         let sizes_arr = [];
         if (size_obj) {
           let sizes = size_obj.split(",");
@@ -418,7 +455,7 @@ export function Component(props) {
           });
         }
         let defaultcolour = "";
-        var images_arr = fatchvalue.data.productListByProductId.productImagesByProductId.nodes;
+        var images_arr = productListByProductId.productImagesByProductId.nodes;
         images_arr.forEach((element) => {
           if (element.isdefault) {
             defaultcolour = element.productColor;
@@ -428,7 +465,8 @@ export function Component(props) {
         Array.prototype.insert = function (index, item) {
           this.splice(index, 0, item);
         };
-        let metalcolor = fatchvalue.data.productListByProductId.productMetalcoloursByProductId.nodes;
+        let metalcolor =
+          productListByProductId.productMetalcoloursByProductId.nodes;
         metalcolor.forEach((colorobj) => {
           if (colorobj.productColor === defaultcolour) {
             colorobj["isdefault"] = true;
@@ -440,33 +478,43 @@ export function Component(props) {
         });
         setProductCtx({
           ...productCtx,
-          productname: fatchvalue.data.productListByProductId.productName,
-          isactive: fatchvalue.data.productListByProductId.isactive,
-          product_type: fatchvalue.data.productListByProductId.productType,
-          product_categoy: fatchvalue.data.productListByProductId.productCategory,
-          gemstonelist: fatchvalue.data.productListByProductId.productGemstonesByProductSku.nodes,
-          diamondlist: fatchvalue.data.productListByProductId.productDiamondsByProductSku.nodes,
-          variants: fatchvalue.data.productListByProductId.transSkuListsByProductId.nodes,
-          product_images: fatchvalue.data.productListByProductId.productImagesByProductId.nodes,
+          productname: productListByProductId.productName,
+          isactive: productListByProductId.isactive,
+          product_type: productListByProductId.productType,
+          product_categoy: productListByProductId.productCategory,
+          gemstonelist:
+            productListByProductId.productGemstonesByProductSku.nodes,
+          diamondlist: productListByProductId.productDiamondsByProductSku.nodes,
+          variants: productListByProductId.transSkuListsByProductId.nodes,
+          productImages: productListByProductId.productImagesByProductId.nodes,
           productMetalColor: metalcolors,
-          oldproductMetalColor: fatchvalue.data.productListByProductId.productMetalcoloursByProductId.nodes,
-          productMetalPurity: fatchvalue.data.productListByProductId.productPuritiesByProductId.nodes,
-          oldproductMetalPurity: fatchvalue.data.productListByProductId.productPuritiesByProductId.nodes,
+          oldproductMetalColor:
+            productListByProductId.productMetalcoloursByProductId.nodes,
+          productMetalPurity:
+            productListByProductId.productPuritiesByProductId.nodes,
+          oldproductMetalPurity:
+            productListByProductId.productPuritiesByProductId.nodes,
           variant_size: sizes_arr,
-          productmaterials: fatchvalue.data.productListByProductId.productMaterialsByProductSku.nodes,
-          vendorcode: fatchvalue.data.productListByProductId.vendorCode,
+          productmaterials:
+            productListByProductId.productMaterialsByProductSku.nodes,
+          vendorcode: productListByProductId.vendorCode,
           product_gender: gender_arr,
-          themes: fatchvalue.data.productListByProductId.productThemesByProductId.nodes,
-          prod_styles: fatchvalue.data.productListByProductId.productStylesByProductId.nodes, // productDiamondColor:diamondTypesArray,
-          occassions: fatchvalue.data.productListByProductId.productOccassionsByProductId.nodes,
-          collections: fatchvalue.data.productListByProductId.productCollectionsByProductId.nodes,
-          stonecount: fatchvalue.data.productListByProductId.productStonecountsByProductId.nodes,
-          stonecolour: fatchvalue.data.productListByProductId.productStonecolorsByProductId.nodes,
+          themes: productListByProductId.productThemesByProductId.nodes,
+          prod_styles: productListByProductId.productStylesByProductId.nodes, // productDiamondColor:diamondTypesArray,
+          occassions: productListByProductId.productOccassionsByProductId.nodes,
+          collections:
+            productListByProductId.productCollectionsByProductId.nodes,
+          stonecount:
+            productListByProductId.productStonecountsByProductId.nodes,
+          stonecolour:
+            productListByProductId.productStonecolorsByProductId.nodes,
           // productDiamondClarity:diamondClaritySku,
         });
         setstate({
           ...state,
-          duplicate_productName: JSON.parse(JSON.stringify(fatchvalue.data.productListByProductId.productName)),
+          duplicate_productName: JSON.parse(
+            JSON.stringify(productListByProductId.productName)
+          ),
         });
         setLoadopen(false);
       })
@@ -490,7 +538,15 @@ export function Component(props) {
         </Snackbar>
       </React.Fragment>
       <Grid item container spacing={1}>
-        <Grid item xs={12} sm={12} md={3} lg={3} spacing={2} style={{ padding: "15px", backgroundColor: "#FFFFFF" }}>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={3}
+          lg={3}
+          spacing={2}
+          style={{ padding: "15px", backgroundColor: "#FFFFFF" }}
+        >
           <TextField
             className={classes.helperinput}
             variant="outlined"
@@ -499,7 +555,11 @@ export function Component(props) {
             pattern="[a-zA-Z]*"
             value={productCtx.productname}
             id="productname"
-            error={productCtx && productCtx.error_message && productCtx.error_message.productname}
+            error={
+              productCtx &&
+              productCtx.error_message &&
+              productCtx.error_message.productname
+            }
             name="productname"
             label="Product Name"
             //onInput={keyPress.bind(this)}
@@ -517,7 +577,11 @@ export function Component(props) {
             InputProps={{
               readOnly: true,
             }}
-            error={productCtx && productCtx.error_message && productCtx.error_message.product_categoy}
+            error={
+              productCtx &&
+              productCtx.error_message &&
+              productCtx.error_message.product_categoy
+            }
             name="product_category"
             label="Product Category"
           />
@@ -528,7 +592,11 @@ export function Component(props) {
             fullWidth
             value={productCtx.product_type}
             id="product_type"
-            error={productCtx && productCtx.error_message && productCtx.error_message.product_type}
+            error={
+              productCtx &&
+              productCtx.error_message &&
+              productCtx.error_message.product_type
+            }
             InputProps={{
               readOnly: true,
             }}
@@ -541,7 +609,7 @@ export function Component(props) {
             label="Vendor Name"
             fullWidth
             className={classes.helperinput}
-            value={productCtx.vendorcode}
+            value={productCtx?.vendorcode ?? ""}
             id="productvendorcode"
             InputProps={{
               readOnly: true,
@@ -556,7 +624,11 @@ export function Component(props) {
             fullWidth
             defaultValue={productCtx.productname}
             id="seo_text"
-            error={productCtx && productCtx.error_message && productCtx.error_message.productname}
+            error={
+              productCtx &&
+              productCtx.error_message &&
+              productCtx.error_message.productname
+            }
             name="seo_text"
             label="Minimum Order Quantity"
           />
@@ -567,7 +639,11 @@ export function Component(props) {
             fullWidth
             defaultValue={productCtx.productname}
             id="url"
-            error={productCtx && productCtx.error_message && productCtx.error_message.productname}
+            error={
+              productCtx &&
+              productCtx.error_message &&
+              productCtx.error_message.productname
+            }
             name="url"
             label="Maximum Order Quantity"
           />
@@ -575,11 +651,17 @@ export function Component(props) {
             multiple
             id="free-solo-2-demo"
             disabled
+            options={[]}
             className={classes.fixedTag}
             value={productCtx.productmaterials}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.materialName} {...getTagProps({ index })} />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  label={option.materialName}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -601,11 +683,17 @@ export function Component(props) {
             multiple
             id="free-solo-2-demo"
             disabled
+            options={[]}
             className={classes.fixedTag}
             value={productCtx.productMetalColor}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.productColor} {...getTagProps({ index })} />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  label={option.productColor}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -623,11 +711,17 @@ export function Component(props) {
             multiple
             id="free-solo-2-demo"
             disabled
+            options={[]}
             className={classes.fixedTag}
             value={productCtx.productMetalPurity}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.purity} {...getTagProps({ index })} />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  label={option.purity}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -652,7 +746,12 @@ export function Component(props) {
             options={productCtx.masterData.gender}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  label={option.label}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -678,7 +777,12 @@ export function Component(props) {
             onChange={handleoptionChange("themes")}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.themeName} {...getTagProps({ index })} />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  label={option.themeName}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -703,7 +807,12 @@ export function Component(props) {
             value={productCtx.prod_styles}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.styleName} {...getTagProps({ index })} />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  label={option.styleName}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -729,7 +838,12 @@ export function Component(props) {
             onChange={handleoptionChange("occassions")}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.occassionName} {...getTagProps({ index })} />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  label={option.occassionName}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -754,7 +868,12 @@ export function Component(props) {
             onChange={handleoptionChange("collections")}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.collectionName} {...getTagProps({ index })} />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  label={option.collectionName}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -779,7 +898,12 @@ export function Component(props) {
             onChange={handleoptionChange("stonecount")}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.stonecount} {...getTagProps({ index })} />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  label={option.stonecount}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -805,7 +929,12 @@ export function Component(props) {
             onChange={handleoptionChange("stonecolour")}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.stonecolor} {...getTagProps({ index })} />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  label={option.stonecolor}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -821,8 +950,18 @@ export function Component(props) {
           />
 
           <FormControlLabel
-            label={productCtx.isactive ? "Disable this product" : "Enable this product"}
-            control={<Switch checked={productCtx.isactive} onChange={handledisableproduct("isactive")} value="checkedA" />}
+            label={
+              productCtx.isactive
+                ? "Disable this product"
+                : "Enable this product"
+            }
+            control={
+              <Switch
+                checked={productCtx.isactive}
+                onChange={handledisableproduct("isactive")}
+                value="checkedA"
+              />
+            }
           />
 
           <Grid
@@ -835,7 +974,11 @@ export function Component(props) {
             }}
           >
             <Grid item>
-              <Button color="primary" variant="contained" onClick={(e) => saveProductEditItem()}>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={(e) => saveProductEditItem()}
+              >
                 Update
               </Button>
               {/* <Button color="default" style={{  marginLeft:"16px" }} variant="contained" onClick={(e) => backProductList()}>
@@ -845,18 +988,36 @@ export function Component(props) {
           </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={9} lg={9} spacing={2} style={{ padding: "15px" }}>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={9}
+          lg={9}
+          spacing={2}
+          style={{ padding: "15px" }}
+        >
           <Grid container item md={6}></Grid>
-          <Grid style={{ fontSize: ".9rem", padding: "8px" }}>Diamond Table</Grid>
+          <Grid style={{ fontSize: ".9rem", padding: "8px" }}>
+            Diamond Table
+          </Grid>
           <DiamondDetails diamond={productCtx.diamondlist} />
           {productCtx.gemstonelist.length > 0 ? (
             <>
               {" "}
-              <Grid style={{ fontSize: ".9rem", padding: "8px", marginTop: "28px" }}>Gemstone Table</Grid>
+              <Grid
+                style={{ fontSize: ".9rem", padding: "8px", marginTop: "28px" }}
+              >
+                Gemstone Table
+              </Grid>
               <GemstoneDetails gemstone={productCtx.gemstonelist} />{" "}
             </>
           ) : null}
-          <Grid style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}>Variant Creation</Grid>
+          <Grid
+            style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}
+          >
+            Variant Creation
+          </Grid>
 
           <Grid style={{}}>
             {/* <Grid style={{ fontSize: ".9rem", display: "flex", alignItems: "center" }}>Create Variant</Grid> */}
@@ -868,7 +1029,9 @@ export function Component(props) {
                 id="panel1c-header"
               >
                 <div className={classes.column}>
-                  <Typography className={classes.heading}>Add New variant</Typography>
+                  <Typography className={classes.heading}>
+                    Add New variant
+                  </Typography>
                 </div>
               </ExpansionPanelSummary>
               <Divider />
@@ -889,13 +1052,25 @@ export function Component(props) {
                     </ExpansionPanelActions> */}
             </ExpansionPanel>
           </Grid>
-          <Grid style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}>
-            <SortHeader columnnames={columnnames.varients} getColumnnames={getColumnnames} displytype={1} />{" "}
+          <Grid
+            style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}
+          >
+            <SortHeader
+              columnnames={columnnames.varients}
+              getColumnnames={getColumnnames}
+              displytype={1}
+            />{" "}
           </Grid>
 
-          <Variants variants={productCtx.variants} columns={varientcolumns} displycolumns={displycolumns} />
+          <Variants
+            variants={productCtx.variants}
+            columns={varientcolumns}
+            displycolumns={displycolumns}
+          />
 
-          <Grid style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}>
+          <Grid
+            style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}
+          >
             <SortHeader
               title={"Pricing Table"}
               columnnames={pricingcolumns}
@@ -903,21 +1078,37 @@ export function Component(props) {
               getColumnnames={getColumnnames}
               displytype={2}
             />
-            <Button onClick={(e) => Skupricesync(prod_id)} size="small" variant="outlined" color="primary">
+            <Button
+              onClick={(e) => Skupricesync(prod_id)}
+              size="small"
+              variant="outlined"
+              color="primary"
+            >
               Price Run For This Product
             </Button>
           </Grid>
-          {isshowpricesummary ? <Pricedetails onClose={dismisspricesummary} values={pricesummaryvalues} /> : null}
+          {isshowpricesummary ? (
+            <Pricedetails
+              onClose={dismisspricesummary}
+              values={pricesummaryvalues}
+            />
+          ) : null}
           <Skupricing
             variants={productCtx.variants}
             onShow={showpricesummary}
             columns={displypricingcolumns}
             displycolumns={displycolumnnames}
           />
-          <Grid style={{ fontSize: ".9rem", padding: "8px" }}>Product Images</Grid>
-          {productCtx.productMetalColor.map((colors) => (
-            <Productimages color={colors.productColor} isdefault={colors.isdefault} prodimages={productCtx.product_images} />
-          ))}
+          <Grid style={{ fontSize: ".9rem", padding: "8px" }}>
+            Product Images
+          </Grid>
+          {/* {productCtx.productMetalColor.map((colors) => ( */}
+          <Productimages
+            //color={colors.productColor}
+            //isdefault={colors.isdefault}
+            prodimages={productCtx.productImages}
+          />
+          {/* ))} */}
         </Grid>
       </Grid>
     </Grid>
@@ -944,7 +1135,9 @@ export const ProductAttributes = withRouter((props) => {
   if (error) return <div>error</div>;
 
   const _content = (
-    <ProductProvider value={{ data, mapper: productCategory.mapper, mappertype: "masterData" }}>
+    <ProductProvider
+      value={{ data, mapper: productCategory.mapper, mappertype: "masterData" }}
+    >
       <Component {...props} />
     </ProductProvider>
   );

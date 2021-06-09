@@ -1,59 +1,80 @@
 {
-    "menus":[
+  "menus": [
+    {
+      "name": "Product List",
+      "url": "/productlist"
+    },
+    {
+      "name": "Pricing",
+      "url": "Pricing",
+      "submenu": [
         {
-            "name":"Product List",
-            "url":"/productlist"
+          "name": "Gold Price Setup",
+          "url": "/goldpriceupdate"
         },
         {
-            "name":"Pricing",
-            "url":"Pricing",
-            "submenu":[
-                {
-                    "name":"Gold Price Setup",
-                    "url":"/goldpriceupdate"
-                },
-                {
-                    "name":"Vendor Price Setup",
-                    "url":"/vendorpricesetup"
-                },
-                {
-                    "name":"Selling Price Markup Setup",
-                    "url":"/markuppricesetup"
-                },
-                {
-                    "name":"Discount Setup",
-                    "url":"/salediscountlist"
-                },
-                {
-                    "name":"Price Run",
-                    "url":"/priceupdate"
-                }
-            ]
+          "name": "Vendor Price Setup",
+          "url": "/vendorpricesetup"
         },
         {
-            "name":"Customer List",
-            "url":"/manageusers"
+          "name": "Selling Price Markup Setup",
+          "url": "/markuppricesetup"
         },
         {
-            "name":"Vendor List",
-            "url":"/vendorlist"
+          "name": "Discount Setup",
+          "url": "/salediscountlist"
         },
         {
-            "name":"Order List",
-            "url":"/orderlist"
-        },
-        {
-            "name":"Configuration",
-            "url":"/configuration"
-        },
-        {
-            "name":"Vouchers",
-            "url":"/voucherdiscountlist"
-        },
-        {
-            "name":"Role Management",
-            "url":"/userconfiguration"
+          "name": "Price Run",
+          "url": "/priceupdate"
         }
-       
-    ]
+      ]
+    },
+    {
+      "name": "Customer List",
+      "url": "/manageusers"
+    },
+    {
+      "name": "Vendor List",
+      "url": "/vendorlist"
+    },
+    {
+      "name": "Order List",
+      "url": "/orderlist"
+    },
+    {
+      "name": "Configuration",
+      "url": "/configuration"
+    },
+    {
+      "name": "Vouchers",
+      "url": "/voucherdiscountlist"
+    },
+    {
+      "name": "Role Management",
+      "url": "/userconfiguration"
+    },
+    {
+      "name": "Inventory & Shipping Setup",
+      "url": "inventory-shipping-setup",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/Inventory+%26+ShippingsetupNSS.png",
+      "submenu": [
+        {
+          "name": "Holiday Manager",
+          "url": "/holiday-manager",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/HolidayNSS.png"
+        },
+        {
+          "name": "Warehouse",
+          "url": "/warehouse",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/Warehouse+-++OutlineNSS.png"
+        },
+        {
+          "name": "Inventory",
+          "url": "/inventory",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/InventoryNSS.png"
+        }
+      ]
+    }
+  ]
 }

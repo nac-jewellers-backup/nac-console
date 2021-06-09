@@ -1,24 +1,23 @@
-import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import { useStyles } from './styles';
-import { withRouter } from 'react-router-dom';
-import SideBar from '../SideBar';
-import { GlobalContext } from '../../context';
-import { CssBaseline } from '@material-ui/core';
-import clsx from 'clsx';
-import './style.css'
-
+import React from "react";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import Badge from "@material-ui/core/Badge";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import MailIcon from "@material-ui/icons/Mail";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import { useStyles } from "./styles";
+import { withRouter } from "react-router-dom";
+import SideBar from "../SideBar";
+import { GlobalContext } from "../../context";
+import { CssBaseline } from "@material-ui/core";
+import clsx from "clsx";
+import "./style.css";
 
 function PAppBar() {
   const classes = useStyles();
@@ -42,46 +41,43 @@ function PAppBar() {
     handleMobileMenuClose();
   }
   function handlelogout() {
-    localStorage.removeItem("accesstoken")
-    window.location = '/'
+    localStorage.removeItem("accesstoken");
+    window.location = "/";
   }
 
-  
-  function handleDrawer(){
-    setGlobalCtx({ ...globalCtx, sideBarOpen: !globalCtx.sideBarOpen })
+  function handleDrawer() {
+    setGlobalCtx({ ...globalCtx, sideBarOpen: !globalCtx.sideBarOpen });
   }
 
   function handleMobileMenuOpen(event) {
     setMobileMoreAnchorEl(event.currentTarget);
-
   }
 
-  const menuId = 'primary-search-account-menu';
+  const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
       id={menuId}
       keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={handlelogout}>Logout</MenuItem>
-
     </Menu>
   );
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
       id={mobileMenuId}
       keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
@@ -117,9 +113,12 @@ function PAppBar() {
 
   return (
     <>
-      <AppBar position="fixed" className={clsx(classes.appBar, {
-              [classes.appBarShift]: globalCtx.sideBarOpen,
-            })} >
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: globalCtx.sideBarOpen,
+        })}
+      >
         <Toolbar>
           <IconButton
             className="hide"
@@ -134,10 +133,10 @@ function PAppBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography style={{color: '#fff'}}  variant="h4" noWrap>
-           Stylori
+          <Typography style={{ color: "#fff" }} variant="h4" noWrap>
+            Stylori
           </Typography>
-          
+
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {/* <IconButton aria-label="show 4 new mails" color="inherit">
@@ -182,21 +181,20 @@ function PAppBar() {
 
 const PrimaryAppBar = withRouter(PAppBar);
 
-const MainWrapper = props => {
+const MainWrapper = (props) => {
   const classes = useStyles();
   let { component: Component, ...rest } = props;
 
-  return(
-    <main className={classes.content} >
-        <div className={classes.toolbar} />
-        <Component {...rest} />
-      </main>
-  )
-}
+  return (
+    <main className={classes.content}>
+      <div className={classes.toolbar} />
+      <Component {...rest} />
+    </main>
+  );
+};
 
 export const withAppBar = (component, props) => {
-
-  return(
+  return (
     <>
       <CssBaseline />
       <PrimaryAppBar {...props} />
@@ -204,6 +202,6 @@ export const withAppBar = (component, props) => {
       <MainWrapper component={component} />
     </>
   );
-}
+};
 
 export default PrimaryAppBar;
