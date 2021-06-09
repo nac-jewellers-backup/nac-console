@@ -78,6 +78,8 @@ function SideBar() {
       //  setIsreload(true)
     }
     //setGlobalCtx({...globalCtx,"accesspages":pages})
+
+    console.log("pagess",accesspages )
   }, []);
   function handleListItemClick(event, index) {
     setGlobalCtx({ ...globalCtx, selectedIndex: index });

@@ -1488,7 +1488,60 @@ const VERIFYTAGNO = gql`
   }
 `;
 
+const ALLBANNERS = `
+query MyQuery {
+  allBanners
+  {
+    nodes {
+      id
+      mobile
+      position
+      url
+      web
+      urlParam 
+    }
+  }
+}
+`;
+
+const CREATEALLBANNERS = `
+mutation MyMutation(
+  $now: Datetime!
+  $url: String
+  $web: String
+  $mobile: String
+  $position: Int
+) {
+  createBanner(
+    input: {
+      banner: {
+        createdAt: $now
+        updatedAt: $now
+        mobile: $mobile
+        position: $position
+        url: $url
+        web: $web
+        urlParam : "allBanners"
+      }
+    }
+  ) {
+    clientMutationId
+     banner {
+      id
+      mobile
+      position
+      updatedAt
+      url
+      web
+      createdAt
+    }
+  }
+}
+`;
+
 export {
+  ALLBANNERS,
+  CREATEALLBANNERS,
   PRODUCTCATEGORY,
   PRODUCTLIST,
   PRODUCTEDIT,
