@@ -66,6 +66,7 @@ import {
   HolidayManager,
   Inventory,
   Warehouse,
+  Banner
 } from "../screens";
 import PrivateRoute from "./PrivateRoute";
 import { NetworkProvider } from "../context/NetworkContext";
@@ -100,6 +101,7 @@ const MainApp = () => {
           <PrivateRoute path={route.materiallist} component={CategoryList} />
           <PrivateRoute path={route.editCategory} component={Editcategory} />
           <PrivateRoute path={route.materiallistpage} component={newmaterial} />
+          <PrivateRoute path={route.banner} component={Banner} />
           <PrivateRoute
             path={route.producttypes}
             component={Masterproducttypes}

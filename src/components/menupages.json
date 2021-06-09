@@ -51,6 +51,10 @@
       "url": "/voucherdiscountlist"
     },
     {
+      "name": "Banner",
+      "url": "/banner"
+    },
+    {
       "name": "Role Management",
       "url": "/userconfiguration"
     },

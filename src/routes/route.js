@@ -11,6 +11,7 @@ const route = {
   userorders: "/orderlist/:userid",
   userwishlist: "/userwishlist/:userid",
   address: "/address/:userid",
+  banner: "/banner",
 
   materiallist: "/material",
   mastermaterial: "/materialmaster",
