@@ -17,39 +17,39 @@ import {
   DialogContent,
   DialogActions,
 } from "@material-ui/core";
-import {Something} from "./dummySS";
-import {CREATEALLBANNERS,ALLBANNERS} from "../../graphql/query";
-import { GRAPHQL_DEV_CLIENT } from "../../config"
+import { Something } from "./dummySS";
+import { CREATEALLBANNERS, ALLBANNERS } from "../../graphql/query";
+import { GRAPHQL_DEV_CLIENT } from "../../config";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      width: "100%",
-      marginTop: theme.spacing(3),
+  root: {
+    width: "100%",
+    marginTop: theme.spacing(3),
+  },
+  imagecontainer: {
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
     },
-    imagecontainer: {
-      display: "flex",
-      "& > *": {
-        margin: theme.spacing(1),
-      },
-    },
-    table: {
-      minWidth: 500,
-    },
-    tableWrapper: {
-      overflowX: "auto",
-    },
-    link: {
-      display: "flex",
-    },
-    icon: {
-      marginRight: theme.spacing(0.5),
-      width: 20,
-      height: 20,
-    },
-    link_style: {
-      color: "#000",
-    },
-  }));
+  },
+  table: {
+    minWidth: 500,
+  },
+  tableWrapper: {
+    overflowX: "auto",
+  },
+  link: {
+    display: "flex",
+  },
+  icon: {
+    marginRight: theme.spacing(0.5),
+    width: 20,
+    height: 20,
+  },
+  link_style: {
+    color: "#000",
+  },
+}));
 
 function BannerPage(props) {
   const classes = useStyles();
@@ -83,8 +83,7 @@ function BannerPage(props) {
         .catch(console.error);
     }
     allbannerfetch();
-    console.log("fetch", allbanner)
-
+    console.log("fetch", allbanner);
   }, []);
 
   const handleClickOpen = () => {
@@ -101,14 +100,14 @@ function BannerPage(props) {
 
   const onsubmitvalue = async () => {
     let create_banner_data = {
-      position: createlandingbanner.position,
+      position: Number(createlandingbanner.position),
       url: createlandingbanner.link,
       mobile: createlandingbanner.mobile,
       web: createlandingbanner.web,
       now: new Date().toISOString(),
     };
-    debugger
-    console.log("create_banner_data",create_banner_data)
+    debugger;
+    console.log("create_banner_data", create_banner_data);
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
@@ -118,19 +117,23 @@ function BannerPage(props) {
         variables: create_banner_data,
       }),
     };
+    debugger;
+    console.log(opts);
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
+        debugger;
+
         setOpen(false);
         window.location.reload();
-        console.log("isokay", fatchvalue)
+        console.log("isokay", fatchvalue);
       })
       .catch(console.error);
-  }
+  };
 
-    return (
-        <div>
-            <Paper className={classes.root}>
+  return (
+    <div>
+      <Paper className={classes.root}>
         <Grid container item xs={12} style={{ padding: "16px" }} sm={12} alignItems={"flex-end"}>
           <Grid fullwidth item xs={9} sm={9}>
             <Typography component="h6" variant="h6" style={{ fontWeight: "bold" }}>
@@ -145,8 +148,7 @@ function BannerPage(props) {
           </Grid>
         </Grid>
 
-        <Dialog  open={open} onClose={handleClose}
-        >
+        <Dialog open={open} onClose={handleClose}>
           <DialogTitle id="form-dialog-title">Stylori Landing Page : </DialogTitle>
           <DialogContent>
             <TextField
@@ -193,7 +195,7 @@ function BannerPage(props) {
           </DialogContent>
           <DialogActions>
             <Button onClick={onsubmitvalue}>Submit</Button>
-            <Button onClick= {handleClose}> Cancel</Button>
+            <Button onClick={handleClose}> Cancel</Button>
           </DialogActions>
         </Dialog>
 
@@ -228,9 +230,10 @@ function BannerPage(props) {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <Button 
-                    // onClick={() => handleDelete(val.id)}
-                     style={{ color: "#fff", backgroundColor: "red" }}>
+                    <Button
+                      // onClick={() => handleDelete(val.id)}
+                      style={{ color: "#fff", backgroundColor: "red" }}
+                    >
                       Delete
                     </Button>
                   </TableCell>
@@ -240,8 +243,8 @@ function BannerPage(props) {
           </Table>
         </div>
       </Paper>
-        </div>
-    );
+    </div>
+  );
 }
 
 export default BannerPage;
