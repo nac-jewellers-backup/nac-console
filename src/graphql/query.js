@@ -1490,7 +1490,7 @@ const VERIFYTAGNO = gql`
 
 const ALLBANNERS = `
 query MyQuery {
-  allBanners
+  allBanners(condition: {urlParam: "landing"})
   {
     nodes {
       id
@@ -1521,7 +1521,7 @@ mutation MyMutation(
         position: $position
         url: $url
         web: $web
-        urlParam : "allBanners"
+        urlParam : "landing"
       }
     }
   ) {
@@ -1539,9 +1539,131 @@ mutation MyMutation(
 }
 `;
 
+const ALLLISTINGBANNERS = `
+query MyQuery {
+  allBanners(condition: {urlParam: "listing"})
+  {
+    nodes {
+      id
+      mobile
+      position
+      url
+      web
+      urlParam 
+    }
+  }
+}
+`;
+
+const CREATELISTINGBANNERS = `
+mutation MyMutation(
+  $now: Datetime!
+  $url: String
+  $web: String
+  $mobile: String
+  $position: Int
+) {
+  createBanner(
+    input: {
+      banner: {
+        createdAt: $now
+        updatedAt: $now
+        mobile: $mobile
+        position: $position
+        url: $url
+        web: $web
+        urlParam : "listing"
+      }
+    }
+  ) {
+    clientMutationId
+     banner {
+      id
+      mobile
+      position
+      updatedAt
+      url
+      web
+      createdAt
+    }
+  }
+}
+`;
+
+const ALLSPECIFICLISTINGPAGE = `
+query MyQuery {
+  allBanners
+  (condition: {url: "specificListingPage"}) 
+  {
+    nodes {
+      id
+      mobile
+      position
+      web
+      urlParam
+    }
+  }
+}
+`;
+
+const CREATESPECIFICLISTINGPAGE = `
+mutation MyMutation(
+  $now: Datetime!
+  $web: String
+  $mobile: String
+  $urlParam :String
+) {
+  createBanner(
+    input: {
+      banner: {
+        createdAt: $now
+        updatedAt: $now
+        mobile: $mobile
+        url: "specificListingPage"
+        web: $web
+        urlParam : $urlParam
+      }
+    }
+  ) {
+    clientMutationId
+    banner {
+      id
+      mobile
+      position
+      updatedAt
+      url
+      web
+      createdAt
+    }
+  }
+}
+`;
+
+const DELETEALLBANNER = `
+mutation MyMutation($id : Int!) {
+  deleteBannerById(input: {id: $id}) {
+    banner {
+      id
+      nodeId
+      mobile
+      position
+      updatedAt
+      url
+      web
+      createdAt
+    }
+  }
+}
+`;
+
 export {
   ALLBANNERS,
+  ALLLISTINGBANNERS,
+  ALLSPECIFICLISTINGPAGE,
   CREATEALLBANNERS,
+  CREATELISTINGBANNERS,
+  CREATESPECIFICLISTINGPAGE,
+  DELETEALLBANNER,
   PRODUCTCATEGORY,
   PRODUCTLIST,
   PRODUCTEDIT,

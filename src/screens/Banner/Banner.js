@@ -1,18 +1,18 @@
 import React from 'react';
 import { withRouter } from "react-router-dom";
-import BannerPage from "../../components/BannerPage"
+import BannerPage from "../../components/BannerPage";
+import BannerListingPage from "../../components/BannerPage/BannerListingPage";
+import BannerSpecificPage from "../../components/BannerPage/BannerSpecificPage";
 import Container from '@material-ui/core/Container';
-// import {Input} from '../../components/Input.js'
-
-// import "./Dashboard.css"
 
 class Banner_ extends React.Component {
   
-   
   render() {
   return (
     <Container maxWidth="false" disableGutters>
      <BannerPage />
+     <BannerListingPage />
+     <BannerSpecificPage />
   </Container>
          
   );

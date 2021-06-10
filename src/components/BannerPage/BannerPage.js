@@ -106,8 +106,7 @@ function BannerPage(props) {
       web: createlandingbanner.web,
       now: new Date().toISOString(),
     };
-    debugger;
-    console.log("create_banner_data", create_banner_data);
+
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
@@ -117,16 +116,12 @@ function BannerPage(props) {
         variables: create_banner_data,
       }),
     };
-    debugger;
-    console.log(opts);
+
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
-        debugger;
-
         setOpen(false);
         window.location.reload();
-        console.log("isokay", fatchvalue);
       })
       .catch(console.error);
   };
