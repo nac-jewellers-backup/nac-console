@@ -1488,6 +1488,22 @@ const VERIFYTAGNO = gql`
   }
 `;
 
+const ALLBANNERSCOMPLETE = `
+query MyQuery {
+  allBanners
+  {
+    nodes {
+      id
+      mobile
+      position
+      url
+      web
+      urlParam 
+    }
+  }
+}
+`;
+
 const ALLBANNERS = `
 query MyQuery {
   allBanners(condition: {urlParam: "landing"})
