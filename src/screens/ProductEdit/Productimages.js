@@ -168,65 +168,65 @@ export default function Productimages(props) {
       setProductimages(productimgs);
     }
   }
-  const handlenewAssetChange = (e) => {
-    const files = e.target.files;
-    Object.keys(files).map((file, index) => {
-      // const size = files[index].size;
-      var imagecount = 1;
-      if (productimages) {
-        imagecount = image_count + 1;
-      }
-      let imagename = product_id + "-" + imagecount + props.color.charAt(0);
-      const fileParts = files[index].type.split("/");
-      const fileType = fileParts[1];
+  // const handlenewAssetChange = (e) => {
+  //   const files = e.target.files;
+  //   Object.keys(files).map((file, index) => {
+  //     // const size = files[index].size;
+  //     var imagecount = 1;
+  //     if (productimages) {
+  //       imagecount = image_count + 1;
+  //     }
+  //     let imagename = product_id + "-" + imagecount + props.color.charAt(0);
+  //     const fileParts = files[index].type.split("/");
+  //     const fileType = fileParts[1];
 
-      uploadimagetoserver(
-        files[index],
-        fileType,
-        imagename,
-        product_id,
-        {},
-        false
-      );
-    });
-  };
-  const handleAssetChange = (e, imageposition, category, endPoint) => {
-    const files = e.target.files;
-    Object.keys(files).map((file, index) => {
-      const size = files[index].size;
-      alert(imageposition);
-      let productimageobj = {};
-      productimages.forEach((content) => {
-        if (
-          content.productColor === props.color &&
-          imageposition === content.imagePosition
-        ) {
-          productimageobj = content;
-        }
-      });
-      var prodid = productimageobj.productId;
-      var prodcolor = productimageobj.productColor;
-      var imagecount = 1;
-      let randomnum = makeid(1, "", 1);
-      if (productimages) {
-        //  imagecount = image_count + 1;
-      }
-      let imagename =
-        prodid + "-" + imageposition + randomnum + prodcolor.charAt(0);
-      const fileParts = files[index].type.split("/");
-      const fileType = fileParts[1];
-      //alert(imagename)
-      uploadimagetoserver(
-        files[index],
-        fileType,
-        imagename,
-        prodid,
-        productimageobj,
-        true
-      );
-      // alert(imagename)
-    });
-  };
+  //     uploadimagetoserver(
+  //       files[index],
+  //       fileType,
+  //       imagename,
+  //       product_id,
+  //       {},
+  //       false
+  //     );
+  //   });
+  // };
+  // const handleAssetChange = (e, imageposition, category, endPoint) => {
+  //   const files = e.target.files;
+  //   Object.keys(files).map((file, index) => {
+  //     const size = files[index].size;
+  //     alert(imageposition);
+  //     let productimageobj = {};
+  //     productimages.forEach((content) => {
+  //       if (
+  //         content.productColor === props.color &&
+  //         imageposition === content.imagePosition
+  //       ) {
+  //         productimageobj = content;
+  //       }
+  //     });
+  //     var prodid = productimageobj.productId;
+  //     var prodcolor = productimageobj.productColor;
+  //     var imagecount = 1;
+  //     let randomnum = makeid(1, "", 1);
+  //     if (productimages) {
+  //       //  imagecount = image_count + 1;
+  //     }
+  //     let imagename =
+  //       prodid + "-" + imageposition + randomnum + prodcolor.charAt(0);
+  //     const fileParts = files[index].type.split("/");
+  //     const fileType = fileParts[1];
+  //     //alert(imagename)
+  //     uploadimagetoserver(
+  //       files[index],
+  //       fileType,
+  //       imagename,
+  //       prodid,
+  //       productimageobj,
+  //       true
+  //     );
+  //     // alert(imagename)
+  //   });
+  // };
   return (
     <Paper className={classes.root}>
       <Card className={classes.card}>
@@ -267,14 +267,14 @@ export default function Productimages(props) {
                     }}
                     className="container"
                   >
-                    <input
+                    {/* <input
                       type="file"
                       className="custom-file-input"
                       multiple
                       onChange={(e) =>
                         handleAssetChange(e, url.imagePosition, "", "")
                       }
-                    ></input>
+                    ></input> */}
 
                     <img
                       src={
@@ -305,7 +305,7 @@ export default function Productimages(props) {
                 {/* ) : null} */}
               </React.Fragment>
             ))}
-            <Grid
+            {/* <Grid
               item
               style={{
                 width: "150px",
@@ -341,7 +341,7 @@ export default function Productimages(props) {
                   ></input>
                 </label>
               }
-            </Grid>
+            </Grid> */}
           </Grid>
         </CardContent>
       </Card>

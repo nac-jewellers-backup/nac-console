@@ -1013,16 +1013,16 @@ export function Component(props) {
               <GemstoneDetails gemstone={productCtx.gemstonelist} />{" "}
             </>
           ) : null}
-          <Grid
+          {/* <Grid
             style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}
           >
             Variant Creation
-          </Grid>
+          </Grid> */}
 
           <Grid style={{}}>
             {/* <Grid style={{ fontSize: ".9rem", display: "flex", alignItems: "center" }}>Create Variant</Grid> */}
 
-            <ExpansionPanel expanded={expand} onChange={handleChange()}>
+            {/* <ExpansionPanel expanded={expand} onChange={handleChange()}>
               <ExpansionPanelSummary
                 expandIcon={expand ? <CloseIcon /> : <AddIcon />}
                 aria-controls="panel1c-content"
@@ -1043,14 +1043,14 @@ export function Component(props) {
                   productId={prod_id}
                 />
               </ExpansionPanelDetails>
-              <Divider />
+              <Divider /> */}
               {/* <ExpansionPanelActions>
                       <Button size="small">Cancel</Button>
                       <Button size="small" color="primary">
                         Save
                       </Button>
                     </ExpansionPanelActions> */}
-            </ExpansionPanel>
+            {/* </ExpansionPanel> */}
           </Grid>
           <Grid
             style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}

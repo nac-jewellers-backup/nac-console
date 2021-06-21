@@ -2,61 +2,75 @@
   "menus": [
     {
       "name": "Product List",
-      "url": "/productlist"
+      "url": "/productlist",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/ProductListNSS.svg"
     },
     {
       "name": "Pricing",
       "url": "Pricing",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/PricingNSS.svg",
       "submenu": [
         {
           "name": "Gold Price Setup",
-          "url": "/goldpriceupdate"
+          "url": "/goldpriceupdate",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/GoldPriceSetupNSS.svg"
         },
         {
           "name": "Vendor Price Setup",
-          "url": "/vendorpricesetup"
+          "url": "/vendorpricesetup",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/VendorPriceNSS.svg"
         },
         {
           "name": "Selling Price Markup Setup",
-          "url": "/markuppricesetup"
+          "url": "/markuppricesetup",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/SellingPriceMarkupNSS.svg"
         },
         {
           "name": "Discount Setup",
-          "url": "/salediscountlist"
+          "url": "/salediscountlist",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/DiscountSetupNSS.svg"
         },
         {
           "name": "Price Run",
-          "url": "/priceupdate"
+          "url": "/priceupdate",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/PricerunNSS.svg"
         }
       ]
     },
     {
       "name": "Customer List",
-      "url": "/manageusers"
+      "url": "/manageusers",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/CustomerListNSS.svg"
     },
     {
       "name": "Vendor List",
-      "url": "/vendorlist"
+      "url": "/vendorlist",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/VendorListNSS.svg"
     },
     {
       "name": "Order List",
-      "url": "/orderlist"
+      "url": "/orderlist",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/OrderListNSS.svg"
     },
     {
       "name": "Configuration",
-      "url": "/configuration"
+      "url": "/configuration",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/ConfigurationNSS.svg"
     },
     {
       "name": "Vouchers",
-      "url": "/voucherdiscountlist"
-    },
-    {
-      "name": "Banner",
-      "url": "/banner"
+      "url": "/voucherdiscountlist",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/VouchersNSS.svg"
     },
     {
       "name": "Role Management",
-      "url": "/userconfiguration"
+      "url": "/userconfiguration",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/RoleManagementNSS.svg"
+    },
+    {
+      "name": "Banners",
+      "url": "/banners",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/BannerNSS.svg"
     },
     {
       "name": "Inventory & Shipping Setup",

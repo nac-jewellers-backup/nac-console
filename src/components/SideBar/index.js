@@ -79,7 +79,7 @@ function SideBar() {
     }
     //setGlobalCtx({...globalCtx,"accesspages":pages})
 
-    console.log("pagess",accesspages )
+    console.log("pagess", accesspages);
   }, []);
   function handleListItemClick(event, index) {
     setGlobalCtx({ ...globalCtx, selectedIndex: index });
@@ -102,13 +102,7 @@ function SideBar() {
         open={globalCtx.sideBarOpen}
       >
         <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawer}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
+          <IconButton onClick={handleDrawer}>{theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
         </div>
         <Divider />
 
@@ -121,46 +115,26 @@ function SideBar() {
                     <>
                       <ListItem button onClick={handleClick(menuobj.name)}>
                         <ListItemIcon>
-                          <InboxIcon />
+                          {/* <InboxIcon /> */}
+                          <img style={{ width: "18px" }} src={menuobj.icon} alt="NAC Console"></img>
                         </ListItemIcon>
                         <ListItemText primary={menuobj.name} />
-                        {globalCtx.isExpand &&
-                        globalCtx.optionname === menuobj.name ? (
-                          <ExpandLess />
-                        ) : (
-                          <ExpandMore />
-                        )}
+                        {globalCtx.isExpand && globalCtx.optionname === menuobj.name ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
-                      <Collapse
-                        in={
-                          globalCtx.isExpand &&
-                          globalCtx.optionname === menuobj.name
-                        }
-                        timeout="auto"
-                        unmountOnExit
-                      >
+                      <Collapse in={globalCtx.isExpand && globalCtx.optionname === menuobj.name} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
                           {menuobj.submenu.map((submenuobj, subindex) => (
                             <React.Fragment key={subindex}>
-                              {accesspages &&
-                              accesspages.indexOf(submenuobj.url) > -1 ? (
-                                <Link
-                                  underline="none"
-                                  component={RouterLink}
-                                  to={submenuobj.url}
-                                >
+                              {accesspages && accesspages.indexOf(submenuobj.url) > -1 ? (
+                                <Link underline="none" component={RouterLink} to={submenuobj.url}>
                                   <ListItem
                                     button
                                     className={classes.nested}
-                                    selected={
-                                      globalCtx.selectedIndex === subindex
-                                    }
-                                    onClick={(event) =>
-                                      handleListItemClick(event, subindex)
-                                    }
+                                    selected={globalCtx.selectedIndex === subindex}
+                                    onClick={(event) => handleListItemClick(event, subindex)}
                                   >
                                     <ListItemIcon>
-                                      <StarBorder />
+                                      <img style={{ width: "18px" }} src={submenuobj.icons} alt="NAC Console"></img>
                                     </ListItemIcon>
                                     <ListItemText primary={submenuobj.name} />
                                   </ListItem>
@@ -177,11 +151,7 @@ function SideBar() {
                 <>
                   {" "}
                   {accesspages && accesspages.indexOf(menuobj.url) > -1 ? (
-                    <Link
-                      underline="none"
-                      component={RouterLink}
-                      to={menuobj.url}
-                    >
+                    <Link underline="none" component={RouterLink} to={menuobj.url}>
                       <ListItem
                         button
                         key={"Product List"}
@@ -189,7 +159,11 @@ function SideBar() {
                         onClick={handleClick(menuobj.name)}
                       >
                         <ListItemIcon>
-                          <InboxIcon />{" "}
+                        <img
+                            style={{ width: "18px" }}
+                            src={menuobj.icon}
+                            alt="NAC Icon"
+                          ></img>
                         </ListItemIcon>
                         <ListItemText primary={menuobj.name} />
                       </ListItem>

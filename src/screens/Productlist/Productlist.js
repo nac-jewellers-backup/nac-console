@@ -84,21 +84,21 @@ export const Productlist = withRouter(
           console.log("smbcj");
         });
 
-      async function fetchCSVdata() {
-        responseCSV = await sendNetworkRequest("/productdetails", {}, {});
-        let responseData = responseCSV.res_json;
+      // async function fetchCSVdata() {
+      //   responseCSV = await sendNetworkRequest("/productdetails", {}, {});
+      //   let responseData = responseCSV.res_json;
 
-        if (responseCSV.statuscode === 200) {
-          let keyData = [];
+      //   if (responseCSV.statuscode === 200) {
+      //     let keyData = [];
 
-          for (const [key] of Object.entries(responseData[0])) {
-            keyData.push({ label: key, key: key });
-          }
+      //     for (const [key] of Object.entries(responseData[0])) {
+      //       keyData.push({ label: key, key: key });
+      //     }
 
-          console.log(keyData);
-          setDataCSV({ ...dataCSV, keyCSV: keyData, valueCSV: responseData });
-        }
-      }
+      //     console.log(keyData);
+      //     setDataCSV({ ...dataCSV, keyCSV: keyData, valueCSV: responseData });
+      //   }
+      // }
       // fetchCSVdata();
     }, []);
 
