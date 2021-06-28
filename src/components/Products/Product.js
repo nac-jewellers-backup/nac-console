@@ -358,7 +358,7 @@ const AddContact = (props) => {
       orderby: orderby ? orderby : orderBy,
     };
     let response = await sendNetworkRequest("/getproductlist", {}, bodydata);
-    debugger;
+    
     console.log(response);
     setProductlists(response.products.rows);
     setPageCount(response.products.count);
@@ -425,7 +425,7 @@ const AddContact = (props) => {
             {stableSort(productlists, getComparator(order, orderBy)).map((row, index) => (
               <TableRow key={row.product_id}>
                 <TableCell component="th" scope="row">
-                  {row.product_id}
+                  {row?.trans_sku_lists?.[0].sku_id}
                   <Button onClick={(e) => ProductEdit(row.product_id)}>
                     <EditIcon />
                   </Button>
