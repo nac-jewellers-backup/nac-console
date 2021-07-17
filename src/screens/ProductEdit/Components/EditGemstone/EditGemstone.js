@@ -49,22 +49,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EditGemstone = (props) => {
-  debugger;
-  console.log(props);
   const { diamond, open, onClose, onApply, className, ...rest } = props;
   const initialValues = {
     id: diamond.id,
-    gemstonesettings: diamond.gemstonesettings ? diamond.gemstonesettings : "",
-    gemstonecount: diamond.gemstonecount ? diamond.gemstonecount : "",
-    gemstoneweight: diamond.gemstoneweight ? diamond.gemstoneweight : null,
-    gemstonesize: diamond.gemstonesize ? diamond.gemstonesize : null,
-    gemstoneitemname: diamond.gemstoneitemname ?? "",
-    gemstonesubitemname: diamond.gemstonesubitemname ?? "",
-    gemstonedescription: diamond.gemstonedescription ?? "",
-    gemstoneshape: diamond.gemstoneshape ? diamond.gemstoneshape : null,
+    gemstonesettings: diamond?.gemstonesettings ?? null,
+    gemstonecount: diamond?.gemstonecount ?? "",
+    gemstoneweight: diamond?.gemstoneweight ?? "",
+    gemstonesize: diamond?.gemstonesize ?? "",
+    gemstoneitemname: diamond?.gemstoneitemname ?? "",
+    gemstonesubitemname: diamond?.gemstonesubitemname ?? "",
+    gemstonedescription: diamond?.gemstonedescription ?? "",
+    gemstoneshape: diamond?.gemstoneshape ?? null,
+    gemstonetype: diamond?.gemstonetype ?? null,
   };
   const [value, setValue] = useState("");
   const { productCtx, setProductCtx } = React.useContext(ProductContext);
+
   const [editcontent, setEditcontent] = React.useState({
     ...initialValues,
   });
@@ -136,7 +136,7 @@ const EditGemstone = (props) => {
             id="size"
             margin="dense"
             value={editcontent.gemstonesize}
-            placeholder={"Weight"}
+            label="Size"
             name="size"
             autoComplete="size"
             onChange={handleInputChange("gemstonesize")}
@@ -145,9 +145,9 @@ const EditGemstone = (props) => {
             variant="outlined"
             fullWidth
             id="size"
+            label="Weight"
             margin="dense"
             value={editcontent.gemstoneweight}
-            placeholder={"Weight"}
             name="size"
             autoComplete="size"
             onChange={handleInputChange("gemstoneweight")}
@@ -162,7 +162,7 @@ const EditGemstone = (props) => {
             name="size"
             type="number"
             autoComplete="size"
-            onChange={handleInputChange("diamondcount")}
+            onChange={handleInputChange("gemstonecount")}
             value={editcontent.gemstonecount}
           />
           <Autocomplete
@@ -191,10 +191,33 @@ const EditGemstone = (props) => {
           <Autocomplete
             id="free-solo-2-demo"
             className={classes.fixedTag}
-            getOptionLabel={(option) => option.label}
+            getOptionLabel={(option) => option.name}
             value={editcontent.gemstoneshape}
-            options={productCtx.masterData.gemstoneshape}
+            options={productCtx.masterData.gemstonshapes}
             onChange={handleoptionChange("gemstoneshape")}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip variant="outlined" size="small" label={option.name} {...getTagProps({ index })} />
+              ))
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Shape"
+                margin="dense"
+                variant="outlined"
+                fullWidth
+                InputProps={{ ...params.InputProps, type: "search" }}
+              />
+            )}
+          />
+          <Autocomplete
+            id="free-solo-2-demo"
+            className={classes.fixedTag}
+            getOptionLabel={(option) => option.label}
+            value={editcontent.gemstonetype}
+            options={productCtx.masterData.gemstontypes}
+            onChange={handleoptionChange("gemstonetype")}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (
                 <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
@@ -203,7 +226,7 @@ const EditGemstone = (props) => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label=" Shape"
+                label="Type"
                 margin="dense"
                 variant="outlined"
                 fullWidth

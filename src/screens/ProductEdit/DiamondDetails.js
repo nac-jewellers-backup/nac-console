@@ -31,9 +31,9 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 const columns = [
-  { id: "Diamond", label: "Diamond" },
-  { id: "ItemName", label: "Item Name" },
-  { id: "SubItemName", label: "SubItem Name" },
+  { id: "Diamond Type", label: "Diamond Type" },
+  { id: "Diamond Name", label: "Diamond Name" },
+  { id: " SubItemName", label: "  Sub Item Name" },
   { id: "Description", label: "Description" },
   { id: "Colour", label: "Colour" },
   { id: "Clarity", label: "Clarity" },
@@ -203,8 +203,7 @@ export default function DiamondDetails(props) {
   });
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.diamond && props.diamond.length - page * rowsPerPage);
   function DiamondEdit(diamondData) {
-    debugger;
-    console.log(diamondData);
+   
     setDiamondEditObject({
       ...diamondEditObject,
       edit: JSON.parse(JSON.stringify(diamondData)),
@@ -242,6 +241,7 @@ export default function DiamondDetails(props) {
     setOpenedit(true);
   }
   async function DiamondSave(diamondobj) {
+   
     // alert(JSON.stringify(productCtx.diamondsettings))
     // alert(JSON.stringify(productCtx.diamondshape))
     // alert(JSON.stringify(productCtx.diamondcount))
@@ -263,6 +263,9 @@ export default function DiamondDetails(props) {
           bodydata["itemname"] = diamondobj.diamonditemname;
           bodydata["subitemname"] = diamondobj.diamondsubitemname;
           bodydata["description"] = diamondobj.diamonddescription;
+          bodydata["color"] = diamondobj.diamondcolor?.label;
+          bodydata["clarity"] = diamondobj?.diamondclarity?.label;
+          bodydata["diamondtype"] = diamondobj.diamondtype?.label;
           return diamondListData;
         }
         return diamondListData;
@@ -311,6 +314,7 @@ export default function DiamondDetails(props) {
       });
       handleClick();
     }
+    window.location.reload();
   }
   function CancelEdit(diamondData) {
     setBtnEdit({ ...btnEdit, id: "", action: false });

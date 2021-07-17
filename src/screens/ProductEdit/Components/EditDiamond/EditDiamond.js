@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EditDiamond = (props) => {
-  debugger;
-  console.log(props);
+
+
   const { diamond, open, onClose, onApply, className, ...rest } = props;
   const initialValues = {
     id: diamond.id,
@@ -61,9 +61,13 @@ const EditDiamond = (props) => {
     diamonditemname: diamond.diamonditemname ?? "",
     diamondsubitemname: diamond.diamondsubitemname ?? "",
     diamonddescription: diamond.diamonddescription ?? "",
+    diamondclarity: diamond.diamondClarity ?? "",
+    diamondtype: diamond.diamondType ?? "",
+    diamondcolor: diamond.diamondColour ?? "",
   };
   const [value, setValue] = useState("");
   const { productCtx, setProductCtx } = React.useContext(ProductContext);
+ 
   const [editcontent, setEditcontent] = React.useState({
     ...initialValues,
   });
@@ -103,7 +107,7 @@ const EditDiamond = (props) => {
             autoComplete="size"
             onChange={handleInputChange("diamonditemname")}
           />{" "}
-          <TextField
+          {/* <TextField
             variant="outlined"
             fullWidth
             id="size"
@@ -114,7 +118,7 @@ const EditDiamond = (props) => {
             name="size"
             autoComplete="size"
             onChange={handleInputChange("diamondsubitemname")}
-          />{" "}
+          />{" "} */}
           <TextField
             variant="outlined"
             fullWidth
@@ -149,7 +153,6 @@ const EditDiamond = (props) => {
             name="size"
             type="number"
             autoComplete="size"
-          
             onChange={handleInputChange("diamondcount")}
             value={editcontent.diamondcount}
           />
@@ -172,7 +175,6 @@ const EditDiamond = (props) => {
                 margin="dense"
                 variant="outlined"
                 fullWidth
-                label="Setting"
                 InputProps={{ ...params.InputProps, type: "search" }}
               />
             )}
@@ -197,6 +199,75 @@ const EditDiamond = (props) => {
                 variant="outlined"
                 fullWidth
                 label="Shape"
+                InputProps={{ ...params.InputProps, type: "search" }}
+              />
+            )}
+          />
+          <Autocomplete
+            id="free-solo-2-demo"
+            className={classes.fixedTag}
+            getOptionLabel={(option) => option.label}
+            value={editcontent.diamondcolor}
+            options={productCtx.masterData.diamondcolors}
+            onChange={handleoptionChange("diamondcolor")}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
+              ))
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Diamond Color"
+                margin="dense"
+                variant="outlined"
+                fullWidth
+                InputProps={{ ...params.InputProps, type: "search" }}
+              />
+            )}
+          />{" "}
+          <Autocomplete
+            id="free-solo-2-demo"
+            className={classes.fixedTag}
+            getOptionLabel={(option) => option.label}
+            value={editcontent.diamondclarity}
+            options={productCtx.masterData.diamondclarities}
+            onChange={handleoptionChange("diamondclarity")}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
+              ))
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Diamond Clarity"
+                margin="dense"
+                variant="outlined"
+                fullWidth
+                InputProps={{ ...params.InputProps, type: "search" }}
+              />
+            )}
+          />
+          <Autocomplete
+            id="free-solo-2-demo"
+            className={classes.fixedTag}
+            getOptionLabel={(option) => option.label}
+            value={editcontent.diamondtype}
+            options={productCtx.masterData.diamondtypes}
+            onChange={handleoptionChange("diamondtype")}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
+              ))
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Diamond Type"
+                margin="dense"
+                variant="outlined"
+                fullWidth
                 InputProps={{ ...params.InputProps, type: "search" }}
               />
             )}

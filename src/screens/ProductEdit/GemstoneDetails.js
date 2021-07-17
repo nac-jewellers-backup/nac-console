@@ -30,14 +30,16 @@ function Alert(props) {
 }
 const columns = [
   { id: "Gemstone Type", label: "Gemstone Type" },
-  { id: "ItemName", label: "Item Name" },
+  { id: "Gemstone Name", label: "Gemstone Name" },
   { id: "SubItemName", label: "SubItem Name" },
   { id: "Description", label: "Description" },
-  { id: "Shape", label: "Shape" },
-  { id: "Setting", label: "Setting" },
+
   { id: "Size", label: "Size" },
   { id: "Weight", label: "Weight" },
   { id: "Number", label: "Number" },
+
+  { id: "Setting", label: "Setting" },
+  { id: "Shape", label: "Shape" },
   {
     id: "Edit",
     label: "Edit",
@@ -187,6 +189,7 @@ export default function GemstoneDetails(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { productCtx, setProductCtx } = React.useContext(ProductContext);
+
   const [btnEdit, setBtnEdit] = React.useState({
     action: false,
     id: "",
@@ -196,8 +199,7 @@ export default function GemstoneDetails(props) {
   });
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.gemstone && props.gemstone.length - page * rowsPerPage);
   function GemstoneEdit(gemstoneData) {
-    debugger;
-    console.log(gemstoneData);
+   
     setGemstoneEditObject({
       ...gemstoneEditObject,
       edit: JSON.parse(JSON.stringify(gemstoneData)),
@@ -216,6 +218,7 @@ export default function GemstoneDetails(props) {
       gemstoneitemname: gemstoneData.itemName,
       gemstonesubitemname: gemstoneData.subItemName,
       gemstonedescription: gemstoneData.description,
+      gemstonetype: gemstoneData.gemstoneType,
     });
     setEditcontent({
       id: gemstoneData.id,
@@ -231,6 +234,7 @@ export default function GemstoneDetails(props) {
       gemstoneitemname: gemstoneData.itemName,
       gemstonesubitemname: gemstoneData.subItemName,
       gemstonedescription: gemstoneData.description,
+      gemstonetype: gemstoneData.gemstoneType,
     });
     // setBtnEdit({ ...btnEdit, id: gemstoneData.id, action: true })
     setOpenedit(true);
@@ -261,8 +265,11 @@ export default function GemstoneDetails(props) {
           bodydata["itemname"] = gemdata.gemstoneitemname;
           bodydata["subitemname"] = gemdata.gemstonesubitemname;
           bodydata["description"] = gemdata.gemstonedescription;
+          bodydata["gemstonetype"] = gemdata.gemstonetype.label;
+        
           return gemstoneListData;
         }
+       
         return gemstoneListData;
       });
 
@@ -310,6 +317,7 @@ export default function GemstoneDetails(props) {
       });
       handleClick();
     }
+    window.location.reload();
   }
   function handleChangePage(event, newPage) {
     setPage(newPage);
@@ -364,74 +372,7 @@ export default function GemstoneDetails(props) {
                   <TableCell align={"center"} style={{ width: 40 }} component="th" scope="row">
                     {row.description}
                   </TableCell>
-                  {btnEdit.action && btnEdit.id == row.id ? (
-                    <TableCell component="th" scope="row">
-                      <Autocomplete
-                        id="free-solo-2-demo"
-                        className={classes.fixedTag}
-                        getOptionLabel={(option) => option.label}
-                        value={productCtx.gemstoneshape}
-                        options={productCtx.masterData.gemstonshapes}
-                        onChange={handleoptionChange("gemstoneshape")}
-                        renderTags={(value, getTagProps) =>
-                          value.map((option, index) => (
-                            <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
-                          ))
-                        }
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Gemstone Shape"
-                            margin="dense"
-                            variant="outlined"
-                            fullWidth
-                            InputProps={{
-                              ...params.InputProps,
-                              type: "search",
-                            }}
-                          />
-                        )}
-                      />
-                    </TableCell>
-                  ) : (
-                    <TableCell component="th" scope="row">
-                      {row.gemstoneShape}
-                    </TableCell>
-                  )}
-                  {btnEdit.action && btnEdit.id == row.id ? (
-                    <TableCell component="th" scope="row">
-                      <Autocomplete
-                        id="free-solo-2-demo"
-                        className={classes.fixedTag}
-                        getOptionLabel={(option) => option.label}
-                        value={productCtx.gemstonesettings}
-                        options={productCtx.masterData.gemstonesettings}
-                        onChange={handleoptionChange("gemstonesettings")}
-                        renderTags={(value, getTagProps) =>
-                          value.map((option, index) => (
-                            <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
-                          ))
-                        }
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Gemstone Setting"
-                            margin="dense"
-                            variant="outlined"
-                            fullWidth
-                            InputProps={{
-                              ...params.InputProps,
-                              type: "search",
-                            }}
-                          />
-                        )}
-                      />
-                    </TableCell>
-                  ) : (
-                    <TableCell component="th" scope="row">
-                      {row.gemstoneSetting}
-                    </TableCell>
-                  )}
+
                   {btnEdit.action && btnEdit.id == row.id ? (
                     <TableCell component="th" scope="row">
                       <Input
@@ -487,6 +428,75 @@ export default function GemstoneDetails(props) {
                   ) : (
                     <TableCell component="th" scope="row">
                       {row.stoneCount}
+                    </TableCell>
+                  )}
+
+                  {btnEdit.action && btnEdit.id == row.id ? (
+                    <TableCell component="th" scope="row">
+                      <Autocomplete
+                        id="free-solo-2-demo"
+                        className={classes.fixedTag}
+                        getOptionLabel={(option) => option.label}
+                        value={productCtx.gemstonesettings}
+                        options={productCtx.masterData.gemstonesettings}
+                        onChange={handleoptionChange("gemstonesettings")}
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
+                          ))
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Gemstone Setting"
+                            margin="dense"
+                            variant="outlined"
+                            fullWidth
+                            InputProps={{
+                              ...params.InputProps,
+                              type: "search",
+                            }}
+                          />
+                        )}
+                      />
+                    </TableCell>
+                  ) : (
+                    <TableCell component="th" scope="row">
+                      {row.gemstoneSetting}
+                    </TableCell>
+                  )}
+                  {btnEdit.action && btnEdit.id == row.id ? (
+                    <TableCell component="th" scope="row">
+                      <Autocomplete
+                        id="free-solo-2-demo"
+                        className={classes.fixedTag}
+                        getOptionLabel={(option) => option.label}
+                        value={productCtx.gemstoneshape}
+                        options={productCtx.masterData.gemstonshapes}
+                        onChange={handleoptionChange("gemstoneshape")}
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
+                          ))
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Gemstone Shape"
+                            margin="dense"
+                            variant="outlined"
+                            fullWidth
+                            InputProps={{
+                              ...params.InputProps,
+                              type: "search",
+                            }}
+                          />
+                        )}
+                      />
+                    </TableCell>
+                  ) : (
+                    <TableCell component="th" scope="row">
+                      {row.gemstoneShape}
                     </TableCell>
                   )}
                   {btnEdit.action && btnEdit.id == row.id ? (

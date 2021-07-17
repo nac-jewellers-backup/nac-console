@@ -1231,184 +1231,183 @@ query{
 }
 `;
 const PRODUCTEDIT = gql`
-    query MyQuery($productId: String!) {
-      productListByProductId(productId: $productId) {
-        productMetalcoloursByProductId {
-          nodes {
-            productColor
-            id
-            __typename
-          }
+  query MyQuery($productId: String!) {
+    productListByProductId(productId: $productId) {
+      productMetalcoloursByProductId {
+        nodes {
+          productColor
+          id
           __typename
         }
-        productName
-        productType
-        vendorCode
-        gender
-        isactive
-        prodDescription
-        productMaterialsByProductSku {
-          nodes {
-            materialName
-            __typename
-          }
-          __typename
-        }
-        productDiamondsByProductSku {
-          nodes {
-            itemName
-            subItemName
-            description
-    
-            diamondClarity
-            diamondColour
-            diamondSettings
-            diamondShape
-            diamondType
-            id
-            stoneCount
-            stoneWeight
-            __typename
-          }
-          __typename
-        }
-        productGemstonesByProductSku {
-          nodes {
-            itemName
-            subItemName
-            description
-    
-            gemstoneSetting
-            gemstoneShape
-            gemstoneSize
-            gemstoneType
-            gemstonsSize
-            id
-            stoneCount
-            stoneWeight
-            __typename
-          }
-          __typename
-        }
-        productImagesByProductId(orderBy: IMAGE_POSITION_ASC) {
-          nodes {
-            id
-            imagePosition
-            productId
-            imageUrl
-            ishover
-            isdefault
-            productColor
-            __typename
-          }
-          __typename
-        }
-        productPuritiesByProductId {
-          nodes {
-            purity
-            id
-            __typename
-          }
-          __typename
-        }
-        productThemesByProductId(condition: { isActive: true }) {
-          nodes {
-            themeName
-            id
-            __typename
-          }
-          __typename
-        }
-        productStonecolorsByProductId {
-          nodes {
-            id
-            stonecolor
-            __typename
-          }
-          __typename
-        }
-        productStylesByProductId(condition: { isActive: true }) {
-          nodes {
-            styleName
-            id
-            __typename
-          }
-          __typename
-        }
-        productCollectionsByProductId {
-          nodes {
-            collectionName
-            id
-            __typename
-          }
-          __typename
-        }
-        productOccassionsByProductId(condition: { isActive: true }) {
-          nodes {
-            occassionName
-            id
-            __typename
-          }
-          __typename
-        }
-        productStonecountsByProductId {
-          nodes {
-            id
-            stonecount
-            __typename
-          }
-          __typename
-        }
-        transSkuListsByProductId {
-          nodes {
-            skuSize
-            diamondType
-            metalColor
-            purity
-            productId
-            skuWeight
-            generatedSku
-            costPrice
-            costPriceTax
-            discountPrice
-            discountPriceTax
-            markupPrice
-            marginOnSalePercentage
-            markupPriceTax
-            marginOnSalePercentage
-            sellingPrice
-            discountDesc
-            sellingPriceTax
-            isReadyToShip
-            discount
-            isActive
-            isdefault
-            vendorDeliveryTime
-            id
-            isActive
-            transSkuDescriptionsBySkuId {
-              nodes {
-                skuDescription
-                certificate
-                ringsizeImage
-                __typename
-              }
-              __typename
-            }
-            maxOrderQty
-            minOrderQty
-            __typename
-          }
-          __typename
-        }
-        productCategory
-        sizeVarient
-        height
-        length
         __typename
       }
+      productName
+      productType
+      vendorCode
+      gender
+      earringBacking
+      isactive
+      prodDescription
+      productMaterialsByProductSku {
+        nodes {
+          materialName
+          __typename
+        }
+        __typename
+      }
+      productDiamondsByProductSku {
+        nodes {
+          itemName
+          subItemName
+          description
+          diamondClarity
+          diamondColour
+          diamondSettings
+          diamondShape
+          diamondType
+          id
+          stoneCount
+          stoneWeight
+          __typename
+        }
+        __typename
+      }
+      productGemstonesByProductSku {
+        nodes {
+          itemName
+          subItemName
+          description
+          gemstoneSetting
+          gemstoneShape
+          gemstoneSize
+          gemstoneType
+          gemstonsSize
+          id
+          stoneCount
+          stoneWeight
+          __typename
+        }
+        __typename
+      }
+      productImagesByProductId(orderBy: IMAGE_POSITION_ASC) {
+        nodes {
+          id
+          imagePosition
+          productId
+          imageUrl
+          ishover
+          isdefault
+          productColor
+          __typename
+        }
+        __typename
+      }
+      productPuritiesByProductId {
+        nodes {
+          purity
+          id
+          __typename
+        }
+        __typename
+      }
+      productThemesByProductId(condition: { isActive: true }) {
+        nodes {
+          themeName
+          id
+          __typename
+        }
+        __typename
+      }
+      productStonecolorsByProductId {
+        nodes {
+          id
+          stonecolor
+          __typename
+        }
+        __typename
+      }
+      productStylesByProductId(condition: { isActive: true }) {
+        nodes {
+          styleName
+          id
+          __typename
+        }
+        __typename
+      }
+      productCollectionsByProductId {
+        nodes {
+          collectionName
+          id
+          __typename
+        }
+        __typename
+      }
+      productOccassionsByProductId(condition: { isActive: true }) {
+        nodes {
+          occassionName
+          id
+          __typename
+        }
+        __typename
+      }
+      productStonecountsByProductId {
+        nodes {
+          id
+          stonecount
+          __typename
+        }
+        __typename
+      }
+      transSkuListsByProductId {
+        nodes {
+          skuSize
+          diamondType
+          metalColor
+          purity
+          productId
+          skuWeight
+          generatedSku
+          costPrice
+          costPriceTax
+          discountPrice
+          discountPriceTax
+          markupPrice
+          marginOnSalePercentage
+          markupPriceTax
+          marginOnSalePercentage
+          sellingPrice
+          discountDesc
+          sellingPriceTax
+          isReadyToShip
+          discount
+          isActive
+          isdefault
+          vendorDeliveryTime
+          id
+          isActive
+          transSkuDescriptionsBySkuId {
+            nodes {
+              skuDescription
+              certificate
+              ringsizeImage
+              __typename
+            }
+            __typename
+          }
+          maxOrderQty
+          minOrderQty
+          __typename
+        }
+        __typename
+      }
+      productCategory
+      sizeVarient
+      height
+      length
+      __typename
+      productVendorCode
     }
-    
+  }
 `;
 
 const ALLMASTERRINGSIZE = `
@@ -1695,7 +1694,22 @@ mutation MyMutation($id : Int!) {
   }
 }
 `;
-
+const ALLMASTERPRODUCTSIZE = gql`
+  query allproductsizes($productType: String) {
+    allMasterRingsSizes(condition: { productType: $productType }) {
+      nodes {
+        name
+        nodeId
+        id
+        size
+        updatedAt
+        productType
+        gender
+        sizeValue
+      }
+    }
+  }
+`;
 export {
   ALLBANNERS,
   ALLLISTINGBANNERS,
@@ -1778,4 +1792,5 @@ export {
   VALIDATEGENERATEDSKU,
   STOCKSTATUS,
   VERIFYTAGNO,
+  ALLMASTERPRODUCTSIZE,
 };
