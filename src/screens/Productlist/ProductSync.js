@@ -113,7 +113,7 @@ const ProductSync = (props) => {
   const { sendNetworkRequest } = React.useContext(NetworkContext);
   var [data, setData] = React.useState({
     action_type: "price_sync",
-    Product_lists: "",
+    sync_url: "",
     new_tagno: [],
   });
   const [progress, setProgress] = React.useState(0);
@@ -156,7 +156,7 @@ const ProductSync = (props) => {
       } else {
         setData({
           action_type: "price_sync",
-          Product_lists: "",
+          sync_url: "",
           new_tagno: [],
         });
         snack.setSnack({
@@ -176,26 +176,13 @@ const ProductSync = (props) => {
       });
       return;
     }
-    if (data.Product_lists === "") {
+    if (data.sync_url === "") {
       snack.setSnack({
         open: true,
         severity: "error",
-        msg: "Sync Data cannot be empty!",
+        msg: "Sync Data URL cannot be empty!",
       });
       return;
-    } else {
-      try {
-        JSON.parse(data.Product_lists);
-      } catch (error) {
-        if (error) {
-          snack.setSnack({
-            open: true,
-            severity: "error",
-            msg: "Some error occured while parsing data",
-          });
-          return;
-        }
-      }
     }
     if (!warehouse?.id && data.action_type === "new_uploads") {
       snack.setSnack({
@@ -213,7 +200,6 @@ const ProductSync = (props) => {
       {},
       {
         ...data,
-        Product_lists: JSON.parse(Product_lists),
         warehouse: warehouse?.id,
       }
     )
@@ -294,13 +280,12 @@ const ProductSync = (props) => {
         </Grid>
         <Grid xs={12} style={{ padding: "9px" }}>
           <TextField
-            value={data.Product_lists}
+            value={data.sync_url}
             onChange={handleChange}
-            multiline
             rows={15}
             fullWidth
-            label={"Sync Data"}
-            name="Product_lists"
+            label={"Sync Data URL"}
+            name="sync_url"
             variant="outlined"
             required
             inputProps={{ className: classes.textarea }}

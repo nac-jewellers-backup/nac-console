@@ -28,7 +28,7 @@ function App() {
       <MuiThemeProvider theme={theme}>
         <div className="App">
           <CssBaseline />
-          <Router>
+          <Router >
             <AppAlert>
               <MainApp />
             </AppAlert>
