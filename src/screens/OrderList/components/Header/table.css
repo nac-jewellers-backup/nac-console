@@ -1,94 +1,94 @@
 @media only screen and (max-width: 600px) {
-    .product {
-      font-size: 10px !important;
-      padding: 5px 5px !important;
-    }
-    .column-btn #one{
-        font-size: 400 !important;
-        
-    }
-    .products {
-        font-size: 16px !important;
-      }
-      #create{
-        float: right;
-      }
+  .product {
+    font-size: 10px !important;
+    padding: 5px 5px !important;
   }
-  @media only screen and (max-width: 660px) {
-    .product {
-      font-size: 10px !important;
-      padding: 5px 5px !important;
-    }
-    .column-btn #one{
-        font-size: 400 !important;
-        
-    }
-    .products {
-        font-size: 16px !important;
-      }
-      #create{
-        float: right;
-      }
+  .column-btn #one{
+      font-size: 400 !important;
+      
   }
-  @media only screen and (max-width: 400px) {
-    .product {
-      font-size: 7px !important;
-      padding: 5px 5px !important;
-      font-weight: 200 !important;
+  .products {
+      font-size: 16px !important;
     }
-    .products {
-        font-size: 15px !important;
-       
-      }
+    #create{
+      float: right;
+    }
+}
+@media only screen and (max-width: 660px) {
+  .product {
+    font-size: 10px !important;
+    padding: 5px 5px !important;
+  }
+  .column-btn #one{
+      font-size: 400 !important;
+      
+  }
+  .products {
+      font-size: 16px !important;
+    }
+    #create{
+      float: right;
+    }
+}
+@media only screen and (max-width: 400px) {
+  .product {
+    font-size: 7px !important;
+    padding: 5px 5px !important;
+    font-weight: 200 !important;
+  }
+  .products {
+      font-size: 15px !important;
+     
+    }
+  
+}
+@media only screen and (max-width: 324px) {
+  .product {
+    font-size: 4px !important;
+    
     
   }
-  @media only screen and (max-width: 324px) {
-    .product {
-      font-size: 4px !important;
-      
-      
-    }
-    .column-btn #one{
-      font-size: 100 !important;
-      
-  }
-  .column-btn button{
-    font-size: 11px !important;
-    padding: 5px 5px !important;
+  .column-btn #one{
+    font-size: 100 !important;
     
 }
-    .products {
-        font-size: 14px !important;
-       
-      }
-    
-  }
-  @media only screen and (max-width: 842px) {
-    .product {
-      font-size: 13px !important;
-      padding: 5px 5px !important;
-      font-weight: 400 !important;
+.column-btn button{
+  font-size: 11px !important;
+  padding: 5px 5px !important;
+  
+}
+  .products {
+      font-size: 14px !important;
+     
     }
-    .products {
-        font-size: 16px !important;
-       
-      }
-      #create{
-        float: right;
-      }
+  
+}
+@media only screen and (max-width: 842px) {
+  .product {
+    font-size: 13px !important;
+    padding: 5px 5px !important;
+    font-weight: 400 !important;
   }
-  @media only screen and (max-width: 1025px) {
-    .product {
-      font-size: 13px !important;
-      padding: 7px 7px !important;
-      font-weight: 400 !important;
+  .products {
+      font-size: 16px !important;
+     
     }
-    .products {
-        font-size: 16px !important;
-       
-      }
-      #create{
-        float: right;
-      }
-    
+    #create{
+      float: right;
+    }
+}
+@media only screen and (max-width: 1025px) {
+  .product {
+    font-size: 13px !important;
+    padding: 7px 7px !important;
+    font-weight: 400 !important;
   }
+  .products {
+      font-size: 16px !important;
+     
+    }
+    #create{
+      float: right;
+    }
+  
+}

@@ -1,18 +1,21 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
-import { Paper, Card, CardHeader, CardContent, Grid } from "@material-ui/core";
+import { Paper, Card, CardHeader, CardContent, Grid, Snackbar, Button } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 import { NetworkContext } from "../../context/NetworkContext";
 import "./upload.css";
-
+import { Alert } from "@material-ui/lab";
+import { IMAGEDELETE } from "../../graphql/query";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { GRAPHQL_DEV_CLIENT } from "../../config";
 const useStyles2 = makeStyles((theme) => ({
   root: {
     width: "100%",
     height: 100,
     marginTop: theme.spacing(3),
   },
- 
+
   tableWrapper: {
     overflowX: "auto",
   },
@@ -70,7 +73,7 @@ export default function Productimages(props) {
   const classes = useStyles2();
   let image_count = 0;
   let product_id = "";
-
+  const [success, setSuccess] = React.useState(false);
   const [productimages, setProductimages] = React.useState(props.prodimages);
   const { sendNetworkRequest } = React.useContext(NetworkContext);
 
@@ -85,7 +88,31 @@ export default function Productimages(props) {
       product_id = imgobj.productId;
     }
   });
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
+    setSuccess(false);
+  };
+  const deleteImage = async (imageData) => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: IMAGEDELETE,
+        variables: { productimageid: imageData.id },
+      }),
+    };
+
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((fatchvalue) => {
+        fatchvalue.statuscode = 200 && window.location.reload();
+      })
+      .catch(console.error);
+  };
   const handlenewAssetChange = (e) => {
     const files = e.target.files;
     Object.keys(files).map((file, index) => {
@@ -143,10 +170,10 @@ export default function Productimages(props) {
 
     await axios.put(signedRequest, fileobj, options);
     let responsecontent = await sendNetworkRequest("/updateproductimage", {}, { imageobj: imagecontent, isedit: isedit }, false);
-
-    if (responsecontent.statuscode === 200) {
-      window.location.reload();
-    }
+    responsecontent.statuscode === 200 && setSuccess(true);
+    setTimeout(function () {
+      responsecontent.statuscode === 200 && window.location.reload();
+    }, 2500);
   }
 
   return (
@@ -155,7 +182,7 @@ export default function Productimages(props) {
         <CardHeader title={props.color && props.isdefault ? props.color + " (Default Colour)" : props.color} />
         <CardContent>
           <Grid container spacing={2} className={classes.styleFile}>
-            {productimages.map((url) => (
+            {productimages.map((url, index) => (
               <React.Fragment key={url.id}>
                 <div style={{ position: "relative" }}>
                   <i
@@ -192,9 +219,13 @@ export default function Productimages(props) {
                       alt="product images"
                     />
                   </Grid>
+                  <Button variant="outlined" style={{ margin: "auto", display: "flex" }} onClick={() => deleteImage(url)}>
+                    <DeleteIcon style={{ color: "grey" }} />
+                  </Button>
+                  <br />
                   <Typography style={{ textAlign: "center" }} variant="h5">
                     {" "}
-                    {url.imagePosition}{" "}
+                    {index + 1}{" "}
                   </Typography>
 
                   <Typography style={{ textAlign: "center" }} variant="h6">
@@ -237,6 +268,9 @@ export default function Productimages(props) {
           </Grid>
         </CardContent>
       </Card>
+      <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose}>Image Upload Successfully...</Alert>
+      </Snackbar>
     </Paper>
   );
 }

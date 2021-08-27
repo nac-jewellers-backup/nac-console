@@ -37,7 +37,8 @@ const columns = [
   { id: "Size", label: "Size" },
   { id: "Weight", label: "Weight" },
   { id: "Number", label: "Number" },
-
+  { id: "Amount", label: "Amount" },
+  { id: "Carat", label: "Per Carat" },
   { id: "Setting", label: "Setting" },
   { id: "Shape", label: "Shape" },
   {
@@ -199,7 +200,6 @@ export default function GemstoneDetails(props) {
   });
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.gemstone && props.gemstone.length - page * rowsPerPage);
   function GemstoneEdit(gemstoneData) {
-   
     setGemstoneEditObject({
       ...gemstoneEditObject,
       edit: JSON.parse(JSON.stringify(gemstoneData)),
@@ -266,10 +266,10 @@ export default function GemstoneDetails(props) {
           bodydata["subitemname"] = gemdata.gemstonesubitemname;
           bodydata["description"] = gemdata.gemstonedescription;
           bodydata["gemstonetype"] = gemdata.gemstonetype.label;
-        
+
           return gemstoneListData;
         }
-       
+
         return gemstoneListData;
       });
 
@@ -430,7 +430,12 @@ export default function GemstoneDetails(props) {
                       {row.stoneCount}
                     </TableCell>
                   )}
-
+                  <TableCell style={{ width: 40 }} component="th" scope="row">
+                    {row.stoneWeight}
+                  </TableCell>
+                  <TableCell style={{ width: 40 }} component="th" scope="row">
+                    {row.stoneAmount}
+                  </TableCell>
                   {btnEdit.action && btnEdit.id == row.id ? (
                     <TableCell component="th" scope="row">
                       <Autocomplete
