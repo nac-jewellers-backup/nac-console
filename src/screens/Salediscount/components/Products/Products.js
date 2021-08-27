@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import clsx from 'clsx';
+import React, { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import clsx from "clsx";
 // import moment from 'moment';
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 // import PerfectScrollbar from 'react-perfect-scrollbar';
-import { makeStyles } from '@material-ui/styles';
-import CreateIcon from '@material-ui/icons/Create';
-import DeleteIcon from '@material-ui/icons/Delete';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import Viewsku from '../Viewsku'
+import { makeStyles } from "@material-ui/styles";
+import CreateIcon from "@material-ui/icons/Create";
+import DeleteIcon from "@material-ui/icons/Delete";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import Viewsku from "../Viewsku";
 
 import {
   Button,
@@ -25,31 +25,31 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  colors
-} from '@material-ui/core';
+  colors,
+} from "@material-ui/core";
 
-import { Label, ReviewStars } from '../../../../components';
+import { Label, ReviewStars } from "../../../../components";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   filterButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   content: {
-    padding: 0
+    padding: 0,
   },
   inner: {
-    minWidth: 1150
+    minWidth: 1150,
   },
   actions: {
     padding: theme.spacing(0, 1),
-    justifyContent: 'flex-end'
-  }
+    justifyContent: "flex-end",
+  },
 }));
 
-const Products = props => {
+const Products = (props) => {
   const { className, orders, ...rest } = props;
 
   const classes = useStyles();
@@ -60,9 +60,9 @@ const Products = props => {
   const [open, setOpen] = useState(false);
   const [selectskus, setSelectskus] = useState([]);
 
-  const handleSelectAll = event => {
+  const handleSelectAll = (event) => {
     const selectedOrders = event.target.checked
-      ? orders.map(order => order.id)
+      ? orders.map((order) => order.id)
       : [];
 
     setSelectedOrders(selectedOrders);
@@ -92,30 +92,31 @@ const Products = props => {
     setPage(page);
   };
 
-  const handleChangeRowsPerPage = event => {
+  const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(event.target.value);
   };
-  function handlecancel(){
-    setOpen(false)
+  function handlecancel() {
+    setOpen(false);
   }
-  function handleOpen(prodskus)
-  {
-    setOpen(true)
-    setSelectskus(prodskus)
+  function handleOpen(prodskus) {
+    setOpen(true);
+    setSelectskus(prodskus);
   }
   const paymentStatusColors = {
     canceled: colors.grey[600],
     pending: colors.orange[600],
     completed: colors.green[600],
-    rejected: colors.red[600]
+    rejected: colors.red[600],
   };
-
   return (
-    <div
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-    {open ? <Viewsku isadd={open} products={selectskus}  actionclose={handlecancel}/> : null} 
+    <div {...rest} className={clsx(classes.root, className)}>
+      {open ? (
+        <Viewsku
+          isadd={open}
+          products={selectskus}
+          actionclose={handlecancel}
+        />
+      ) : null}
 
       {/* <Typography
         color="textSecondary"
@@ -126,36 +127,30 @@ const Products = props => {
         {Math.ceil(orders.length / rowsPerPage)}
       </Typography> */}
       <Card>
-        <CardHeader
-          title =  {props.title} 
-
-         
-        />
+        <CardHeader title={props.title} />
         <Divider />
         <CardContent className={classes.content}>
           {/* <PerfectScrollbar> */}
-            <div className={classes.inner}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    
-                    <TableCell>Product ID</TableCell>
-                    
-                    {/* <TableCell align="center">SKU Count</TableCell>
+          <div className={classes.inner}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Product ID</TableCell>
+
+                  {/* <TableCell align="center">SKU Count</TableCell>
 
                     <TableCell align="center">Actions</TableCell> */}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {props.products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(order => (
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {props.products
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((order) => (
                     <TableRow
-                      // key={order.id}
-                      // selected={selectedOrders.indexOf(order.id) !== -1}
+                    // key={order.id}
+                    // selected={selectedOrders.indexOf(order.id) !== -1}
                     >
-                      
-                     
-
-                      <TableCell >{order}</TableCell>
+                      <TableCell>{order}</TableCell>
                       {/* <TableCell align="center"> 
                       <IconButton aria-label="delete"  onClick={() => handleOpen(order.skus)}  color="primary">
                           <VisibilityIcon />
@@ -170,9 +165,9 @@ const Products = props => {
                       </TableCell> */}
                     </TableRow>
                   ))}
-                </TableBody>
-              </Table>
-            </div>
+              </TableBody>
+            </Table>
+          </div>
           {/* </PerfectScrollbar> */}
         </CardContent>
         <CardActions className={classes.actions}>
@@ -194,11 +189,11 @@ const Products = props => {
 
 Products.propTypes = {
   className: PropTypes.string,
-  orders: PropTypes.array.isRequired
+  orders: PropTypes.array.isRequired,
 };
 
 Products.defaultProps = {
-  orders: []
+  orders: [],
 };
 
 export default Products;
