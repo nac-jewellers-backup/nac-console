@@ -81,6 +81,9 @@ const route = {
   warehouse: "/warehouse",
   holiday_manager: "/holiday-manager",
   inventory: "/inventory",
+
+  silverbanner: "/silverbanner",
+  silverlistingbanner: "/listingPage",
 };
 
 export default route;

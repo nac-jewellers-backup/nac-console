@@ -190,6 +190,22 @@ const EditContent = (props) => {
                     />
                   </Grid>
                 ) : null}
+
+                {columnname.key == "email" && !diamond.isedit ? (
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="outlined"
+                      margin="dense"
+                      fullWidth
+                      id={columnname.key}
+                      name={columnname.key}
+                      value={editcontent[columnname.key]}
+                      onChange={handleInputChange(columnname.key)}
+                      label={columnname.label}
+                      disabled={columnname.type === 10}
+                    />
+                  </Grid>
+                ) : null}
                 {columnname.type === 2 && (
                   <Grid item xs={12}>
                     <FormControlLabel

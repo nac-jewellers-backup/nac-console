@@ -1,31 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import { Query, withApollo } from "react-apollo";
-import {
-  PRODUCTLIST,
-  PRODUCTCATEGORY,
-  PRODUCTFILTERMASTER,
-  PRODUCTLISTSTATUSEDIT,
-} from "../../graphql/query";
+import { withApollo } from "react-apollo";
+import { PRODUCTFILTERMASTER } from "../../graphql/query";
 
-import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
 import Product from "../../components/Products";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import FullLoader from "../../components/Loader";
 import { ProductFilter } from "../../components";
-import { NetworkContext } from "../../context/NetworkContext";
 import ProductSync from "./ProductSync";
 
 export const Productlist = withRouter(
   withApollo((props) => {
     const [masters, setMasters] = useState({});
     const [filterparams, setFilterparams] = useState({});
-    const [dataCSV, setDataCSV] = useState({ keyCSV: [], valueCSV: [] });
-    const { sendNetworkRequest } = React.useContext(NetworkContext);
 
     const [open, setOpen] = React.useState(false);
 
@@ -37,7 +26,6 @@ export const Productlist = withRouter(
       setOpen(false);
     };
 
-    let responseCSV;
     function onFilter(filterobj) {
       let filtercontent = {};
 
@@ -83,23 +71,6 @@ export const Productlist = withRouter(
         .catch((error) => {
           console.log("smbcj");
         });
-
-      // async function fetchCSVdata() {
-      //   responseCSV = await sendNetworkRequest("/productdetails", {}, {});
-      //   let responseData = responseCSV.res_json;
-
-      //   if (responseCSV.statuscode === 200) {
-      //     let keyData = [];
-
-      //     for (const [key] of Object.entries(responseData[0])) {
-      //       keyData.push({ label: key, key: key });
-      //     }
-
-      //     console.log(keyData);
-      //     setDataCSV({ ...dataCSV, keyCSV: keyData, valueCSV: responseData });
-      //   }
-      // }
-      // fetchCSVdata();
     }, []);
 
     return (
@@ -112,30 +83,17 @@ export const Productlist = withRouter(
           </Grid>
 
           <Grid fullwidth item xs={6} sm={6} style={{ "text-align": "right" }}>
-            <Link underline="none"
-            //  component={RouterLink}
-            //  to={"/productupload"}
-             >
+            <Link underline="none">
               <Button variant="contained" color="primary" disabled>
                 Add New Product
               </Button>
             </Link>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleClickOpen}
-              style={{ marginLeft: 2 }}
-            >
+            <Button variant="contained" color="primary" onClick={handleClickOpen} style={{ marginLeft: 2 }}>
               Product Sync
             </Button>
           </Grid>
         </Grid>
-        <ProductFilter
-          masters={masters}
-          onSearch={onSearch}
-          onFilter={onFilter}
-          dataCSV={dataCSV}
-        />
+        <ProductFilter masters={masters} onSearch={onSearch} onFilter={onFilter} />
         <Product filterparams={filterparams} />
         <ProductSync open={open} handleClose={handleClose} />
       </Grid>

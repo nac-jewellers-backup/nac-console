@@ -11,7 +11,7 @@
     {
       "id": 2,
       "name": "Order Date",
-      "label": "Order ID",
+      "label": "Order Date",
       "type": 4,
       "key": "orderdate",
       "isActive": true,

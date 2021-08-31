@@ -39,6 +39,8 @@ const columns = [
   { id: "Clarity", label: "Clarity" },
   { id: "Weight", label: "Weight" },
   { id: "Number", label: "Number" },
+  { id: "Amount", label: "Amount" },
+  { id: "Carat", label: "Per Carat" },
   { id: "Setting", label: "Setting" },
   { id: "Shape", label: "Shape" },
 
@@ -203,7 +205,6 @@ export default function DiamondDetails(props) {
   });
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.diamond && props.diamond.length - page * rowsPerPage);
   function DiamondEdit(diamondData) {
-   
     setDiamondEditObject({
       ...diamondEditObject,
       edit: JSON.parse(JSON.stringify(diamondData)),
@@ -241,7 +242,6 @@ export default function DiamondDetails(props) {
     setOpenedit(true);
   }
   async function DiamondSave(diamondobj) {
-   
     // alert(JSON.stringify(productCtx.diamondsettings))
     // alert(JSON.stringify(productCtx.diamondshape))
     // alert(JSON.stringify(productCtx.diamondcount))
@@ -333,6 +333,7 @@ export default function DiamondDetails(props) {
   const handleInputChange = (type) => (e) => {
     setProductCtx({ ...productCtx, [type]: e.target.value });
   };
+
   return (
     <Paper className={classes.root}>
       <React.Fragment>
@@ -420,6 +421,12 @@ export default function DiamondDetails(props) {
                       {row.stoneCount}
                     </TableCell>
                   )}
+                  <TableCell style={{ width: 40 }} component="th" scope="row">
+                    {row.stoneWeight}
+                  </TableCell>
+                  <TableCell style={{ width: 40 }} component="th" scope="row">
+                    {row.stoneAmount}
+                  </TableCell>
                   {btnEdit.action && btnEdit.id == row.id ? (
                     <TableCell component="th" scope="row">
                       <Autocomplete

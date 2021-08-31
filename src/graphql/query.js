@@ -842,10 +842,7 @@ const GOLDPRICELIST = gql`
 
 const DIAMONDMARKUP = gql`
   query MyQuery($vendorCode: String!) {
-    allPricingMarkups(
-      condition: { material: $vendorCode }
-      orderBy: UPDATED_AT_DESC
-    ) {
+    allPricingMarkups(condition: { material: $vendorCode }, orderBy: UPDATED_AT_DESC) {
       nodes {
         updatedAt
         sellingPriceMin
@@ -1072,9 +1069,7 @@ query {
 
 const MAKINGCHARGEPRICELIST = gql`
   query MyQuery($vendorCode: String!, $ratetype: Int!) {
-    allMakingChargeSettings(
-      condition: { vendorCode: $vendorCode, rateType: $ratetype }
-    ) {
+    allMakingChargeSettings(condition: { vendorCode: $vendorCode, rateType: $ratetype }) {
       nodes {
         weightStart
         weightEnd
@@ -1116,12 +1111,7 @@ const GEMPRICELIST = gql`
 const PRODUCTLISTSTATUSEDIT = gql`
   mutation MyMutation($productId: String!, $isActive: Boolean!) {
     __typename
-    updateProductListByProductId(
-      input: {
-        productId: $productId
-        productListPatch: { isactive: $isActive }
-      }
-    ) {
+    updateProductListByProductId(input: { productId: $productId, productListPatch: { isactive: $isActive } }) {
       clientMutationId
       productList {
         isactive
@@ -1160,9 +1150,7 @@ const CREATETAXSETUP = gql`
 const VOUCHERSTATUSEDIT = gql`
   mutation MyMutation($voucherId: UUID!, $isActive: Boolean!) {
     __typename
-    updateVoucherById(
-      input: { id: $voucherId, voucherPatch: { isActive: $isActive } }
-    ) {
+    updateVoucherById(input: { id: $voucherId, voucherPatch: { isActive: $isActive } }) {
       clientMutationId
       voucher {
         isActive
@@ -1174,9 +1162,7 @@ const VOUCHERSTATUSEDIT = gql`
 const DISCOUNTSTATUSEDIT = gql`
   mutation MyMutation($discountId: UUID!, $isActive: Boolean!) {
     __typename
-    updateSaleDiscountById(
-      input: { id: $discountId, saleDiscountPatch: { isActive: $isActive } }
-    ) {
+    updateSaleDiscountById(input: { id: $discountId, saleDiscountPatch: { isActive: $isActive } }) {
       clientMutationId
       saleDiscount {
         isActive
@@ -1295,6 +1281,9 @@ const PRODUCTEDIT = gql`
           id
           stoneCount
           stoneWeight
+          stoneAmount
+          stoneRate
+
           __typename
         }
         __typename
@@ -1312,6 +1301,8 @@ const PRODUCTEDIT = gql`
           id
           stoneCount
           stoneWeight
+          stoneAmount
+          stoneRate
           __typename
         }
         __typename
@@ -1412,6 +1403,7 @@ const PRODUCTEDIT = gql`
           vendorDeliveryTime
           id
           isActive
+
           transSkuDescriptionsBySkuId {
             nodes {
               skuDescription
@@ -1431,6 +1423,7 @@ const PRODUCTEDIT = gql`
       sizeVarient
       height
       length
+      width
       __typename
       productVendorCode
     }
@@ -1453,12 +1446,7 @@ const ALLMASTERRINGSIZE = `
 
 const HOLIDAYLIST = gql`
   query ($first: Int, $offset: Int, $filter: HolidayManagerFilter) {
-    allHolidayManagers(
-      first: $first
-      offset: $offset
-      filter: $filter
-      orderBy: DATE_ASC
-    ) {
+    allHolidayManagers(first: $first, offset: $offset, filter: $filter, orderBy: DATE_ASC) {
       nodes {
         id
         holiday
@@ -1742,6 +1730,257 @@ const ALLMASTERPRODUCTSIZE = gql`
     }
   }
 `;
+
+const IMAGEDELETE = `
+mutation MyMutation($productimageid: UUID!) {
+  deleteProductImageById(input: { id: $productimageid }) {
+    productListByProductId {
+      productId
+    }
+  }
+}
+
+`;
+
+const ALLSTYLORISILVERLISTINGBOTTOMBANNERS = `
+query MyQuery {
+  allBanners(condition: { urlParam: "bottom" }) {
+    nodes {
+      id
+      mobile
+      position
+      url
+      web
+      urlParam
+    }
+  }
+}
+
+`;
+
+const ALLSTYLORISILVERLANDINGBANNERS = `
+query MyQuery {
+  allBanners(condition: { urlParam: "landing" }) {
+    nodes {
+      id
+      mobile
+      position
+      url
+      web
+      urlParam
+    }
+  }
+}
+
+`;
+
+const ALLSTYLORISILVERLISTINGPAGE = `
+query MyQuery {
+  allBanners(condition: { urlParam: "listingPage" }) {
+    nodes {
+      id
+      mobile
+      position
+      url
+      web
+      urlParam
+    }
+  }
+}
+
+
+`;
+
+const ALLSTYLORISILVERROUTINGPAGE = `
+query MyQuery {
+  allBanners(condition: {url: "#"}) {
+    nodes {
+      id
+      mobile
+      position
+      url
+      web
+      urlParam
+    }
+  }
+}`;
+
+const CREATESILVERLANDINGBANNER = `
+mutation MyMutation(
+  $now: Datetime!
+  $url: String
+  $web: String
+  $mobile: String
+  $position: Int
+) {
+  createBanner(
+    input: {
+      banner: {
+        createdAt: $now
+        updatedAt: $now
+        mobile: $mobile
+        position: $position
+        url: $url
+        web: $web
+        urlParam :"landing"
+      }
+    }
+  ) {
+    clientMutationId
+    banner {
+      id
+      mobile
+      position
+      updatedAt
+      url
+      web
+      createdAt
+    }
+  }
+}`;
+
+const CREATESILVERLISTINGBOTTOMBANNER = `
+mutation MyMutation(
+  $now: Datetime!
+  $url: String
+  $web: String
+  $mobile: String
+  $position: Int
+) {
+  createBanner(
+    input: {
+      banner: {
+        createdAt: $now
+        updatedAt: $now
+        mobile: $mobile
+        url: $url
+        web: $web
+        urlParam: "bottom"
+        position: $position
+      }
+    }
+  ) {
+    clientMutationId
+    banner {
+      id
+      mobile
+      updatedAt
+      url
+      web
+      createdAt
+      urlParam
+    }
+  }
+}
+
+
+`;
+
+const CREATESILVERLISTINGPAGE = `
+mutation MyMutation(
+  $now: Datetime!
+  $url: String
+  $web: String
+  $mobile: String
+  $position: Int
+) {
+  createBanner(
+    input: {
+      banner: {
+        createdAt: $now
+        updatedAt: $now
+        mobile: $mobile
+        position: $position
+        url: $url
+        web: $web
+        urlParam: "listingPage"
+      }
+    }
+  ) {
+    clientMutationId
+    banner {
+      id
+      mobile
+      position
+      updatedAt
+      url
+      web
+      createdAt
+    }
+  }
+}
+
+`;
+
+const CREATESTYLORISILVERROUTINGPAGE = `
+mutation MyMutation(
+  $now: Datetime!
+  $web: String
+  $mobile: String
+  $position: Int
+  $urlParam: String
+) {
+  createBanner(
+    input: {
+      banner: {
+        createdAt: $now
+        updatedAt: $now
+        mobile: $mobile
+        position: $position
+        url: "S"
+        web: $web
+        urlParam: $urlParam
+      }
+    }
+  ) {
+    clientMutationId
+    banner {
+      id
+      mobile
+      position
+      updatedAt
+      url
+      web
+      createdAt
+      urlParam
+    }
+  }
+}
+
+`;
+
+const DELETESILVERLANDINGBANNER = `
+mutation MyMutation($id: Int!) {
+  deleteBannerById(input: { id: $id }) {
+    banner {
+      id
+      nodeId
+      mobile
+      position
+      updatedAt
+      url
+      web
+      createdAt
+    }
+  }
+}
+
+`;
+
+const DELETESILVERLISTINGBOTTOMBANNER = `
+mutation MyMutation($id: Int!) {
+  deleteBannerById(input: { id: $id }) {
+    banner {
+      id
+      mobile
+      position
+      url
+      web
+    }
+  }
+}
+`;
+
 export {
   ALLBANNERS,
   ALLLISTINGBANNERS,
@@ -1825,4 +2064,15 @@ export {
   STOCKSTATUS,
   VERIFYTAGNO,
   ALLMASTERPRODUCTSIZE,
+  IMAGEDELETE,
+  ALLSTYLORISILVERLISTINGBOTTOMBANNERS,
+  ALLSTYLORISILVERLANDINGBANNERS,
+  ALLSTYLORISILVERLISTINGPAGE,
+  ALLSTYLORISILVERROUTINGPAGE,
+  CREATESILVERLANDINGBANNER,
+  CREATESILVERLISTINGBOTTOMBANNER,
+  CREATESILVERLISTINGPAGE,
+  CREATESTYLORISILVERROUTINGPAGE,
+  DELETESILVERLANDINGBANNER,
+  DELETESILVERLISTINGBOTTOMBANNER,
 };
