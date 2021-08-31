@@ -17,6 +17,12 @@ import {
   LinearProgress,
   Box,
   CircularProgress,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Backdrop,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import ChipInput from "material-ui-chip-input";
@@ -25,9 +31,11 @@ import socketIOClient from "socket.io-client";
 import { API_URL } from "../../config";
 import { NetworkContext } from "../../context/NetworkContext";
 import SyncIcon from "@material-ui/icons/Sync";
+import AssignmentTurnedInOutlinedIcon from "@material-ui/icons/AssignmentTurnedInOutlined";
 import { Autocomplete } from "@material-ui/lab";
 import { useApolloClient, useQuery } from "react-apollo";
 import { VERIFYTAGNO, WAREHOUSELIST } from "../../graphql/query";
+import { isEmpty } from "validate.js";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -47,6 +55,9 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
+  },
+  errorTable: {
+    margin: 10,
   },
 }));
 
@@ -119,6 +130,11 @@ const ProductSync = (props) => {
   const [progress, setProgress] = React.useState(0);
   const [warehouse, setWarehouse] = React.useState(null);
   const [errorTagNo, setErrorTagNo] = React.useState([]);
+  const [validatedTagNo, setValidatedTagNo] = React.useState({
+    status: false,
+    errors: {},
+  });
+  const [backDrop, setBackDrop] = React.useState(false);
   var handleChange = (event) => {
     var { name, value } = event.target;
     setData({ ...data, [name]: value });
@@ -163,6 +179,7 @@ const ProductSync = (props) => {
           severity: AlertProps.severity.info,
           msg: `Process Completed ${data.timeElapsed}`,
         });
+        socket.close();
       }
     });
   }, []);
@@ -220,6 +237,49 @@ const ProductSync = (props) => {
       });
   };
 
+  const validatePreSync = () => {
+    if (data.sync_url === "") {
+      snack.setSnack({
+        open: true,
+        severity: "error",
+        msg: "Sync Data URL cannot be empty!",
+      });
+      return;
+    }
+    if (data.action_type === "new_uploads" && data.new_tagno.length === 0) {
+      snack.setSnack({
+        open: true,
+        severity: "error",
+        msg: "TAG Number cannot be empty!",
+      });
+      return;
+    }
+    setBackDrop(true);
+    sendNetworkRequest("/preSync_validator", {}, { ...data })
+      .then((response) => {
+        let errorStatus = false;
+        data.new_tagno.forEach((tagno) => {
+          if (response[tagno] && !isEmpty(response[tagno])) {
+            errorStatus = true;
+          }
+        });
+        setBackDrop(false);
+        setValidatedTagNo({
+          status: errorStatus,
+          errors: response,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        setBackDrop(false);
+        snack.setSnack({
+          open: true,
+          severity: "error",
+          msg: "Some error occured, Please try again!",
+        });
+      });
+  };
+
   return (
     <Dialog fullScreen open={open} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
@@ -235,12 +295,26 @@ const ProductSync = (props) => {
           <Typography variant="h6" color="inherit" className={classes.title}>
             Product Sync
           </Typography>
+          {data.action_type !== "price_sync" && (
+            <Button
+              variant="outlined"
+              autoFocus
+              color="inherit"
+              onClick={validatePreSync}
+              startIcon={<AssignmentTurnedInOutlinedIcon />}
+            >
+              {"Validate Product Sync"}
+            </Button>
+          )}
           <Button
             autoFocus
             color="inherit"
             variant="outlined"
             onClick={handleRun}
             startIcon={<SyncIcon />}
+            disabled={
+              data.action_type !== "price_sync" && !validatedTagNo?.status
+            }
           >
             {data.action_type === "price_sync"
               ? "Run Price Sync"
@@ -317,15 +391,79 @@ const ProductSync = (props) => {
                     : ``
                 }
               />
-              {console.log(errorTagNo)}
             </Grid>
           </>
+        )}
+        {!isEmpty(validatedTagNo?.errors) && (
+          <Grid item xs={12} className={classes.errorTable}>
+            <Typography variant="overline" color="error" style={{ padding: 5 }}>
+              {
+                "Below masters are missing respectively, Please add them before syncing products"
+              }
+            </Typography>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Tag No.</TableCell>
+                  <TableCell align="center">Master Type</TableCell>
+                  <TableCell align="center">Value</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.new_tagno.map(
+                  (element, index) =>
+                    !isEmpty(validatedTagNo.errors[element]) && (
+                      <React.Fragment key={index}>
+                        {console.log(
+                          Object.keys(validatedTagNo.errors[element]).length
+                        )}
+                        <TableRow>
+                          <TableCell
+                            rowSpan={
+                              Object.keys(validatedTagNo.errors[element]).length
+                            }
+                            align="center"
+                          >
+                            {element}
+                          </TableCell>
+                          {Object.keys(validatedTagNo.errors[element]).map(
+                            (item, i) =>
+                              i == 0 && (
+                                <React.Fragment key={i}>
+                                  <TableCell align="center">{item}</TableCell>
+                                  <TableCell align="center">
+                                    {validatedTagNo.errors[element][item]}
+                                  </TableCell>
+                                </React.Fragment>
+                              )
+                          )}
+                        </TableRow>
+                        {Object.keys(validatedTagNo.errors[element]).map(
+                          (item, i) =>
+                            i > 0 && (
+                              <TableRow key={i}>
+                                <TableCell align="center">{item}</TableCell>
+                                <TableCell align="center">
+                                  {validatedTagNo.errors[element][item]}
+                                </TableCell>
+                              </TableRow>
+                            )
+                        )}
+                      </React.Fragment>
+                    )
+                )}
+              </TableBody>
+            </Table>
+          </Grid>
         )}
         {progress > 0 && (
           <Grid item xs={12}>
             <LinearProgressWithLabel value={progress} />
           </Grid>
         )}
+        <Backdrop className={classes.backdrop} open={backDrop}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </Grid>
     </Dialog>
   );
