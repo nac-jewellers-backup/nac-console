@@ -3,7 +3,7 @@
 export const BASE_URL = "https://api-staging.nacjewellers.net";
 export const API_URL = "https://api-staging.nacjewellers.net";
 export const APP_URL = "https://staging.nacjewellers.net";
-export const GRAPHQL_DEV_CLIENT = "https://api-staging.nacjewellers.net";
+export const GRAPHQL_DEV_CLIENT = "https://api-staging.nacjewellers.net/graphql";
 export const URL = "https://console-staging.nacjewellers.net";
 export const BASE_IMAGE_URL = "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/";
 //  export const GRAPHQL_DEV_CLIENT = "http://localhost:8080/graphql"
