@@ -257,16 +257,16 @@ const ProductSync = (props) => {
     setBackDrop(true);
     sendNetworkRequest("/preSync_validator", {}, { ...data })
       .then((response) => {
-        let errorStatus = false;
+        let errorStatus = true;
         data.new_tagno.forEach((tagno) => {
           if (response[tagno] && !isEmpty(response[tagno])) {
-            errorStatus = true;
+            errorStatus = false;
           }
         });
         setBackDrop(false);
         setValidatedTagNo({
           status: errorStatus,
-          errors: response,
+          errors: !errorStatus ? response : {},
         });
       })
       .catch((error) => {
