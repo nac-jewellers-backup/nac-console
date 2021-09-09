@@ -68,8 +68,8 @@
       "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/RoleManagementNSS.svg"
     },
     {
-      "name": "Banners",
-      "url": "/banner",
+      "name": "CMS Home",
+      "url": "/cmshome",
       "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/BannerNSS.svg"
     },
     {

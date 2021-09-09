@@ -1980,7 +1980,74 @@ mutation MyMutation($id: Int!) {
   }
 }
 `;
+const ALLFEATUREDPRODUCT = `query MyQuery {
+  allFeaturedProducts {
+    nodes {
+      productId
+      productListByProductId {
+        productName
+        productId
+        productImagesByProductId(condition: { ishover: true }) {
+          nodes {
+            imageUrl
+          }
+        }
+        transSkuListsByProductId {
+          nodes {
+            costPrice
+            markupPrice
+            skuUrl
+            transSkuDescriptionsBySkuId {
+              nodes {
+                skuDescription
+              }
+            }
+            sellingPrice
+          }
+        }
+      }
+      isActive
+    }
+  }
+}
 
+`;
+
+const CREATEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!, $isActive: Boolean) {
+  createFeaturedProduct(
+    input: { featuredProduct: { productId: $ProductId, isActive: $isActive } }
+  ) {
+    featuredProduct {
+      productId
+      isActive
+    }
+  }
+}
+`;
+
+const ISACTIVEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!, $isActive: Boolean) {
+  updateFeaturedProductByProductId(
+    input: {
+      featuredProductPatch: { isActive: $isActive }
+      productId: $ProductId
+    }
+  ) {
+    featuredProduct {
+      productId
+      isActive
+    }
+  }
+}
+`;
+
+const DELETEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!) {
+  deleteFeaturedProductByProductId(input: { productId: $ProductId }) {
+    featuredProduct {
+      productId
+    }
+  }
+}
+`;
 export {
   ALLBANNERS,
   ALLLISTINGBANNERS,
@@ -2075,4 +2142,8 @@ export {
   CREATESTYLORISILVERROUTINGPAGE,
   DELETESILVERLANDINGBANNER,
   DELETESILVERLISTINGBOTTOMBANNER,
+  ALLFEATUREDPRODUCT,
+  CREATEFEATUREDPRODUCT,
+  ISACTIVEFEATUREDPRODUCT,
+  DELETEFEATUREDPRODUCT,
 };

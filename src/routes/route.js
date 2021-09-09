@@ -11,7 +11,7 @@ const route = {
   userorders: "/orderlist/:userid",
   userwishlist: "/userwishlist/:userid",
   address: "/address/:userid",
-  banner: "/banner",
+  cmshome: "/cmshome",
 
   materiallist: "/material",
   mastermaterial: "/materialmaster",
@@ -84,6 +84,7 @@ const route = {
 
   silverbanner: "/silverbanner",
   silverlistingbanner: "/listingPage",
+  FeaturedProduct: "/featuredproduct",
 };
 
 export default route;

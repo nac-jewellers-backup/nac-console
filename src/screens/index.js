@@ -60,4 +60,4 @@ export * from "./Addtaxattributes";
 export * from "./HolidayManager";
 export * from "./Warehouse";
 export * from "./Inventory";
-export * from "./Banner";
+// export * from "./cms";

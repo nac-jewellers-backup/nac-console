@@ -67,19 +67,19 @@ import {
   Inventory,
   Warehouse,
 } from "../screens";
-import Banner from "../screens/Banner/Banner";
+import cmshome from "../screens/cms/cmshome";
 import PrivateRoute from "./PrivateRoute";
 import { NetworkProvider } from "../context/NetworkContext";
 import { GlobalContext } from "../context";
 import { ApolloProvider } from "react-apollo";
 import { ProductAttributes } from "../screens/ProductEdit/ProductAttributes";
 import { CreateVariant } from "../screens/ProductEdit/CreateVariant";
-import Silverbanner from "../screens/Banner/silverbanner/silverbanner";
-import SilverListingbanner from "../screens/Banner/silverbanner/silverListingBanner/silverListingBanner";
+import Silverbanner from "../screens/cms/silverbanner/silverbanner";
+import SilverListingbanner from "../screens/cms/silverbanner/silverListingBanner/silverListingBanner";
 import { ProductContext, ProductProvider } from "../context/ProductuploadContext";
 import newmaterial from "../screens/CategoryList/components/newmaterial/newmaterial";
 import Editcategory from "../screens/CategoryList/components/editpage/editcategory";
-
+import FeaturedProduct from "../components/FeaturedProduct/FeaturedProduct.js"
 const MainApp = () => {
   const { globalCtx } = React.useContext(GlobalContext);
   const { productCtx } = React.useContext(ProductContext);
@@ -100,7 +100,7 @@ const MainApp = () => {
           <PrivateRoute path={route.materiallist} component={CategoryList} />
           <PrivateRoute path={route.editCategory} component={Editcategory} />
           <PrivateRoute path={route.materiallistpage} component={newmaterial} />
-          <PrivateRoute path={route.banner} component={Banner} />
+          <PrivateRoute path={route.cmshome} component={cmshome} />
           <PrivateRoute path={route.producttypes} component={Masterproducttypes} />
           <PrivateRoute path={route.voucherdiscount} component={Voucherdiscount} />
           <PrivateRoute path={route.priceupdate} component={Priceupdate} />
@@ -170,6 +170,7 @@ const MainApp = () => {
           <PrivateRoute path={route.inventory} component={Inventory} />
           <PrivateRoute path={route.silverbanner} component={Silverbanner} />
           <PrivateRoute path={route.silverlistingbanner} component={SilverListingbanner} />
+          <PrivateRoute path={route.FeaturedProduct} component={FeaturedProduct} />
         </Switch>
       </NetworkProvider>
       {/* </ProductProvider> */}
