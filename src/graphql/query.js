@@ -2025,7 +2025,7 @@ const CREATEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!, $isActiv
 }
 `;
 
-const ISACTIVEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!, $isActive: Boolean) {
+const   ISACTIVEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!, $isActive: Boolean) {
   updateFeaturedProductByProductId(
     input: {
       featuredProductPatch: { isActive: $isActive }
@@ -2048,6 +2048,8 @@ const DELETEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!) {
   }
 }
 `;
+
+
 export {
   ALLBANNERS,
   ALLLISTINGBANNERS,
