@@ -1,31 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import {
-  Paper,
-  Grid,
-  Typography,
-  TextField,
   Button,
-  Table,
-  TableHead,
-  TableCell,
-  TableBody,
-  TableRow,
-  Link,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
 } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { makeStyles } from "@material-ui/core/styles";
+import Switch from "@material-ui/core/Switch";
+import React, { useEffect, useState } from "react";
+import { GRAPHQL_DEV_CLIENT } from "../../../config";
 import {
   ALLFEATUREDPRODUCT,
   CREATEFEATUREDPRODUCT,
-  ISACTIVEFEATUREDPRODUCT,
   DELETEFEATUREDPRODUCT,
+  ISACTIVEFEATUREDPRODUCT,
 } from "../../../graphql/query";
-import { GRAPHQL_DEV_CLIENT, APP_URL } from "../../../config";
-import Switch from "@material-ui/core/Switch";
 const useStyles2 = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -95,11 +94,16 @@ const FeaturedProuductComponent = (props) => {
     setOpen(false);
   };
   const onChangeData = (event) => {
-   
-    setCreateFeaturedProduct({ ...createFeaturedProduct, [event.target.name]: event.target.value });
+    setCreateFeaturedProduct({
+      ...createFeaturedProduct,
+      [event.target.name]: event.target.value,
+    });
   };
   const onChangeChecked = (event) => {
-    setCreateFeaturedProduct({ ...createFeaturedProduct, [event.target.name]: event.target.checked });
+    setCreateFeaturedProduct({
+      ...createFeaturedProduct,
+      [event.target.name]: event.target.checked,
+    });
   };
   const handleChangeIsActive = (productId) => async (event) => {
     const url = GRAPHQL_DEV_CLIENT;
@@ -121,7 +125,6 @@ const FeaturedProuductComponent = (props) => {
   };
 
   const handleDelete = async (ProductId) => {
-   
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
@@ -131,11 +134,10 @@ const FeaturedProuductComponent = (props) => {
         variables: { ProductId: ProductId },
       }),
     };
-  
+
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
-       
         window.location.reload();
       })
       .catch(console.error);
@@ -146,7 +148,7 @@ const FeaturedProuductComponent = (props) => {
       ProductId: createFeaturedProduct.productId,
       isActive: createFeaturedProduct.isActive,
     };
- 
+
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
@@ -160,7 +162,6 @@ const FeaturedProuductComponent = (props) => {
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
-       
         setOpen(false);
         window.location.reload();
       })
@@ -170,22 +171,40 @@ const FeaturedProuductComponent = (props) => {
   return (
     <>
       <Paper className={classes.root}>
-        <Grid container item xs={12} style={{ padding: "16px" }} sm={12} alignItems={"flex-end"}>
+        <Grid
+          container
+          item
+          xs={12}
+          style={{ padding: "16px" }}
+          sm={12}
+          alignItems={"flex-end"}
+        >
           <Grid fullwidth item xs={9} sm={9}>
-            <Typography component="h6" variant="h6" style={{ fontWeight: "bold" }}>
+            <Typography
+              component="h6"
+              variant="h6"
+              style={{ fontWeight: "bold" }}
+            >
               NAC - Landing Page - Featured Product
             </Typography>
           </Grid>
 
           <Grid fullwidth item xs={3} sm={3} style={{ "text-align": "right" }}>
-            <Button variant="contained" color="primary" onClick={handleClickOpen}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleClickOpen}
+            >
               Add New
             </Button>
           </Grid>
         </Grid>
 
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle id="form-dialog-title"> NAC - Landing Page - Featured Product : </DialogTitle>
+          <DialogTitle id="form-dialog-title">
+            {" "}
+            NAC - Landing Page - Featured Product :{" "}
+          </DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
@@ -219,7 +238,13 @@ const FeaturedProuductComponent = (props) => {
         </Dialog>
 
         <div className={classes.tableWrapper}>
-          <Table className={classes.table} border={1} borderColor={"#ddd"} size="small" stickyHeader>
+          <Table
+            className={classes.table}
+            border={1}
+            borderColor={"#ddd"}
+            size="small"
+            stickyHeader
+          >
             <TableHead>
               <TableRow>
                 <TableCell>Product Id</TableCell>
@@ -233,11 +258,16 @@ const FeaturedProuductComponent = (props) => {
               {allFeaturedProudct.map((val, index) => (
                 <TableRow key={index}>
                   <TableCell>{val.productId}</TableCell>
-                  <TableCell>{val?.productListByProductId?.productName}</TableCell>
+                  <TableCell>
+                    {val?.productListByProductId?.productName}
+                  </TableCell>
                   <TableCell>
                     <img
                       alt="nacimages"
-                      src={val?.productListByProductId?.productImagesByProductId?.nodes[0]?.imageUrl}
+                      src={
+                        val?.productListByProductId?.productImagesByProductId
+                          ?.nodes[0]?.imageUrl
+                      }
                       style={{ width: "50px", height: "auto" }}
                     />
                   </TableCell>
@@ -253,7 +283,11 @@ const FeaturedProuductComponent = (props) => {
                   <TableCell>
                     <Button
                       onClick={() => handleDelete(val.productId)}
-                      style={{ color: "#fff", backgroundColor: "red", cursor: "pointer !important" }}
+                      style={{
+                        color: "#fff",
+                        backgroundColor: "red",
+                        cursor: "pointer !important",
+                      }}
                     >
                       Delete
                     </Button>

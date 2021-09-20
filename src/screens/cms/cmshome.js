@@ -1,13 +1,11 @@
-import React from "react";
-
-import Grid from "@material-ui/core/Grid";
-
-import Link from "@material-ui/core/Link";
-import { Link as RouterLink } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-
+import Grid from "@material-ui/core/Grid";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
+import React from "react";
+import { Link as RouterLink } from "react-router-dom";
+
 const CmsHome = (props) => {
   return (
     <Grid container spacing={3}>
@@ -22,7 +20,11 @@ const CmsHome = (props) => {
         <Link underline="none" component={RouterLink} to="/silverbanner">
           <Card fullwidth className="card2">
             <CardContent>
-              <Typography style={{ textAlign: "center", marginTop: 8 }} component="h6" variant="h5">
+              <Typography
+                style={{ textAlign: "center", marginTop: 8 }}
+                component="h6"
+                variant="h5"
+              >
                 NAC Banners
               </Typography>
             </CardContent>
@@ -34,8 +36,28 @@ const CmsHome = (props) => {
         <Link underline="none" component={RouterLink} to="/featuredproduct">
           <Card fullwidth className="card2">
             <CardContent>
-              <Typography style={{ textAlign: "center", marginTop: 8 }} component="h6" variant="h5">
+              <Typography
+                style={{ textAlign: "center", marginTop: 8 }}
+                component="h6"
+                variant="h5"
+              >
                 Featured Product
+              </Typography>
+            </CardContent>
+          </Card>
+        </Link>
+      </Grid>
+
+      <Grid item xs={6} sm={4} lg={3}>
+        <Link underline="none" component={RouterLink} to="/comments">
+          <Card fullwidth className="card2">
+            <CardContent>
+              <Typography
+                style={{ textAlign: "center", marginTop: 8 }}
+                component="h6"
+                variant="h5"
+              >
+                Customers Reviews
               </Typography>
             </CardContent>
           </Card>

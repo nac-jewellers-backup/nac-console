@@ -842,7 +842,10 @@ const GOLDPRICELIST = gql`
 
 const DIAMONDMARKUP = gql`
   query MyQuery($vendorCode: String!) {
-    allPricingMarkups(condition: { material: $vendorCode }, orderBy: UPDATED_AT_DESC) {
+    allPricingMarkups(
+      condition: { material: $vendorCode }
+      orderBy: UPDATED_AT_DESC
+    ) {
       nodes {
         updatedAt
         sellingPriceMin
@@ -1069,7 +1072,9 @@ query {
 
 const MAKINGCHARGEPRICELIST = gql`
   query MyQuery($vendorCode: String!, $ratetype: Int!) {
-    allMakingChargeSettings(condition: { vendorCode: $vendorCode, rateType: $ratetype }) {
+    allMakingChargeSettings(
+      condition: { vendorCode: $vendorCode, rateType: $ratetype }
+    ) {
       nodes {
         weightStart
         weightEnd
@@ -1111,7 +1116,12 @@ const GEMPRICELIST = gql`
 const PRODUCTLISTSTATUSEDIT = gql`
   mutation MyMutation($productId: String!, $isActive: Boolean!) {
     __typename
-    updateProductListByProductId(input: { productId: $productId, productListPatch: { isactive: $isActive } }) {
+    updateProductListByProductId(
+      input: {
+        productId: $productId
+        productListPatch: { isactive: $isActive }
+      }
+    ) {
       clientMutationId
       productList {
         isactive
@@ -1120,6 +1130,26 @@ const PRODUCTLISTSTATUSEDIT = gql`
   }
 `;
 
+const REVIEWQUERY = `
+  query {
+    allCustomerReviews {
+      nodes {
+        customerName
+        id
+        isActive
+        isPublish
+        message
+        nodeId
+        productSku
+        rating
+        title
+        updatedAt
+        userprofileId
+        productId
+      }
+    }
+  }
+`;
 const CREATETAXSETUP = gql`
   mutation MyMutation(
     $id: UUID!
@@ -1150,7 +1180,9 @@ const CREATETAXSETUP = gql`
 const VOUCHERSTATUSEDIT = gql`
   mutation MyMutation($voucherId: UUID!, $isActive: Boolean!) {
     __typename
-    updateVoucherById(input: { id: $voucherId, voucherPatch: { isActive: $isActive } }) {
+    updateVoucherById(
+      input: { id: $voucherId, voucherPatch: { isActive: $isActive } }
+    ) {
       clientMutationId
       voucher {
         isActive
@@ -1162,7 +1194,9 @@ const VOUCHERSTATUSEDIT = gql`
 const DISCOUNTSTATUSEDIT = gql`
   mutation MyMutation($discountId: UUID!, $isActive: Boolean!) {
     __typename
-    updateSaleDiscountById(input: { id: $discountId, saleDiscountPatch: { isActive: $isActive } }) {
+    updateSaleDiscountById(
+      input: { id: $discountId, saleDiscountPatch: { isActive: $isActive } }
+    ) {
       clientMutationId
       saleDiscount {
         isActive
@@ -1446,7 +1480,12 @@ const ALLMASTERRINGSIZE = `
 
 const HOLIDAYLIST = gql`
   query ($first: Int, $offset: Int, $filter: HolidayManagerFilter) {
-    allHolidayManagers(first: $first, offset: $offset, filter: $filter, orderBy: DATE_ASC) {
+    allHolidayManagers(
+      first: $first
+      offset: $offset
+      filter: $filter
+      orderBy: DATE_ASC
+    ) {
       nodes {
         id
         holiday
@@ -2148,4 +2187,5 @@ export {
   CREATEFEATUREDPRODUCT,
   ISACTIVEFEATUREDPRODUCT,
   DELETEFEATUREDPRODUCT,
+  REVIEWQUERY,
 };
