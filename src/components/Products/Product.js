@@ -321,7 +321,7 @@ const AddContact = (props) => {
   const [allproductlists, setAllProductlists] = React.useState([]);
   const [mastercategories, setMastercategories] = React.useState([]);
   const [masterproducttypes, setMasterproducttypes] = React.useState([]);
-  const { sendNetworkRequest } = React.useContext(NetworkContext);
+  const {} = React.useContext(NetworkContext);
   const [searchtext, setSearchtext] = React.useState("");
 
   // const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.contactlist.length - page * rowsPerPage);
@@ -354,7 +354,7 @@ const AddContact = (props) => {
       productid: prod_id,
     };
 
-    let response = await sendNetworkRequest("/getproducturl", {}, bodycontent);
+    let response = await ("/getproducturl", {}, bodycontent);
     console.log(response);
     //setProductlists(response.products.rows)
     window.open(response.url, "_blank");
@@ -396,7 +396,7 @@ const AddContact = (props) => {
       order: sort ? sort : order,
       orderby: orderby ? orderby : orderBy,
     };
-    let response = await sendNetworkRequest("/getproductlist", {}, bodydata);
+    let response = await ("/getproductlist", {}, bodydata);
 
     console.log(response);
     setProductlists(response.products.rows);

@@ -1,6 +1,6 @@
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
-import { lighten, makeStyles, useTheme } from "@material-ui/core/styles";
+import { lighten, makeStyles } from "@material-ui/core/styles";
 import Switch from "@material-ui/core/Switch";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -14,25 +14,22 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete";
-import FirstPageIcon from "@material-ui/icons/FirstPage";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import LastPageIcon from "@material-ui/icons/LastPage";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import Moment from "react-moment";
 import { useHistory } from "react-router-dom";
+import { GRAPHQL_DEV_CLIENT } from "../../../config";
 import { NetworkContext } from "../../../context/NetworkContext";
+import { REVIEWQUERY } from "../../../graphql/query";
 
 const columns = [
-  { id: "userprofileId", label: "User Profile Id" },
-  { id: "productid", label: "Product Id" },
   { id: "product_sku", label: "Product Sku" },
   { id: "customerName", label: "customer Name" },
+  { id: "rating", label: "Rating" },
+  { id: "title", label: "Title" },
   { id: "message", label: "Message" },
-  { id: "isactive", label: "active" },
-  { id: "createdAt", label: "Created on" },
+  { id: "ispublish", label: "Publish" },
+  { id: "isactive", label: "Active" },
 ];
 
 const useStyles1 = makeStyles((theme) => ({
@@ -45,103 +42,6 @@ const useStyles1 = makeStyles((theme) => ({
 function createData(name, calories, fat) {
   return { name, calories, fat };
 }
-function TablePaginationActions(props) {
-  const classes = useStyles1();
-  const theme = useTheme();
-  const { count, page, rowsPerPage, onChangePage } = props;
-
-  function handleFirstPageButtonClick(event) {
-    onChangePage(event, 0);
-  }
-
-  function handleBackButtonClick(event) {
-    onChangePage(event, page - 1);
-  }
-
-  function handleNextButtonClick(event) {
-    onChangePage(event, page + 1);
-  }
-
-  function handleLastPageButtonClick(event) {
-    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  }
-
-  return (
-    <div className={classes.root}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label="previous page"
-      >
-        {theme.direction === "rtl" ? (
-          <KeyboardArrowRight />
-        ) : (
-          <KeyboardArrowLeft />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        {theme.direction === "rtl" ? (
-          <KeyboardArrowLeft />
-        ) : (
-          <KeyboardArrowRight />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
-    </div>
-  );
-}
-
-TablePaginationActions.propTypes = {
-  count: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-};
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  return stabilizedThis.map((el) => el[0]);
-}
-
 function EnhancedTableHead(props) {
   const {
     classes,
@@ -294,64 +194,63 @@ const useStyles2 = makeStyles((theme) => ({
     overflowX: "auto",
   },
 }));
-
-const CustomerReview = (props) => {
-  let history = useHistory();
-  const classes = useStyles2();
-  const [page, setPage] = React.useState(4);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [pageCount, setPageCount] = React.useState(0);
-  const { sendNetworkRequest } = React.useContext(NetworkContext);
-  const [allReview, setAllReview] = useState([]);
-
-  const query = `
-  query {
-    allCustomerReviews {
-      nodes {
-        customerName
+const ISACTIVEREVIEW = `mutation MyMutation($id: UUID!, $isActive: Boolean) {
+    updateCustomerReviewById(
+      input: { customerReviewPatch: { isActive: $isActive }, id: $id }
+    ) {
+      customerReview {
         id
         isActive
-        isPublish
         message
-        nodeId
+        productId
+        title
+        customerName
         productSku
         rating
-        title
-        updatedAt
-        userprofileId
-        productId
       }
     }
   }
 `;
-  const updateactivequery = `mutation MyMutation($ProductId: String!, $isActive: Boolean) {
-    updateCustomerReviewById(
-      input: {
-        customerReviewPatch: { isActive: $isActive }
-        productId: $ProductId
-      }
-    ) {
-      customerReview {
-        isActive
-        productId
-      }
+const ISPUBLISHREVIEW = `mutation MyMutation($id: UUID!, $isPublish: Boolean) {
+  updateCustomerReviewById(
+    input: { customerReviewPatch: { isPublish: $isPublish }, id: $id }
+  ) {
+    customerReview {
+      id
+      isPublish
+      message
+      productId
+      title
+      customerName
+      productSku
+      rating
     }
-  }  
-  }`;
-  function handleChangePage(event, newPage) {
+  }
+}
+`;
+const CustomerReview = (props) => {
+  let history = useHistory();
+  const classes = useStyles2();
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const { sendNetworkRequest } = React.useContext(NetworkContext);
+  const [allReview, setAllReview] = useState([]);
+
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
-  }
-  function handleChangeRowsPerPage(event) {
-    setRowsPerPage(parseInt(event.target.value, 10));
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(event.target.value);
     setPage(0);
-  }
+  };
 
   useEffect(() => {
-    const url = "https://api-staging.nacjewellers.net/graphql";
+    const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({ query: REVIEWQUERY }),
     };
     fetch(url, opts)
       .then((res) => res.json())
@@ -363,14 +262,14 @@ const CustomerReview = (props) => {
       .catch(console.error);
   }, []);
 
-  const handleChangeIsActive = (productId) => async (event) => {
-    const url = "https://api-staging.nacjewellers.net/graphql";
+  const handleChangeIsPublish = (Id) => async (event) => {
+    const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: updateactivequery,
-        variables: { ProductId: productId, isActive: event.target.checked },
+        query: ISPUBLISHREVIEW,
+        variables: { id: Id, isPublish: event.target.checked },
       }),
     };
 
@@ -381,6 +280,25 @@ const CustomerReview = (props) => {
       })
       .catch(console.error);
   };
+  const handleChangeIsActive = (Id) => async (event) => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: ISACTIVEREVIEW,
+        variables: { id: Id, isActive: event.target.checked },
+      }),
+    };
+
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((fatchvalue) => {
+        window.location.reload();
+      })
+      .catch(console.error);
+  };
+
   return (
     <Paper className={classes.root}>
       <div className={classes.tableWrapper}>
@@ -393,43 +311,37 @@ const CustomerReview = (props) => {
         >
           <EnhancedTableHead classes={classes} />
           <TableBody>
-            {allReview.map((row, index) => (
-              <TableRow key={row.id}>
-                <TableCell component="th" scope="row">
-                  {row.userprofileId}
-                </TableCell>
-                <TableCell align="left">{row.productId}</TableCell>
-                <TableCell align="left">{row.productSku}</TableCell>
-                <TableCell align="left">{row.customerName}</TableCell>
-
-                <TableCell align="left">{row.message}</TableCell>
-
-                <TableCell align="left">
-                  <span>{row.isActive}</span>
-                  <Switch
-                    checked={row.isActive ?? false}
-                    onChange={handleChangeIsActive(row.productId)}
-                    color="primary"
-                  />
-                </TableCell>
-
-                <TableCell align="left" style={{ whiteSpace: "nowrap" }}>
-                  <Moment format="DD MMM YYYY hh:mm a">{row.createdAt}</Moment>
-                </TableCell>
-              </TableRow>
-            ))}
+            {allReview
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => (
+                <TableRow key={row.id}>
+                  <TableCell align="left">{row.productSku}</TableCell>
+                  <TableCell align="left">{row.customerName}</TableCell>
+                  <TableCell align="left">{row.rating}</TableCell>
+                  <TableCell align="left">{row.title}</TableCell>
+                  <TableCell align="left">{row.message}</TableCell>
+                  <TableCell align="left">
+                    <Switch
+                      checked={row.isPublish ?? false}
+                      onChange={handleChangeIsPublish(row.id)}
+                    />
+                  </TableCell>
+                  <TableCell align="left">
+                    <Switch
+                      checked={row.isActive ?? false}
+                      onChange={handleChangeIsActive(row.id)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[10, 50, 100, 200, 500]}
-                count={pageCount}
+                rowsPerPageOptions={[5, 10, 15, 20, 25, 50, 100]}
+                count={allReview.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
-                SelectProps={{
-                  inputProps: { "aria-label": "rows per page" },
-                  native: true,
-                }}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
               />

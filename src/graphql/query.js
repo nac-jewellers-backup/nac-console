@@ -1129,7 +1129,8 @@ const PRODUCTLISTSTATUSEDIT = gql`
     }
   }
 `;
-const REVIEWQUERY = gql`
+
+const REVIEWQUERY = `
   query {
     allCustomerReviews {
       nodes {
@@ -1144,6 +1145,7 @@ const REVIEWQUERY = gql`
         title
         updatedAt
         userprofileId
+        productId
       }
     }
   }
@@ -2072,17 +2074,6 @@ const ISACTIVEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!, $isAct
     featuredProduct {
       productId
       isActive
-    }
-  }
-}
-`;
-const ISACTIVEREVIEW = `mutation MyMutation($ProductId: String!, $isActive: Boolean) {
-  updateCustomerReviewById(
-    input: {customerReviewPatch: {isActive:$isActive , productId:  $ProductId}}
-  ) {
-    customerReview {
-      isActive
-      productId
     }
   }
 }
