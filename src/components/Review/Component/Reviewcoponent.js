@@ -1,7 +1,7 @@
-import { Button, FormControlLabel, Switch } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import { lighten, makeStyles, useTheme } from "@material-ui/core/styles";
+import Switch from "@material-ui/core/Switch";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -14,27 +14,23 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import VisibityIcon from "@material-ui/icons/Visibility";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
-import { withApollo } from "react-apollo";
+import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
 import { useHistory } from "react-router-dom";
-import { NetworkContext } from "../../context/NetworkContext";
-import { PRODUCTLISTSTATUSEDIT } from "../../graphql/query";
+import { NetworkContext } from "../../../context/NetworkContext";
 
 const columns = [
-  { id: "product_id", label: "product id" },
-  { id: "product_name", label: "product name" },
-  { id: "product_type", label: "product type" },
-  { id: "vendor_code", label: "vendor code" },
-  { id: "product_category", label: "product category" },
+  { id: "userprofileId", label: "User Profile Id" },
+  { id: "productid", label: "Product Id" },
+  { id: "product_sku", label: "Product Sku" },
+  { id: "customerName", label: "customer Name" },
+  { id: "message", label: "Message" },
   { id: "isactive", label: "active" },
   { id: "createdAt", label: "Created on" },
 ];
@@ -149,11 +145,10 @@ function stableSort(array, comparator) {
 function EnhancedTableHead(props) {
   const {
     classes,
-    onSelectAllClick,
+
     order,
     orderBy,
-    numSelected,
-    rowCount,
+
     onRequestSort,
   } = props;
   const createSortHandler = (property) => (event) => {
@@ -163,17 +158,10 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {/* <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
-        </TableCell> */}
         {columns.map((headCell) => (
           <TableCell
             key={headCell.id}
+            style={{ whiteSpace: "nowrap" }}
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "default"}
             sortDirection={orderBy === headCell.id ? order : false}
@@ -307,125 +295,92 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
-const AddContact = (props) => {
+const CustomerReview = (props) => {
   let history = useHistory();
   const classes = useStyles2();
-  const [page, setPage] = React.useState(0);
-  const [selected, setSelected] = React.useState([]);
-  const [order, setOrder] = React.useState("desc");
-  const [orderBy, setOrderBy] = React.useState("updatedAt");
+  const [page, setPage] = React.useState(4);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [pageCount, setPageCount] = React.useState(0);
-  const [offsetValue, setOffsetValue] = React.useState(0);
-  const [productlists, setProductlists] = React.useState([]);
-  const [allproductlists, setAllProductlists] = React.useState([]);
-  const [mastercategories, setMastercategories] = React.useState([]);
-  const [masterproducttypes, setMasterproducttypes] = React.useState([]);
   const { sendNetworkRequest } = React.useContext(NetworkContext);
-  const [searchtext, setSearchtext] = React.useState("");
+  const [allReview, setAllReview] = useState([]);
 
-  // const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.contactlist.length - page * rowsPerPage);
+  const query = `
+  query {
+    allCustomerReviews {
+      nodes {
+        customerName
+        id
+        isActive
+        isPublish
+        message
+        nodeId
+        productSku
+        rating
+        title
+        updatedAt
+        userprofileId
+        productId
+      }
+    }
+  }
+`;
+  const updateactivequery = `mutation MyMutation($ProductId: String!, $isActive: Boolean) {
+    updateCustomerReviewById(
+      input: {
+        customerReviewPatch: { isActive: $isActive }
+        productId: $ProductId
+      }
+    ) {
+      customerReview {
+        isActive
+        productId
+      }
+    }
+  }  
+  }`;
   function handleChangePage(event, newPage) {
     setPage(newPage);
-    setOffsetValue(newPage * rowsPerPage);
-    getproductlist("", "", "", "", newPage);
   }
-  useEffect(() => {
-    getproductlist("", "", "", "", "", order, orderBy);
-  }, []);
-  useEffect(() => {
-    getproductlist(
-      props.filterparams.searchtext,
-      props.filterparams.categoryname,
-      props.filterparams.product_type,
-      "",
-      "",
-      order,
-      orderBy
-    );
-  }, [props.filterparams]);
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-    getproductlist("", "", "", event.target.value, "");
   }
-  async function showproductdetails(prod_id) {
-    let bodycontent = {
-      productid: prod_id,
-    };
 
-    let response = await sendNetworkRequest("/getproducturl", {}, bodycontent);
-    console.log(response);
-    //setProductlists(response.products.rows)
-    window.open(response.url, "_blank");
-  }
-  function ProductEdit(id) {
-    // localStorage.setItem('productEditId',id);
-    history.push(`product_attributes/${id}`);
-  }
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-    getproductlist("", "", "", "", "", isAsc ? "desc" : "asc", property);
-  };
-  function searchproduct(searchtext, productcategory, producttype) {
-    let products = allproductlists.filter((l) => {
-      return (
-        l.productId.toLowerCase().match(searchtext.toLowerCase()) ||
-        l.productName.toLowerCase().match(searchtext.toLowerCase())
-      );
-    });
-    setProductlists(products);
-  }
-  async function getproductlist(
-    searchtext,
-    productcategory,
-    producttype,
-    pagesize,
-    offsetvalue,
-    sort,
-    orderby
-  ) {
-    let bodydata = {
-      size: pagesize ? pagesize : rowsPerPage,
-      offset: offsetValue,
-      searchtext: searchtext,
-      productcategory: productcategory,
-      producttype: producttype,
-      order: sort ? sort : order,
-      orderby: orderby ? orderby : orderBy,
+  useEffect(() => {
+    const url = "https://api-staging.nacjewellers.net/graphql";
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query }),
     };
-    let response = await sendNetworkRequest("/getproductlist", {}, bodydata);
-
-    console.log(response);
-    setProductlists(response.products.rows);
-    setPageCount(response.products.count);
-  }
-  function applyfilter(searchtext, categoryname, typename) {
-    getproductlist(searchtext, categoryname, typename);
-  }
-  // function productItemStatusChange(id,isactive){
-  // let variable = {
-  //   "productId": id
-  // };
-  // let status = isactive ? variable.isActive = false :variable.isActive = true;
-  async function productItemStatusChange(id, isactive, refetch) {
-    let variables = {
-      productId: id,
-      isActive: isactive ? false : true,
-    };
-    await props.client
-      .mutate({ mutation: PRODUCTLISTSTATUSEDIT, variables })
-      .then((res) => {
-        if (res !== null) {
-          refetch();
-        }
+    fetch(url, opts)
+      .then((res) => res.json())
+      .then((fatchvalue) => {
+        let data = fatchvalue.data.allCustomerReviews.nodes;
+        console.log(data);
+        setAllReview(data);
       })
       .catch(console.error);
-  }
-  // const [productItemStatusChange,{ data }] = useMutation(PRODUCTLISTSTATUSEDIT);
-  // }
+  }, []);
+
+  const handleChangeIsActive = (productId) => async (event) => {
+    const url = "https://api-staging.nacjewellers.net/graphql";
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: updateactivequery,
+        variables: { ProductId: productId, isActive: event.target.checked },
+      }),
+    };
+
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((fatchvalue) => {
+        window.location.reload();
+      })
+      .catch(console.error);
+  };
   return (
     <Paper className={classes.root}>
       <div className={classes.tableWrapper}>
@@ -436,98 +391,33 @@ const AddContact = (props) => {
           size="small"
           stickyHeader
         >
-          {/* <TableHead>
-            <TableRow>
-              {columns.map(column => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead> */}
-          <EnhancedTableHead
-            classes={classes}
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-          />
+          <EnhancedTableHead classes={classes} />
           <TableBody>
-            {/* <Query
-              query={PRODUCTLIST(true,"Bangles")}
-              onCompleted={data => setPageCount( data.allProductLists.totalCount )}
-              variables={{ "Veiw": rowsPerPage, "Offset": offsetValue}}>
-              {
-                  ({ data, loading, error, refetch }) => {
-                    debugger
-                      if (loading) {
-                          // return <Loader />
-                      }
-                      if (error) {
-                        return <div>{error}</div>
-                          // return false
-                      }
-                      if (data) { 
-                           return <> */}
-            {stableSort(productlists, getComparator(order, orderBy)).map(
-              (row, index) => (
-                <TableRow key={row.product_id}>
-                  <TableCell component="th" scope="row">
-                    {row?.trans_sku_lists?.[0].sku_id}
-                    <Button onClick={(e) => ProductEdit(row.product_id)}>
-                      <EditIcon />
-                    </Button>
-                    <Button onClick={(e) => showproductdetails(row.product_id)}>
-                      <VisibityIcon />
-                    </Button>
-                  </TableCell>
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    onClick={() => showproductdetails(row)}
-                  >
-                    {/* <Link variant="body2">  */}
-                    {row.product_name}
+            {allReview.map((row, index) => (
+              <TableRow key={row.id}>
+                <TableCell component="th" scope="row">
+                  {row.userprofileId}
+                </TableCell>
+                <TableCell align="left">{row.productId}</TableCell>
+                <TableCell align="left">{row.productSku}</TableCell>
+                <TableCell align="left">{row.customerName}</TableCell>
 
-                    {/* </Link>   */}
-                  </TableCell>
-                  <TableCell align="left">{row.product_type}</TableCell>
-                  <TableCell align="left">{row.vendor_code}</TableCell>
-                  <TableCell align="left">{row.product_category}</TableCell>
+                <TableCell align="left">{row.message}</TableCell>
 
-                  <TableCell align="left">
-                    {" "}
-                    <FormControlLabel
-                      label={row.isactive ? "" : ""}
-                      control={
-                        <Switch checked={row.isactive} value="checkedA" />
-                      }
-                    />
-                  </TableCell>
+                <TableCell align="left">
+                  <span>{row.isActive}</span>
+                  <Switch
+                    checked={row.isActive ?? false}
+                    onChange={handleChangeIsActive(row.productId)}
+                    color="primary"
+                  />
+                </TableCell>
 
-                  <TableCell align="left">
-                    <Moment format="DD MMM YYYY hh:mm a">
-                      {row.createdAt}
-                    </Moment>
-                  </TableCell>
-                </TableRow>
-              )
-            )}
-            {/* </> */}
-            {/* }
-                      else{
-                      return <div>{"Fetch Products"}</div>
-                     
-                 } } }
-                </Query>  */}
-            {/* {emptyRows > 0 && (
-              <TableRow style={{ height: 48 * emptyRows }}>
-                <TableCell colSpan={6} />
+                <TableCell align="left" style={{ whiteSpace: "nowrap" }}>
+                  <Moment format="DD MMM YYYY hh:mm a">{row.createdAt}</Moment>
+                </TableCell>
               </TableRow>
-            )}  */}
+            ))}
           </TableBody>
           <TableFooter>
             <TableRow>
@@ -542,7 +432,6 @@ const AddContact = (props) => {
                 }}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
-                // ActionsComponent={TablePaginationActions}
               />
             </TableRow>
           </TableFooter>
@@ -551,4 +440,4 @@ const AddContact = (props) => {
     </Paper>
   );
 };
-export default withApollo(AddContact);
+export default CustomerReview;

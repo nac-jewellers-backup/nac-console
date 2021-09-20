@@ -85,6 +85,8 @@ const route = {
   silverbanner: "/silverbanner",
   silverlistingbanner: "/listingPage",
   FeaturedProduct: "/featuredproduct",
+
+  Comments: "/comments",
 };
 
 export default route;
