@@ -87,6 +87,7 @@ const route = {
   FeaturedProduct: "/featuredproduct",
 
   Comments: "/comments",
+  Newarrival: "/newarrival",
 };
 
 export default route;

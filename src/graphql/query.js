@@ -2063,7 +2063,6 @@ const CREATEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!, $isActiv
   }
 }
 `;
-
 const ISACTIVEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!, $isActive: Boolean) {
   updateFeaturedProductByProductId(
     input: {
@@ -2078,7 +2077,6 @@ const ISACTIVEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!, $isAct
   }
 }
 `;
-
 const DELETEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!) {
   deleteFeaturedProductByProductId(input: { productId: $ProductId }) {
     featuredProduct {
@@ -2086,6 +2084,67 @@ const DELETEFEATUREDPRODUCT = `mutation MyMutation($ProductId: String!) {
     }
   }
 }
+`;
+const CREATENEWARRIVALPRODUCT = `mutation MyMutation($ProductId: String!, $isActive: Boolean) {
+  createNewArrivalProduct(
+    input: { newArrivalProduct: { productId: $ProductId, isActive: $isActive } }
+  ) {
+    newArrivalProduct {
+      productId
+      isActive
+    }
+  }
+}
+`;
+const ALLNEWARRIVALPRODUCT = `query MyQuery{
+  allNewArrivalProducts {
+    nodes {
+      productId
+      productListByProductId {
+        productName
+        productId
+        productImagesByProductId(condition: {ishover: false}) {
+          nodes {
+            imageUrl
+          }
+        }
+        transSkuListsByProductId{
+          nodes{
+            costPrice
+            markupPrice
+            skuUrl
+            transSkuDescriptionsBySkuId{
+              nodes{
+                skuDescription
+              }
+            }
+            sellingPrice
+          }
+        }
+      }
+      isActive
+    }
+  }
+}
+`;
+const ISACTIVENEWARRIVALPRODUCT = `mutation MyMutation($ProductId: String!, $isActive: Boolean) {
+  updateNewArrivalProductByProductId(
+    input: {newArrivalProductPatch: {isActive: $isActive}, productId: $ProductId}
+  ) {
+    newArrivalProduct {
+      productId
+      isActive
+    }
+  }
+}
+`;
+const DELETENEWARRIVALPRODUCT = `mutation MyMutation($ProductId: String!) {
+  deleteNewArrivalProductByProductId(input: {productId: $ProductId}) {
+    clientMutationId
+    deletedNewArrivalProductId
+  }
+}
+
 `;
 export {
   ALLBANNERS,
@@ -2186,4 +2245,8 @@ export {
   ISACTIVEFEATUREDPRODUCT,
   DELETEFEATUREDPRODUCT,
   REVIEWQUERY,
+  CREATENEWARRIVALPRODUCT,
+  ALLNEWARRIVALPRODUCT,
+  ISACTIVENEWARRIVALPRODUCT,
+  DELETENEWARRIVALPRODUCT,
 };
