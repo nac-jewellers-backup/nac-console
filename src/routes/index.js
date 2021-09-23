@@ -3,6 +3,7 @@ import React from "react";
 import { ApolloProvider } from "react-apollo";
 import { Route, Switch } from "react-router-dom";
 import FeaturedProduct from "../components/FeaturedProduct/FeaturedProduct.js";
+import Newarrival from "../components/Newarrival/NewArrival";
 import Review from "../components/Review/Review";
 import { GlobalContext } from "../context";
 import { NetworkProvider } from "../context/NetworkContext";
@@ -277,6 +278,7 @@ const MainApp = () => {
             component={FeaturedProduct}
           />
           <PrivateRoute path={route.Comments} component={Review} />
+          <PrivateRoute path={route.Newarrival} component={Newarrival} />
         </Switch>
       </NetworkProvider>
       {/* </ProductProvider> */}
