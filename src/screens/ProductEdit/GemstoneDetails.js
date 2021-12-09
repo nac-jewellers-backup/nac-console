@@ -1,27 +1,26 @@
-import React from "react";
+import { Button, Chip, Input, TextField } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import Paper from "@material-ui/core/Paper";
+import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
+import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import EditIcon from "@material-ui/icons/Edit";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import TableHead from "@material-ui/core/TableHead";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { Typography, Button, Chip, TextField, Input } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import { ProductContext } from "../../context";
 import MuiAlert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import PropTypes from "prop-types";
+import React from "react";
+import { ProductContext } from "../../context";
 import { NetworkContext } from "../../context/NetworkContext";
 import EditGemstone from "./Components/EditGemstone/EditGemstone";
 
@@ -200,6 +199,7 @@ export default function GemstoneDetails(props) {
   });
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.gemstone && props.gemstone.length - page * rowsPerPage);
   function GemstoneEdit(gemstoneData) {
+
     setGemstoneEditObject({
       ...gemstoneEditObject,
       edit: JSON.parse(JSON.stringify(gemstoneData)),
@@ -239,7 +239,9 @@ export default function GemstoneDetails(props) {
     // setBtnEdit({ ...btnEdit, id: gemstoneData.id, action: true })
     setOpenedit(true);
   }
+
   async function GemstoneSave(gemdata) {
+
     if (
       gemdata.gemstonesettings &&
       gemdata.gemstoneshape &&
@@ -247,6 +249,7 @@ export default function GemstoneDetails(props) {
       gemdata.gemstoneweight &&
       gemdata.gemstonesize
     ) {
+
       let list_data = props.gemstone;
       var bodydata = {};
       let gemstoneChangeData = list_data.map((gemstoneListData, index) => {
@@ -281,13 +284,13 @@ export default function GemstoneDetails(props) {
         let status =
           editGemstoneLists && editGemstoneLists.some((check_edit, index) => check_edit.id === editGemstoneList.id)
             ? (editGemstoneLists =
-                editGemstoneLists &&
-                editGemstoneLists.map((gemstone_list, index) => {
-                  if (gemstone_list.id === editGemstoneList.id) {
-                    return editGemstoneList;
-                  }
-                  return gemstone_list;
-                }))
+              editGemstoneLists &&
+              editGemstoneLists.map((gemstone_list, index) => {
+                if (gemstone_list.id === editGemstoneList.id) {
+                  return editGemstoneList;
+                }
+                return gemstone_list;
+              }))
             : editGemstoneLists.push(editGemstoneList);
       }
       setSnackMessage({
@@ -316,8 +319,9 @@ export default function GemstoneDetails(props) {
         severity: "info",
       });
       handleClick();
+      window.location.reload();
     }
-    window.location.reload();
+
   }
   function handleChangePage(event, newPage) {
     setPage(newPage);
@@ -328,9 +332,13 @@ export default function GemstoneDetails(props) {
     setPage(0);
   }
   const handleoptionChange = (type) => (event, value) => {
+    console.log(type, event.target.value, value, "aaaaaaa")
+    debugger;
     setProductCtx({ ...productCtx, [type]: value });
   };
   const handleInputChange = (type) => (e) => {
+    console.log(type, e.target.value, "aaaaaaa")
+    debugger;
     setProductCtx({ ...productCtx, [type]: e.target.value });
   };
   return (
@@ -388,10 +396,10 @@ export default function GemstoneDetails(props) {
                       />
                     </TableCell>
                   ) : (
-                    <TableCell component="th" scope="row">
-                      {row.gemstoneSize}
-                    </TableCell>
-                  )}
+                      <TableCell component="th" scope="row">
+                        {row.gemstoneSize}
+                      </TableCell>
+                    )}
                   {btnEdit.action && btnEdit.id == row.id ? (
                     <TableCell component="th" scope="row">
                       <Input
@@ -407,10 +415,10 @@ export default function GemstoneDetails(props) {
                       />
                     </TableCell>
                   ) : (
-                    <TableCell component="th" scope="row">
-                      {row.stoneWeight}
-                    </TableCell>
-                  )}
+                      <TableCell component="th" scope="row">
+                        {row.stoneWeight}
+                      </TableCell>
+                    )}
                   {btnEdit.action && btnEdit.id == row.id ? (
                     <TableCell component="th" scope="row">
                       <Input
@@ -426,10 +434,10 @@ export default function GemstoneDetails(props) {
                       />
                     </TableCell>
                   ) : (
-                    <TableCell component="th" scope="row">
-                      {row.stoneCount}
-                    </TableCell>
-                  )}
+                      <TableCell component="th" scope="row">
+                        {row.stoneCount}
+                      </TableCell>
+                    )}
                   <TableCell style={{ width: 40 }} component="th" scope="row">
                     {row.stoneWeight}
                   </TableCell>
@@ -466,10 +474,10 @@ export default function GemstoneDetails(props) {
                       />
                     </TableCell>
                   ) : (
-                    <TableCell component="th" scope="row">
-                      {row.gemstoneSetting}
-                    </TableCell>
-                  )}
+                      <TableCell component="th" scope="row">
+                        {row.gemstoneSetting}
+                      </TableCell>
+                    )}
                   {btnEdit.action && btnEdit.id == row.id ? (
                     <TableCell component="th" scope="row">
                       <Autocomplete
@@ -500,10 +508,10 @@ export default function GemstoneDetails(props) {
                       />
                     </TableCell>
                   ) : (
-                    <TableCell component="th" scope="row">
-                      {row.gemstoneShape}
-                    </TableCell>
-                  )}
+                      <TableCell component="th" scope="row">
+                        {row.gemstoneShape}
+                      </TableCell>
+                    )}
                   {btnEdit.action && btnEdit.id == row.id ? (
                     <TableCell align="center">
                       <Button onClick={(e) => GemstoneSave(row.id)}>
@@ -511,12 +519,12 @@ export default function GemstoneDetails(props) {
                       </Button>
                     </TableCell>
                   ) : (
-                    <TableCell align="center">
-                      <Button onClick={(e) => GemstoneEdit(row)}>
-                        <EditIcon />
-                      </Button>
-                    </TableCell>
-                  )}
+                      <TableCell align="center">
+                        <Button onClick={(e) => GemstoneEdit(row)}>
+                          <EditIcon />
+                        </Button>
+                      </TableCell>
+                    )}
                 </TableRow>
               ))}
             {emptyRows == 0 && (
