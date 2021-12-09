@@ -1,49 +1,37 @@
-import React from "react";
-import clsx from "clsx";
+import { Button, Card, Chip, Grid, Input, TextField } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import Paper from "@material-ui/core/Paper";
 import { lighten, makeStyles, useTheme } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
 import Table from "@material-ui/core/Table";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
-import { NetworkContext } from "../../../context/NetworkContext";
-import ConformationAlert from "../../../components/ConformationAlert";
-
-import Toolbar from "@material-ui/core/Toolbar";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
+import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import Toolbar from "@material-ui/core/Toolbar";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+import CancelIcon from "@material-ui/icons/CancelOutlined";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import TableHead from "@material-ui/core/TableHead";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { Input, Grid, Card } from "@material-ui/core";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@material-ui/core/Link";
-import { Query, withApollo } from "react-apollo";
-import {
-  DIAMONDMARKUP,
-  PRODUCTLISTSTATUSEDIT,
-  DELETEMARKUPPRICE,
-} from "../../../graphql/query";
-import { useHistory } from "react-router-dom";
-import { Button, Switch } from "@material-ui/core";
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import Moment from "react-moment";
-import Addmarkup from "./Addmarkup";
-import CancelIcon from "@material-ui/icons/CancelOutlined";
 import SaveIcon from "@material-ui/icons/Save";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { Chip, TextField } from "@material-ui/core";
-import { BASE_URL } from "../../../config";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Filterandsearch from "./../../../screens/Productlist/filterandsearch";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import React from "react";
+import { Query, withApollo } from "react-apollo";
+import Moment from "react-moment";
+import { useHistory } from "react-router-dom";
+import ConformationAlert from "../../../components/ConformationAlert";
+import { NetworkContext } from "../../../context/NetworkContext";
+import {
+  DELETEMARKUPPRICE, DIAMONDMARKUP
+} from "../../../graphql/query";
+import Addmarkup from "./Addmarkup";
+
 const columns = [
   { id: "Component", label: "Components" },
   { id: "Product Category", label: "product Category" },
@@ -104,8 +92,8 @@ function TablePaginationActions(props) {
         {theme.direction === "rtl" ? (
           <KeyboardArrowRight />
         ) : (
-          <KeyboardArrowLeft />
-        )}
+            <KeyboardArrowLeft />
+          )}
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
@@ -115,8 +103,8 @@ function TablePaginationActions(props) {
         {theme.direction === "rtl" ? (
           <KeyboardArrowLeft />
         ) : (
-          <KeyboardArrowRight />
-        )}
+            <KeyboardArrowRight />
+          )}
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
@@ -236,13 +224,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -267,10 +255,10 @@ const EnhancedTableToolbar = (props) => {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle">
-          Nutrition
-        </Typography>
-      )}
+          <Typography className={classes.title} variant="h6" id="tableTitle">
+            Nutrition
+          </Typography>
+        )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
@@ -279,10 +267,10 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list"></IconButton>
-        </Tooltip>
-      )}
+          <Tooltip title="Filter list">
+            <IconButton aria-label="filter list"></IconButton>
+          </Tooltip>
+        )}
     </Toolbar>
   );
 };
@@ -387,7 +375,7 @@ const AddContact = (props) => {
           // refetchval()
         }
       })
-      .catch((err) => {});
+      .catch((err) => { });
     setIsconformation(false);
   }
   function handleDelete(diamondData, refetch) {
@@ -578,7 +566,7 @@ const AddContact = (props) => {
                 variables={{ vendorCode: pricecomponent }}
               >
                 {({ data, loading, error, refetch }) => {
-                  debugger;
+
                   if (loading) {
                     // return <Loader />
                   }
@@ -704,12 +692,12 @@ const AddContact = (props) => {
                                     )}
                                   />
                                 ) : (
-                                  <Typography className={classes.heading}>
-                                    {row.markupType === 1
-                                      ? "Flat"
-                                      : "Percentage"}{" "}
-                                  </Typography>
-                                )}
+                                    <Typography className={classes.heading}>
+                                      {row.markupType === 1
+                                        ? "Flat"
+                                        : "Percentage"}{" "}
+                                    </Typography>
+                                  )}
                               </TableCell>
 
                               <TableCell align="left">
@@ -726,10 +714,10 @@ const AddContact = (props) => {
                                     name="Cost Price"
                                   />
                                 ) : (
-                                  <Typography className={classes.heading}>
-                                    {row.markupValue}{" "}
-                                  </Typography>
-                                )}
+                                    <Typography className={classes.heading}>
+                                      {row.markupValue}{" "}
+                                    </Typography>
+                                  )}
                               </TableCell>
 
                               <TableCell align="left">
@@ -754,20 +742,20 @@ const AddContact = (props) => {
                                   </Button>
                                 </TableCell>
                               ) : (
-                                <TableCell
-                                  align="center"
-                                  style={{ width: 170 }}
-                                >
-                                  <Button onClick={(e) => handleEdit(row)}>
-                                    <EditIcon />
-                                  </Button>
-                                  <Button
-                                    onClick={(e) => handleDelete(row, refetch)}
+                                  <TableCell
+                                    align="center"
+                                    style={{ width: 170 }}
                                   >
-                                    <DeleteIcon />
-                                  </Button>
-                                </TableCell>
-                              )}
+                                    <Button onClick={(e) => handleEdit(row)}>
+                                      <EditIcon />
+                                    </Button>
+                                    <Button
+                                      onClick={(e) => handleDelete(row, refetch)}
+                                    >
+                                      <DeleteIcon />
+                                    </Button>
+                                  </TableCell>
+                                )}
                             </TableRow>
                           </>
                         ))}

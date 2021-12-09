@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
-import clsx from "clsx";
-import { OrderContext } from "../../context";
-import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { API_URL, GRAPHQL_DEV_CLIENT } from "../../config";
-import { PAYMENTSTATUSMASTER, PRODUCTDIAMONDTYPES } from "../../graphql/query";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { v4 as uuid } from 'uuid';
+import React, { useEffect, useState } from "react";
 import Page from "../../components/Page";
+import { GRAPHQL_DEV_CLIENT } from "../../config";
+import { OrderContext } from "../../context";
+import { NetworkContext } from "../../context/NetworkContext";
+import { PAYMENTSTATUSMASTER } from "../../graphql/query";
 import { Header, Results } from "./components";
 import Columns from "./components/columnnames.json";
-import { NetworkContext } from "../../context/NetworkContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +37,7 @@ export default function Producttypecontent() {
     Columns.defaultcolumnnames
   );
 
-  function columnchanged(columnnames) {  
+  function columnchanged(columnnames) {
     let displycolumns = [];
     columnnames.filter((element) => {
       displycolumns.push(element.name);
@@ -77,38 +74,38 @@ export default function Producttypecontent() {
   function searchOption(searchtext) {
     if (searchtext !== "") {
       var data_filter = orders.filter((element) => {
-         if(element.orderstatus === searchtext){
-            return element
-         }
-          });
+        if (element.orderstatus === searchtext) {
+          return element
+        }
+      });
       setFilteredorder(data_filter);
     } else {
       setFilteredorder(orders);
     }
   }
-  function onCancel(){
+  function onCancel() {
     setFilteredorder(orders);
   }
 
-  function searchDate(min,max) {
-    let  fromdate = JSON.stringify(min)
-    fromdate = fromdate.slice(1,11)
+  function searchDate(min, max) {
+    let fromdate = JSON.stringify(min)
+    fromdate = fromdate.slice(1, 11)
     console.log(fromdate)
-    let  todate = JSON.stringify(max)
-    todate = todate.slice(1,11)
+    let todate = JSON.stringify(max)
+    todate = todate.slice(1, 11)
     console.log(todate)
-   if(fromdate && todate !== ""){
-    var date_filter = orders.filter((element)=>{
-    //  console.log(element.orderdate.slice(0,10))
-      if(element.orderdate.slice(0,10) > fromdate && element.orderdate.slice(0,10) <=todate){
-        return element
-      }   
-    });
-    setFilteredorder(date_filter)
-  }
-  else {
-    setFilteredorder(orders);
-  }
+    if (fromdate && todate !== "") {
+      var date_filter = orders.filter((element) => {
+        //  console.log(element.orderdate.slice(0,10))
+        if (element.orderdate.slice(0, 10) > fromdate && element.orderdate.slice(0, 10) <= todate) {
+          return element
+        }
+      });
+      setFilteredorder(date_filter)
+    }
+    else {
+      setFilteredorder(orders);
+    }
   }
 
 
@@ -116,7 +113,7 @@ export default function Producttypecontent() {
   async function getorders() {
     var orders_arr = [];
     orderCtx.orderMaster.orders.forEach((element) => {
-      let orderobj = {};   
+      let orderobj = {};
       orderobj["orderid"] = element.id;
       orderobj["orderdate"] = element.createdAt;
       orderobj["paymentmode"] = element.paymentMode;
@@ -133,11 +130,9 @@ export default function Producttypecontent() {
         pgresponseobj.forEach((pgres) => {
           let response_pg = JSON.parse(pgres.paymentResponse);
           if (element.paymentMode === "Prepaid") {
-            orderobj["paymentstatus"] = `${
-              response_pg?.ipgTransactionId || response_pg?.APTRANSACTIONID
-            }\n${response_pg?.fail_reason || ""}\n${
-              response_pg?.status || response_pg?.TRANSACTIONPAYMENTSTATUS
-            }`;
+            orderobj["paymentstatus"] = `${response_pg?.ipgTransactionId || response_pg?.APTRANSACTIONID
+              }\n${response_pg?.fail_reason || ""}\n${response_pg?.status || response_pg?.TRANSACTIONPAYMENTSTATUS
+              }`;
             /* response_pg?.ipgTransactionId ||
               response_pg?.APTRANSACTIONID +
                 " \n" +
@@ -248,7 +243,7 @@ export default function Producttypecontent() {
   }, []);
   useEffect(() => {
     let mounted = true;
-    const fetchOrders = () => {};
+    const fetchOrders = () => { };
 
     getmaster();
     getorders();
@@ -258,16 +253,15 @@ export default function Producttypecontent() {
       mounted = false;
     };
   }, []);
-//   debugger
-console.log(orders,"main")
+
   return (
     <Page className={classes.root} title="Orders Management List">
-      
 
-            <Typography component="h3" variant="h3" style={{margin:"10px"}}>
-            Orders
+
+      <Typography component="h3" variant="h3" style={{ margin: "10px" }}>
+        Orders
            </Typography>
-          
+
       <Header
         getColumnnames={columnchanged}
         onSearch={searchorder}

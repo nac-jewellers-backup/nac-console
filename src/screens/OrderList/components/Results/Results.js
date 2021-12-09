@@ -1,41 +1,39 @@
-import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-// import PerfectScrollbar from 'react-perfect-scrollbar';
-import { makeStyles } from "@material-ui/styles";
-import CreateIcon from "@material-ui/icons/Create";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Moment from "react-moment";
-import { TextField } from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import SaveIcon from "@material-ui/icons/Save";
-import CancelIcon from "@material-ui/icons/CancelOutlined";
-import EditIcon from "@material-ui/icons/Edit";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-
-import EnhancedTableHead from "../../../../components/EnhancedTableHead";
 import {
   Button,
   Card,
   CardActions,
   CardContent,
-  Chip,
-  Grid,
-  CardHeader,
-  Divider,
-  IconButton,
-  Typography,
-  Table,
+
+
+
+
+
+
+
+
+
+
+
+
+  colors, Table,
   TableBody,
   TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  colors,
-} from "@material-ui/core";
 
-import { Label, ReviewStars } from "../../../../components";
+  TablePagination,
+  TableRow, TextField, Typography
+} from "@material-ui/core";
+import CancelIcon from "@material-ui/icons/CancelOutlined";
+import SaveIcon from "@material-ui/icons/Save";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+// import PerfectScrollbar from 'react-perfect-scrollbar';
+import { makeStyles } from "@material-ui/styles";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import Moment from "react-moment";
+import EnhancedTableHead from "../../../../components/EnhancedTableHead";
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -69,8 +67,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Results = (props) => {
-  // debugger
-  console.log(props, "the list data");
+
   const { className, orders, ...rest } = props;
   const [editcontent, setEditcontent] = React.useState({});
   const [order, setOrder] = React.useState("desc");
@@ -267,67 +264,67 @@ const Results = (props) => {
                                 </Button>
                               </>
                             ) : (
-                              <Button>
-                                <VisibilityIcon onClick={(e) => showorderdetails(`/orderdetails/${order.orderid}`)} />
-                              </Button>
-                            )}
+                                <Button>
+                                  <VisibilityIcon onClick={(e) => showorderdetails(`/orderdetails/${order.orderid}`)} />
+                                </Button>
+                              )}
                           </TableCell>
                         ) : (
-                          <>
-                            {btnEdit.action && btnEdit.id == order.orderid ? (
-                              <TableCell>
-                                {!col.type || col.type == 1 ? <Typography> {order[col.key]}</Typography> : null}
-                                {col.type == 2 ? (
-                                  <TextField
-                                    variant="outlined"
-                                    margin="dense"
-                                    id={col.key}
-                                    name={col.key}
-                                    value={editcontent[col.key]}
-                                    onChange={handleInputChange(col.key)}
-                                    label={col.label}
-                                  />
-                                ) : null}
-                                {col.type == 4 ? <Moment format="DD MMM YYYY hh:mm a">{order[col.key]}</Moment> : null}
+                            <>
+                              {btnEdit.action && btnEdit.id == order.orderid ? (
+                                <TableCell>
+                                  {!col.type || col.type == 1 ? <Typography> {order[col.key]}</Typography> : null}
+                                  {col.type == 2 ? (
+                                    <TextField
+                                      variant="outlined"
+                                      margin="dense"
+                                      id={col.key}
+                                      name={col.key}
+                                      value={editcontent[col.key]}
+                                      onChange={handleInputChange(col.key)}
+                                      label={col.label}
+                                    />
+                                  ) : null}
+                                  {col.type == 4 ? <Moment format="DD MMM YYYY hh:mm a">{order[col.key]}</Moment> : null}
 
-                                {col.type == 5 && order.paymentmode == "COD" ? (
-                                  <Autocomplete
-                                    id="combo-box-demo"
-                                    options={props.paymentstatus}
-                                    margin="dense"
-                                    fullWidth
-                                    value={editcontent[col.key]}
-                                    onChange={handleoptionChange(col.key)}
-                                    getOptionLabel={(option) => option.name}
-                                    renderInput={(params) => <TextField {...params} label="Payment Status" variant="outlined" />}
-                                  />
-                                ) : null}
-                                {col.type == 5 && order.paymentmode != "COD" ? <Typography> {order[col.key]}</Typography> : null}
+                                  {col.type == 5 && order.paymentmode == "COD" ? (
+                                    <Autocomplete
+                                      id="combo-box-demo"
+                                      options={props.paymentstatus}
+                                      margin="dense"
+                                      fullWidth
+                                      value={editcontent[col.key]}
+                                      onChange={handleoptionChange(col.key)}
+                                      getOptionLabel={(option) => option.name}
+                                      renderInput={(params) => <TextField {...params} label="Payment Status" variant="outlined" />}
+                                    />
+                                  ) : null}
+                                  {col.type == 5 && order.paymentmode != "COD" ? <Typography> {order[col.key]}</Typography> : null}
 
-                                {col.type == 3 ? (
-                                  <Autocomplete
-                                    id="combo-box-demo"
-                                    options={props.orderstatus}
-                                    margin="dense"
-                                    fullWidth
-                                    value={editcontent[col.key]}
-                                    onChange={handleoptionChange(col.key)}
-                                    getOptionLabel={(option) => option.name}
-                                    renderInput={(params) => <TextField {...params} label="Order Status" variant="outlined" />}
-                                  />
-                                ) : null}
-                              </TableCell>
-                            ) : (
-                              <TableCell align="center" style={{ width: 20 }}>
-                                {col.type == 4 ? (
-                                  <Moment format="DD MMM YYYY hh:mm a">{order[col.key]}</Moment>
-                                ) : (
-                                  <Typography> {order[col.key]}</Typography>
+                                  {col.type == 3 ? (
+                                    <Autocomplete
+                                      id="combo-box-demo"
+                                      options={props.orderstatus}
+                                      margin="dense"
+                                      fullWidth
+                                      value={editcontent[col.key]}
+                                      onChange={handleoptionChange(col.key)}
+                                      getOptionLabel={(option) => option.name}
+                                      renderInput={(params) => <TextField {...params} label="Order Status" variant="outlined" />}
+                                    />
+                                  ) : null}
+                                </TableCell>
+                              ) : (
+                                  <TableCell align="center" style={{ width: 20 }}>
+                                    {col.type == 4 ? (
+                                      <Moment format="DD MMM YYYY hh:mm a">{order[col.key]}</Moment>
+                                    ) : (
+                                        <Typography> {order[col.key]}</Typography>
+                                      )}
+                                  </TableCell>
                                 )}
-                              </TableCell>
-                            )}
-                          </>
-                        )}
+                            </>
+                          )}
                       </>
                     ))}
 

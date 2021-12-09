@@ -1,30 +1,33 @@
-import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import PropTypes from "prop-types";
+import {
+  Button, Card,
+  CardActions,
+
+  CardContent, CardHeader,
+
+  Divider,
+
+
+
+
+
+
+  Link, Table,
+  TableBody,
+
+  TableCell, TableRow,
+
+  TextField
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 import clsx from "clsx";
 import moment from "moment";
-import { API_URL, GRAPHQL_DEV_CLIENT } from "../../../../config";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import { GRAPHQL_DEV_CLIENT } from "../../../../config";
 import {
-  PAYMENTSTATUSMASTER,
-  PRODUCTDIAMONDTYPES,
+  PAYMENTSTATUSMASTER
 } from "../../../../graphql/query";
-import { makeStyles } from "@material-ui/styles";
-import {
-  Card,
-  CardActions,
-  CardHeader,
-  CardContent,
-  Divider,
-  Button,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  TextField,
-  Link,
-} from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import ReceiptIcon from "@material-ui/icons/ReceiptOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -78,8 +81,8 @@ const OrderInfo = (props) => {
   React.useEffect(() => {
     getmaster();
   }, []);
-  debugger;
-  console.log(props);
+
+
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
       <CardHeader title="Order info" />

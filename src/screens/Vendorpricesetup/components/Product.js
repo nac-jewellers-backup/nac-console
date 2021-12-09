@@ -1,52 +1,36 @@
-import React,{ useEffect, useContext, useState }  from 'react';
-import clsx from 'clsx';
-import {lighten, makeStyles, useTheme } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
+import { Button, Card, Chip, Grid, Input, TextField } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import { lighten, makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-import ConformationAlert from '../../../components/ConformationAlert'
-import Toolbar from '@material-ui/core/Toolbar';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
+import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import CancelIcon from '@material-ui/icons/CancelOutlined';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import TableHead from '@material-ui/core/TableHead';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { Input, Grid, Card} from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom'
-import Link from '@material-ui/core/Link'
-import { Query, withApollo } from 'react-apollo';
-import {GOLDPRICELIST,ALLPRODUCTLIST,DELETEGOLDPRICE,METALMASTER,PRODUCTLISTSTATUSEDIT} from '../../../graphql/query';
-import { useHistory } from "react-router-dom";
-import { Button, Switch } from '@material-ui/core';
-import { useMutation,useQuery } from '@apollo/react-hooks';
-import { NetworkContext } from '../../../context/NetworkContext';
-import Moment from 'react-moment';
-import CancelIcon from '@material-ui/icons/CancelOutlined';
 import SaveIcon from '@material-ui/icons/Save';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Addmetalprice from './Addmetalprice'
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { API_URL, GRAPHQL_DEV_CLIENT } from '../../../config';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import { Query, withApollo } from 'react-apollo';
+import Moment from 'react-moment';
+import { useHistory } from "react-router-dom";
+import ConformationAlert from '../../../components/ConformationAlert';
+import { GRAPHQL_DEV_CLIENT } from '../../../config';
+import { NetworkContext } from '../../../context/NetworkContext';
+import { DELETEGOLDPRICE, GOLDPRICELIST, METALMASTER, PRODUCTLISTSTATUSEDIT } from '../../../graphql/query';
+import Addmetalprice from './Addmetalprice';
 
-import {
- 
-  Chip,
-  TextField
-} from '@material-ui/core';
-import {BASE_URL} from '../../../config'
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Filterandsearch from './../../../screens/Productlist/filterandsearch';
-import { MATERIALMASTER } from '../../../services/queries';
 const columns = [
   { id: 'Metal', label: 'Metal' },
   { id: 'Purity', label: 'Purity' },
@@ -54,7 +38,7 @@ const columns = [
   { id: 'Selling Price', label: 'Selling Price' },
   { id: 'Selling Price Type', label: 'Selling Price Type' },
   { id: 'updatedAt', label: 'updatedAt' },
-  { id: 'Edit / Delete', label: 'Edit / Delete', align : 'center' }
+  { id: 'Edit / Delete', label: 'Edit / Delete', align: 'center' }
 
 ];
 
@@ -170,7 +154,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-       
+
         {columns.map(headCell => (
           <TableCell
             key={headCell.id}
@@ -215,13 +199,13 @@ const useToolbarStyles = makeStyles(theme => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: '1 1 100%',
   },
@@ -242,10 +226,10 @@ const EnhancedTableToolbar = props => {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle">
-          Nutrition
-        </Typography>
-      )}
+          <Typography className={classes.title} variant="h6" id="tableTitle">
+            Nutrition
+          </Typography>
+        )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
@@ -254,12 +238,12 @@ const EnhancedTableToolbar = props => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-          
-          </IconButton>
-        </Tooltip>
-      )}
+          <Tooltip title="Filter list">
+            <IconButton aria-label="filter list">
+
+            </IconButton>
+          </Tooltip>
+        )}
     </Toolbar>
   );
 };
@@ -315,18 +299,18 @@ const useStyles2 = makeStyles(theme => ({
   },
 }));
 
-const   AddContact=(props)=> {
+const AddContact = (props) => {
   let history = useHistory();
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(50);
-  const [pageCount,setPageCount] = React.useState(0);
-  const [offsetValue,setOffsetValue] = React.useState(0)
-  const [editdiamond,setEditdiamond] = React.useState({})
-  const [goldpricelist,setGoldpricelist] = React.useState({})
+  const [pageCount, setPageCount] = React.useState(0);
+  const [offsetValue, setOffsetValue] = React.useState(0)
+  const [editdiamond, setEditdiamond] = React.useState({})
+  const [goldpricelist, setGoldpricelist] = React.useState({})
   const { sendNetworkRequest } = React.useContext(NetworkContext);
-  const [metalmaster,setMetalmaster] = React.useState([])
-  const [puritymaster,setPuritymaster] = React.useState([])
+  const [metalmaster, setMetalmaster] = React.useState([])
+  const [puritymaster, setPuritymaster] = React.useState([])
 
   // const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.contactlist.length - page * rowsPerPage);
   const [order, setOrder] = React.useState('asc');
@@ -345,15 +329,14 @@ const   AddContact=(props)=> {
   const hidedeleteconformation = () => {
     setIsconformation(false);
   };
- async function handledelete(datacontent,refetch)
-  {
-   
-    let variables ={
-      elementId:deleteid
-    }
-    await props.client.mutate({mutation:DELETEGOLDPRICE,variables}).then(res=>{
+  async function handledelete(datacontent, refetch) {
 
-      if(res!==null){
+    let variables = {
+      elementId: deleteid
+    }
+    await props.client.mutate({ mutation: DELETEGOLDPRICE, variables }).then(res => {
+
+      if (res !== null) {
         refetch();
         // refetchval()
       }
@@ -363,27 +346,25 @@ const   AddContact=(props)=> {
     setIsconformation(false);
 
   }
-  async function handleAdd(metalcontent,refetch)
+  async function handleAdd(metalcontent, refetch) {
+    var bodydata = {}
+    bodydata = {
+      material: metalcontent.metal.name,
+      purity: metalcontent.purity.shortCode,
+      costprice: metalcontent.costPrice,
+      sellingprice: metalcontent.sellingPrice,
+      pricetype: metalcontent.pricetype.label,
+      vendor: props.vendor,
+      isadd: true
+    }
+    console.log("--------")
 
-  {
-var bodydata = {}
-bodydata = {
-material : metalcontent.metal.name,
- purity: metalcontent.purity.shortCode,
- costprice : metalcontent.costPrice,
- sellingprice : metalcontent.sellingPrice,
- pricetype: metalcontent.pricetype.label,
- vendor : props.vendor,
- isadd: true
-}
-console.log("--------")
+    console.log(JSON.stringify(bodydata))
+    await sendNetworkRequest('/updatemetalprice', {}, bodydata)
 
-console.log(JSON.stringify(bodydata))
- await sendNetworkRequest('/updatemetalprice', {}, bodydata)
-
- setOpen(false)
- refetch()
-//  setBtnEdit({ ...btnEdit, id:"", action: false })
+    setOpen(false)
+    refetch()
+    //  setBtnEdit({ ...btnEdit, id:"", action: false })
   }
   function handleDelete(diamondData) {
     setDeleteid(diamondData.id)
@@ -400,34 +381,33 @@ console.log(JSON.stringify(bodydata))
   };
   function handleChangePage(event, newPage) {
     setPage(newPage);
-    setOffsetValue(newPage*rowsPerPage)
+    setOffsetValue(newPage * rowsPerPage)
   }
   function CancelEdit(diamondData) {
-    setBtnEdit({ ...btnEdit, id:'', action: false })
+    setBtnEdit({ ...btnEdit, id: '', action: false })
 
   }
-  
+
   function handleEdit(diamondData) {
-    let pricetypes =[{label: 1,name:"Flat"},{label:2,name:"Percentage"}]
-      let selectedsellingPriceType = {}
-      pricetypes.forEach(element => {
-    
-        if(element.label == diamondData.sellingPriceType)
-        {
-          selectedsellingPriceType = element
-        }
-      })
-        setEditdiamond({  
-          ...editdiamond,
-          priceid: diamondData.id,
-          costPrice : diamondData.costPrice,
-          sellingPriceType : diamondData.sellingPriceType,
-          selectedsellingPriceType : selectedsellingPriceType,
-          sellingPrice : diamondData.sellingPrice,
-          updatedAt : new Date()
+    let pricetypes = [{ label: 1, name: "Flat" }, { label: 2, name: "Percentage" }]
+    let selectedsellingPriceType = {}
+    pricetypes.forEach(element => {
+
+      if (element.label == diamondData.sellingPriceType) {
+        selectedsellingPriceType = element
+      }
+    })
+    setEditdiamond({
+      ...editdiamond,
+      priceid: diamondData.id,
+      costPrice: diamondData.costPrice,
+      sellingPriceType: diamondData.sellingPriceType,
+      selectedsellingPriceType: selectedsellingPriceType,
+      sellingPrice: diamondData.sellingPrice,
+      updatedAt: new Date()
 
 
-        })
+    })
     // setProductCtx({
     //   ...productCtx,
     //   editleadtime:diamondData.vendorDeliveryTime,
@@ -435,39 +415,39 @@ console.log(JSON.stringify(bodydata))
     //   editisdefault:diamondData.isdefault,
     //   editisactive:diamondData.isActive
     // })
-    setBtnEdit({ ...btnEdit, id:diamondData.id, action: true })
+    setBtnEdit({ ...btnEdit, id: diamondData.id, action: true })
 
   }
-  async function handleSave(id, refetch){
+  async function handleSave(id, refetch) {
     var bodydata = {}
-   bodydata = {
-    priceid: editdiamond.priceid,
-    costprice : editdiamond.costPrice,
-    sellingprice : editdiamond.sellingPrice,
-    pricetype: editdiamond.sellingPriceType.label
-   }
-  await sendNetworkRequest('/updatemetalprice', {}, bodydata)
+    bodydata = {
+      priceid: editdiamond.priceid,
+      costprice: editdiamond.costPrice,
+      sellingprice: editdiamond.sellingPrice,
+      pricetype: editdiamond.sellingPriceType.label
+    }
+    await sendNetworkRequest('/updatemetalprice', {}, bodydata)
 
-    setBtnEdit({ ...btnEdit, id:"", action: false })
+    setBtnEdit({ ...btnEdit, id: "", action: false })
     refetch()
 
   }
   const handleoptionChange = type => (event, value) => {
-    setEditdiamond({ ...editdiamond, [type]: value})
-}
-  const handleinputChange =type => e => {
-   setEditdiamond({
-     ...editdiamond,
-     [type]: e.target.value
-   })
-     // setProductCtx({ ...productCtx, [type]: e.target.value})
-   
+    setEditdiamond({ ...editdiamond, [type]: value })
+  }
+  const handleinputChange = type => e => {
+    setEditdiamond({
+      ...editdiamond,
+      [type]: e.target.value
+    })
+    // setProductCtx({ ...productCtx, [type]: e.target.value})
+
   }
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   }
-  function ProductEdit(id){
+  function ProductEdit(id) {
     // localStorage.setItem('productEditId',id);
     history.push(`product_attributes/${id}`)
   }
@@ -498,7 +478,7 @@ console.log(JSON.stringify(bodydata))
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: METALMASTER, variables: { } })
+      body: JSON.stringify({ query: METALMASTER, variables: {} })
     };
     // console.log("helo",setProductCtx)
     fetch(url, opts)
@@ -512,36 +492,36 @@ console.log(JSON.stringify(bodydata))
       .catch(console.error)
   }, [])
   // function productItemStatusChange(id,isactive){
-    // let variable = {
-    //   "productId": id
-    // };
-    // let status = isactive ? variable.isActive = false :variable.isActive = true;
-    async function productItemStatusChange(id,isactive,refetch){
-      let variables ={
-        productId:id,
-        isActive:isactive ?false:true
-      }
-      await props.client.mutate({mutation:PRODUCTLISTSTATUSEDIT,variables}).then(res=>{
-
-        if(res!==null){
-          refetch();
-        }
-      }).catch(console.error)
-    
+  // let variable = {
+  //   "productId": id
+  // };
+  // let status = isactive ? variable.isActive = false :variable.isActive = true;
+  async function productItemStatusChange(id, isactive, refetch) {
+    let variables = {
+      productId: id,
+      isActive: isactive ? false : true
     }
-    // const [productItemStatusChange,{ data }] = useMutation(PRODUCTLISTSTATUSEDIT);
+    await props.client.mutate({ mutation: PRODUCTLISTSTATUSEDIT, variables }).then(res => {
+
+      if (res !== null) {
+        refetch();
+      }
+    }).catch(console.error)
+
+  }
+  // const [productItemStatusChange,{ data }] = useMutation(PRODUCTLISTSTATUSEDIT);
   // }
   return (
-      <>
-     
-    <Card className={classes.cardcontent} > 
-    <Grid container justify="left"   alignItems="center" className={classes.cardroot} spacing={4}>
-      <Grid item xs={6}> 
-      <Typography variant="h6"> 
-        {"Gold Price Setup"}
-      </Typography> 
-      </Grid>
-      {/* <Grid item> 
+    <>
+
+      <Card className={classes.cardcontent} >
+        <Grid container justify="left" alignItems="center" className={classes.cardroot} spacing={4}>
+          <Grid item xs={6}>
+            <Typography variant="h6">
+              {"Gold Price Setup"}
+            </Typography>
+          </Grid>
+          {/* <Grid item> 
       <TextField
           variant="outlined"
           margin="dense"
@@ -552,176 +532,176 @@ console.log(JSON.stringify(bodydata))
           name="Cost Price"
       />
       </Grid> */}
-      <Grid item xs={6} style={{textAlign: "right"}}>
-        <Button color="primary" variant="contained"  size="small"  style={{paddingRight: 16, paddingLeft: 16}} onClick={handleClickOpen}>
+          <Grid item xs={6} style={{ textAlign: "right" }}>
+            <Button color="primary" variant="contained" size="small" style={{ paddingRight: 16, paddingLeft: 16 }} onClick={handleClickOpen}>
               Add New
         </Button>
-      </Grid>
+          </Grid>
 
-      </Grid>
-    </Card>
-    <Paper className={classes.root}>
-      
-      <div className={classes.tableWrapper}>
-      
-        <Table className={classes.table} border={1} borderColor={"#ddd"} size="small" stickyHeader>
-        <TableHead>
-            <TableRow>
-              {columns.map(column => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-          <Query
-              query={GOLDPRICELIST}
-              onCompleted={data => setPageCount( data.allGoldPriceSettings.totalCount )}
-              variables={{ "vendorCode": props.vendor}}>
-              {
+        </Grid>
+      </Card>
+      <Paper className={classes.root}>
+
+        <div className={classes.tableWrapper}>
+
+          <Table className={classes.table} border={1} borderColor={"#ddd"} size="small" stickyHeader>
+            <TableHead>
+              <TableRow>
+                {columns.map(column => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <Query
+                query={GOLDPRICELIST}
+                onCompleted={data => setPageCount(data.allGoldPriceSettings.totalCount)}
+                variables={{ "vendorCode": props.vendor }}>
+                {
                   ({ data, loading, error, refetch }) => {
-                    debugger
-                      if (loading) {
-                          // return <Loader />
-                      }
-                      if (error) {
-                        return <div>{error}</div>
-                          // return false
-                      }
-                      if (data) {
-                        setGoldpricelist(data)
-                          return <>
-                           <ConformationAlert 
-                                    title={"Are you sure to delete?"} 
-                                    positivebtn={"Yes"} 
-                                    negativebtn={"No"} 
-                                    message={""} 
-                                    data={deleteid}
-                                    refetch={refetch}
-                                    onSuccess={handledelete}
-                                    onCancel={hidedeleteconformation}
-                                    isshow={isconformation} />
-                               {open ? <Addmetalprice isadd={open} refetch = {refetch} metals={metalmaster} purities={puritymaster} save={handleAdd} actionclose={handleClose}/> : null} 
 
-                              { data.allGoldPriceSettings.nodes.map((row, index) => (
-                                  <TableRow key={row.material}>
-                                  <TableCell component="th" scope="row">
-                                     {row.material}
-                                    
-                                  </TableCell>
-                                  <TableCell component="th" scope="row">
-                                  {row.purity}
-                                    
-                                  </TableCell>
-                                  <TableCell align="left">
-                                  {
-                                    btnEdit.action && btnEdit.id == row.id ? <Input
-                                    variant="outlined"
-                                    margin="dense"
-                                    label="Cost Price"
-                                    fullWidth
-                                    className={classes.helperinput}
-                                    value= {editdiamond.costPrice}
-                                    onChange={handleinputChange('costPrice')}
-                                    id="productvendorcode"
+                    if (loading) {
+                      // return <Loader />
+                    }
+                    if (error) {
+                      return <div>{error}</div>
+                      // return false
+                    }
+                    if (data) {
+                      setGoldpricelist(data)
+                      return <>
+                        <ConformationAlert
+                          title={"Are you sure to delete?"}
+                          positivebtn={"Yes"}
+                          negativebtn={"No"}
+                          message={""}
+                          data={deleteid}
+                          refetch={refetch}
+                          onSuccess={handledelete}
+                          onCancel={hidedeleteconformation}
+                          isshow={isconformation} />
+                        {open ? <Addmetalprice isadd={open} refetch={refetch} metals={metalmaster} purities={puritymaster} save={handleAdd} actionclose={handleClose} /> : null}
 
-                                    name="Cost Price"
-                                    /> : 
-                                    <Typography className={classes.heading}> 
-                                    {row.costPrice} </Typography>  }
-                                    </TableCell>
-                                  <TableCell align="left">
-                                  {
-                                    btnEdit.action && btnEdit.id == row.id ? <Input
-                                    variant="outlined"
-                                    margin="dense"
-                                    label="Cost Price"
-                                    fullWidth
-                                    className={classes.helperinput}
-                                    value= {editdiamond.sellingPrice}
-                                    onChange={handleinputChange('sellingPrice')}
-                                    id="productvendorcode"
-                                    name="Cost Price"
-                                    /> : 
-                                    <Typography className={classes.heading}> 
-                                    {row.sellingPrice} </Typography>  }
-                                    </TableCell>
+                        {data.allGoldPriceSettings.nodes.map((row, index) => (
+                          <TableRow key={row.material}>
+                            <TableCell component="th" scope="row">
+                              {row.material}
 
-                                    <TableCell align="center">
-                                    {
-                                    btnEdit.action && btnEdit.id == row.id ?  <Autocomplete
-                                      id="free-solo-2-demo"
-                                      fullWidth
-                                      disableClearable
-                                      className={classes.fixedTag}
-                                      value={editdiamond.selectedsellingPriceType}
-                                      onChange={handleoptionChange('sellingPriceType')}
-                                      getOptionLabel={option => option.name}
-                                      options={[{label: 1,name:"Flat"},{label:2,name:"Percentage"}]}
-                                      renderTags={(value, getTagProps) =>
-                                      value.map((option, index) => (
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              {row.purity}
+
+                            </TableCell>
+                            <TableCell align="left">
+                              {
+                                btnEdit.action && btnEdit.id == row.id ? <Input
+                                  variant="outlined"
+                                  margin="dense"
+                                  label="Cost Price"
+                                  fullWidth
+                                  className={classes.helperinput}
+                                  value={editdiamond.costPrice}
+                                  onChange={handleinputChange('costPrice')}
+                                  id="productvendorcode"
+
+                                  name="Cost Price"
+                                /> :
+                                  <Typography className={classes.heading}>
+                                    {row.costPrice} </Typography>}
+                            </TableCell>
+                            <TableCell align="left">
+                              {
+                                btnEdit.action && btnEdit.id == row.id ? <Input
+                                  variant="outlined"
+                                  margin="dense"
+                                  label="Cost Price"
+                                  fullWidth
+                                  className={classes.helperinput}
+                                  value={editdiamond.sellingPrice}
+                                  onChange={handleinputChange('sellingPrice')}
+                                  id="productvendorcode"
+                                  name="Cost Price"
+                                /> :
+                                  <Typography className={classes.heading}>
+                                    {row.sellingPrice} </Typography>}
+                            </TableCell>
+
+                            <TableCell align="center">
+                              {
+                                btnEdit.action && btnEdit.id == row.id ? <Autocomplete
+                                  id="free-solo-2-demo"
+                                  fullWidth
+                                  disableClearable
+                                  className={classes.fixedTag}
+                                  value={editdiamond.selectedsellingPriceType}
+                                  onChange={handleoptionChange('sellingPriceType')}
+                                  getOptionLabel={option => option.name}
+                                  options={[{ label: 1, name: "Flat" }, { label: 2, name: "Percentage" }]}
+                                  renderTags={(value, getTagProps) =>
+                                    value.map((option, index) => (
                                       <Chip variant="outlined" size="small" label={option.name} {...getTagProps({ index })} />
-                                      ))
-                                      }
-                                      renderInput={params => (
-                                      <TextField
+                                    ))
+                                  }
+                                  renderInput={params => (
+                                    <TextField
                                       {...params}
                                       label="Price Type"
                                       margin="dense"
                                       variant="outlined"
                                       fullWidth
                                       InputProps={{ ...params.InputProps, readOnly: true, type: 'search' }}
-                                      />
-                                      )}
-                                      /> : <Typography className={classes.heading}> 
-                                      {row.sellingPriceType === 1 ? 'Flat' : 'Percentage'} </Typography>  }
+                                    />
+                                  )}
+                                /> : <Typography className={classes.heading}>
+                                    {row.sellingPriceType === 1 ? 'Flat' : 'Percentage'} </Typography>}
 
-                                    </TableCell>
-
-
+                            </TableCell>
 
 
-                                  <TableCell align="left">            
-                                  <Moment format="DD MMM YYYY hh:mm a">
-                                  { btnEdit.action && btnEdit.id == row.id ? editdiamond.updatedAt : row.updatedAt}
-                                  </Moment>
-                                  </TableCell>
-                                  {
-                                    btnEdit.action && btnEdit.id == row.id ?
-                                      <TableCell  style = {{width: 170}} align="center">
-                                        <Button onClick={(e) => handleSave(row.generatedSku, refetch)}><SaveIcon />
-                                        </Button>
-                                        <Button onClick={(e) => CancelEdit(row)}><CancelIcon />
-                                        </Button>
-                                      </TableCell> :
-                                      <TableCell align="center" style = {{width: 170}}>
-                                        <Button onClick={(e) => handleEdit(row)}><EditIcon />
-                                        </Button>
-                                        <Button onClick={(e) => handleDelete(row, refetch)}><DeleteIcon />
-                                        </Button>
-                                      </TableCell>
-                                  }
-                                </TableRow>
-                              ))}
-                          </>
-                      }
-                      else{
+
+
+                            <TableCell align="left">
+                              <Moment format="DD MMM YYYY hh:mm a">
+                                {btnEdit.action && btnEdit.id == row.id ? editdiamond.updatedAt : row.updatedAt}
+                              </Moment>
+                            </TableCell>
+                            {
+                              btnEdit.action && btnEdit.id == row.id ?
+                                <TableCell style={{ width: 170 }} align="center">
+                                  <Button onClick={(e) => handleSave(row.generatedSku, refetch)}><SaveIcon />
+                                  </Button>
+                                  <Button onClick={(e) => CancelEdit(row)}><CancelIcon />
+                                  </Button>
+                                </TableCell> :
+                                <TableCell align="center" style={{ width: 170 }}>
+                                  <Button onClick={(e) => handleEdit(row)}><EditIcon />
+                                  </Button>
+                                  <Button onClick={(e) => handleDelete(row, refetch)}><DeleteIcon />
+                                  </Button>
+                                </TableCell>
+                            }
+                          </TableRow>
+                        ))}
+                      </>
+                    }
+                    else {
                       return <div>{"Fetch Products"}</div>
-                      }
+                    }
                   }}
-          </Query>
-            {/* {emptyRows > 0 && (
+              </Query>
+              {/* {emptyRows > 0 && (
               <TableRow style={{ height: 48 * emptyRows }}>
                 <TableCell colSpan={6} />
               </TableRow>
             )} */}
-          </TableBody>
-          {/* <TableFooter>
+            </TableBody>
+            {/* <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[50,100,200,500]}
@@ -739,10 +719,10 @@ console.log(JSON.stringify(bodydata))
               />
             </TableRow>
           </TableFooter>*/}
-        </Table> 
+          </Table>
 
-      </div>
-    </Paper>
+        </div>
+      </Paper>
     </>
   );
 }

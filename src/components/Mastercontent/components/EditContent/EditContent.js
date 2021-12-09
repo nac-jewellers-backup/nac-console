@@ -1,35 +1,42 @@
-import React, { useState } from "react";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/styles";
-import AvatarGroup from "@material-ui/lab/AvatarGroup";
-import Lightbox from "react-image-lightbox";
-import "react-image-lightbox/style.css";
-import { FilePond, registerPlugin } from "react-filepond";
-import "filepond/dist/filepond.min.css";
-import axios from "axios";
-import moment from "moment";
-import { NetworkContext } from "../../../../context/NetworkContext";
-
-import "../../tmp.css";
 import {
   Avatar,
   Button,
-  Dialog,
-  Chip,
-  Switch,
+
+
+
+
+
+
+
+  colors, Dialog,
+
+
   FormControlLabel,
-  Grid,
+  Grid, Switch,
+
+
   TextField,
-  Typography,
-  colors,
-  Input,
+  Typography
 } from "@material-ui/core";
-import { ProductContext } from "../../../../context";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import AvatarGroup from "@material-ui/lab/AvatarGroup";
+import { makeStyles } from "@material-ui/styles";
+import axios from "axios";
+import clsx from "clsx";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import "filepond/dist/filepond.min.css";
+import moment from "moment";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { FilePond, registerPlugin } from "react-filepond";
+import Lightbox from "react-image-lightbox";
+import "react-image-lightbox/style.css";
+import { ProductContext } from "../../../../context";
+import { NetworkContext } from "../../../../context/NetworkContext";
+import "../../tmp.css";
+
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 //import getInitials from 'utils/getInitials';
@@ -99,7 +106,7 @@ const EditContent = (props) => {
     // setShowpreview(true)
   }
   const handleInputChange = (type) => (e) => {
-    debugger;
+
     setEditcontent({ ...editcontent, [type]: e.target.value });
   };
   const toggleChecked = (type) => (e) => {
@@ -150,7 +157,7 @@ const EditContent = (props) => {
 
     setValue(event.target.value);
   };
-  React.useEffect(() => {}, [editcontent]);
+  React.useEffect(() => { }, [editcontent]);
 
   return (
     <Dialog maxWidth="lg" onClose={onClose} open={open}>
@@ -278,15 +285,15 @@ const EditContent = (props) => {
                       <AvatarGroup max={2}>
                         {diamond[columnname.key]
                           ? diamond[columnname.key]
-                              .split(",")
-                              .map((diamond, index) => (
-                                <Avatar
-                                  alt="Remy Sharp"
-                                  src={diamond}
-                                  onClick={() => previewimage(diamond)}
-                                  className={classes.small}
-                                />
-                              ))
+                            .split(",")
+                            .map((diamond, index) => (
+                              <Avatar
+                                alt="Remy Sharp"
+                                src={diamond}
+                                onClick={() => previewimage(diamond)}
+                                className={classes.small}
+                              />
+                            ))
                           : null}
                       </AvatarGroup>
                     </Grid>

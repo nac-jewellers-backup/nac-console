@@ -1,34 +1,33 @@
-import React, { useEffect, useContext, useState } from "react";
+import { Button, Chip, FormControlLabel, Grid, Switch, TextField } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { makeStyles } from "@material-ui/styles";
-import { Grid, TextField, Button, Fab } from "@material-ui/core";
-
-import { ProductContext, ProductProvider } from "../../context";
+import React, { useContext, useEffect, useState } from "react";
+import { useApolloClient, useQuery } from "react-apollo";
 import { withRouter } from "react-router-dom";
+import FullLoader from "../../components/Loader";
+import { ProductContext, ProductProvider } from "../../context";
+import { NetworkContext } from "../../context/NetworkContext";
+import { PRODUCTDIAMONDTYPES, PRODUCTEDIT } from "../../graphql/query";
+import { productCategory } from "../../services/mapper";
+import "../Productupload/Productupload.css";
+import columnnames from "./columnnames.json";
+import SortHeader from "./Components/SortHeader";
+import CreateVariant from "./CreateVariant";
 import DiamondDetails from "./DiamondDetails";
 import GemstoneDetails from "./GemstoneDetails";
-import Variants from "./Variants";
-import Skupricing from "./Skupricing";
-
-import { productCategory } from "../../services/mapper";
-import { useApolloClient, useQuery } from "react-apollo";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import "../Productupload/Productupload.css";
-
-import { PRODUCTEDIT, PRODUCTDIAMONDTYPES } from "../../graphql/query";
-import CreateVariant from "./CreateVariant";
-
-import MuiAlert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-
-import { NetworkContext } from "../../context/NetworkContext";
-import SortHeader from "./Components/SortHeader";
-import columnnames from "./columnnames.json";
-import Productimages from "./Productimages";
-import FullLoader from "../../components/Loader";
 import Pricedetails from "./Pricedetails";
+import Productimages from "./Productimages";
+import Skupricing from "./Skupricing";
+import Variants from "./Variants";
 
-import { Chip, Switch, FormControlLabel } from "@material-ui/core";
+
+
+
+
+
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -83,7 +82,7 @@ export function Component(props) {
   const [pricesummaryvalues, setPricesummaryvalue] = React.useState([]);
 
   const [loadopen, setLoadopen] = React.useState(true);
-  
+
   const { sendNetworkRequest } = React.useContext(NetworkContext);
   const [snackMessage, setSnackMessage] = React.useState({
     message: "",
@@ -112,7 +111,7 @@ export function Component(props) {
     create_variant: false,
     duplicate_productName: "",
   });
-  
+
   let prod_id = props.location.pathname.split("/")[2];
   const classes = useStyle();
   function keyPress(evt) {
@@ -124,7 +123,7 @@ export function Component(props) {
   }
   const handleoptionChange = (type) => (event, value) => {
     // if (type === "masterProductSize") {
-    //   debugger;
+    //    
     //   let productSizeString = null;
     //   console.log(type, value);
     //   if (typeof value === Object) {
@@ -141,7 +140,7 @@ export function Component(props) {
     // } else {
     //   setProductCtx({ ...productCtx, [type]: value });
     // }
-    // debugger;
+    //  
     // if (type === "productSize") {
     //   if (typeof value === Object) {
     //     setProductCtx({ ...productCtx, [type]: [value] });
@@ -151,7 +150,7 @@ export function Component(props) {
     // } else {
     setProductCtx({ ...productCtx, [type]: value });
     // }
-    debugger;
+
   };
 
   const handleinputChange = (type) => (e) => {
@@ -245,7 +244,7 @@ export function Component(props) {
     //setstate({ ...state, create_variant: true })
   }
   async function saveProductEditItem() {
-    debugger;
+
     console.log(productCtx.product_type);
     let productEditItem = {
       productId: prod_id,
@@ -392,6 +391,8 @@ export function Component(props) {
       .then((res) => {
         setLoadopen(false);
 
+
+
         var { productListByProductId } = res.data;
         var genders = productListByProductId.gender;
         var productTypes = productListByProductId.productType;
@@ -402,10 +403,10 @@ export function Component(props) {
         // var productSizes = productListByProductId?.transSkuListsByProductId?.nodes[0]?.skuSize;
         // let productSize_arr = [];
         // if (productSizes != null && productSizes != undefined) {
-        //   debugger;
+        //    
         //   let productSizeArray = productSizes.split(",");
         //   for (let i = 0; i < productSizeArray.length; i++) {
-        //     debugger;
+        //      
         //     let obj_size = {
         //       sizeValue: productSizeArray[i],
         //     };
@@ -490,6 +491,8 @@ export function Component(props) {
           }
         });
 
+        console.log()
+
         setProductCtx({
           ...productCtx,
           productname: productListByProductId.productName,
@@ -536,17 +539,17 @@ export function Component(props) {
   //   client
   //     .query({ query: ALLMASTERPRODUCTSIZE, variables: { productType: productCtx?.product_type?.label } })
   //     .then((res) => {
-  //       debugger;
+  //        
   //       let ProductSizeFullData = res?.data?.allMasterRingsSizes?.nodes;
 
-  //       // debugger;
+  //       //  
   //       // let FilteredProductSize = null;
   //       // if (productCtx?.product_type?.label !== undefined && productCtx.product_type?.label !== null) {
   //       //   FilteredProductSize = ProductSizeFullData.filter((val) => {
   //       //     return val.productType === productCtx?.product_type?.label;
   //       //   });
   //       // }
-  //       debugger;
+  //        
   //       setProductCtx({ ...productCtx, masterProductSize: ProductSizeFullData ?? null });
   //       console.log(ProductSizeFullData);
   //     })
@@ -560,118 +563,70 @@ export function Component(props) {
       productId={prod_id}
     />
   ) : (
-    <Grid container>
-      <FullLoader title="Getting Product Details" isopen={loadopen} />
-      <React.Fragment>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity={snackMessage.severity}>
-            {snackMessage.message}
-          </Alert>
-        </Snackbar>
-      </React.Fragment>
-      <Grid item container spacing={1}>
-        <Grid item xs={12} sm={12} md={3} lg={3} spacing={2} style={{ padding: "15px", backgroundColor: "#FFFFFF" }}>
-          <TextField
-            className={classes.helperinput}
-            variant="outlined"
-            margin="dense"
-            fullWidth
-            pattern="[a-zA-Z]*"
-            value={productCtx.productname}
-            id="productname"
-            error={productCtx && productCtx.error_message && productCtx.error_message.productname}
-            name="productname"
-            label="Product Name"
-            //onInput={keyPress.bind(this)}
-            onChange={handleinputChange("productname")}
+      <Grid container>
+        <FullLoader title="Getting Product Details" isopen={loadopen} />
+        <React.Fragment>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity={snackMessage.severity}>
+              {snackMessage.message}
+            </Alert>
+          </Snackbar>
+        </React.Fragment>
+        <Grid item container spacing={1}>
+          <Grid item xs={12} sm={12} md={3} lg={3} spacing={2} style={{ padding: "15px", backgroundColor: "#FFFFFF" }}>
+            <TextField
+              className={classes.helperinput}
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              pattern="[a-zA-Z]*"
+              value={productCtx.productname}
+              id="productname"
+              error={productCtx && productCtx.error_message && productCtx.error_message.productname}
+              name="productname"
+              label="Product Name"
+              //onInput={keyPress.bind(this)}
+              onChange={handleinputChange("productname")}
 
             //onChange={(e)=>handleinputChange(e,'productname')}
-          />
-          <TextField
-            className={classes.helperinput}
-            variant="outlined"
-            margin="dense"
-            fullWidth
-            value={productCtx.product_categoy}
-            id="product_category"
-            InputProps={{
-              readOnly: true,
-            }}
-            error={productCtx && productCtx.error_message && productCtx.error_message.product_categoy}
-            name="product_category"
-            label="Product Category"
-          />
-          <TextField
-            className={classes.helperinput}
-            variant="outlined"
-            margin="dense"
-            fullWidth
-            // pattern="[a-zA-Z]*"
-            value={productCtx.description}
-            id="description"
-            error={productCtx && productCtx.error_message && productCtx.error_message.description}
-            name="description"
-            label="Description"
-            //onInput={keyPress.bind(this)}
-            onChange={handleinputChange("description")}
+            />
+            <TextField
+              className={classes.helperinput}
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              value={productCtx.product_categoy}
+              id="product_category"
+              InputProps={{
+                readOnly: true,
+              }}
+              error={productCtx && productCtx.error_message && productCtx.error_message.product_categoy}
+              name="product_category"
+              label="Product Category"
+            />
+            <TextField
+              className={classes.helperinput}
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              // pattern="[a-zA-Z]*"
+              value={productCtx.description}
+              id="description"
+              error={productCtx && productCtx.error_message && productCtx.error_message.description}
+              name="description"
+              label="Description"
+              //onInput={keyPress.bind(this)}
+              onChange={handleinputChange("description")}
 
             //onChange={(e)=>handleinputChange(e,'productname')}
-          />
-          <Autocomplete
-            id="free-solo-2-demo"
-            className={classes.fixedTag}
-            value={productCtx.product_type}
-            getOptionLabel={(option) => option.label}
-            onChange={handleoptionChange("product_type")}
-            options={productCtx.masterData.product_type}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Product Type"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          <Autocomplete
-            disabled
-            id="free-solo-2-demo"
-            className={classes.fixedTag}
-            value={productCtx.vendorcode}
-            getOptionLabel={(option) => option.name}
-            onChange={handleoptionChange("vendorcode")}
-            options={productCtx?.masterData?.vendorcode}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.name} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Ventor Name"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          {productCtx?.product_type?.label === "Earrings" || productCtx?.product_type?.label === "earrings" ? (
+            />
             <Autocomplete
-              id="free-solo-2-demos"
+              id="free-solo-2-demo"
               className={classes.fixedTag}
-              value={productCtx.earringbacking}
+              value={productCtx.product_type}
               getOptionLabel={(option) => option.label}
-              onChange={handleoptionChange("earringbacking")}
-              options={productCtx.masterData.earringbacking}
+              onChange={handleoptionChange("product_type")}
+              options={productCtx.masterData.product_type}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
                   <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
@@ -680,7 +635,7 @@ export function Component(props) {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Earring Backing"
+                  label="Product Type"
                   margin="dense"
                   variant="outlined"
                   fullWidth
@@ -688,10 +643,58 @@ export function Component(props) {
                 />
               )}
             />
-          ) : (
-            ""
-          )}
-          {/* {productCtx?.product_type?.label === "Rings" ? (
+            <Autocomplete
+              disabled
+              id="free-solo-2-demo"
+              className={classes.fixedTag}
+              value={productCtx.vendorcode}
+              getOptionLabel={(option) => option.name}
+              onChange={handleoptionChange("vendorcode")}
+              options={productCtx?.masterData?.vendorcode}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.name} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Ventor Name"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            {productCtx?.product_type?.label === "Earrings" || productCtx?.product_type?.label === "earrings" ? (
+              <Autocomplete
+                id="free-solo-2-demos"
+                className={classes.fixedTag}
+                value={productCtx.earringbacking}
+                getOptionLabel={(option) => option.label}
+                onChange={handleoptionChange("earringbacking")}
+                options={productCtx.masterData.earringbacking}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
+                  ))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Earring Backing"
+                    margin="dense"
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{ ...params.InputProps, type: "search" }}
+                  />
+                )}
+              />
+            ) : (
+                ""
+              )}
+            {/* {productCtx?.product_type?.label === "Rings" ? (
             <Autocomplete
               mutiple
               id="free-solo-2-demo"
@@ -720,397 +723,397 @@ export function Component(props) {
           ) : (
             ""
           )} */}
-          <TextField
-            className={classes.helperinput}
-            variant="outlined"
-            margin="dense"
-            fullWidth
-            // pattern="[a-zA-Z]*"
-            value={productCtx.height}
-            id="height"
-            error={productCtx && productCtx.error_message && productCtx.error_message.height}
-            name="height"
-            label="Height "
-            //onInput={keyPress.bind(this)}
-            onChange={handleinputChange("height")}
+            <TextField
+              className={classes.helperinput}
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              // pattern="[a-zA-Z]*"
+              value={productCtx.height}
+              id="height"
+              error={productCtx && productCtx.error_message && productCtx.error_message.height}
+              name="height"
+              label="Height "
+              //onInput={keyPress.bind(this)}
+              onChange={handleinputChange("height")}
 
             //onChange={(e)=>handleinputChange(e,'productname')}
-          />
-          <TextField
-            className={classes.helperinput}
-            variant="outlined"
-            margin="dense"
-            fullWidth
-            // pattern="[a-zA-Z]*"
-            value={productCtx.length}
-            id="length"
-            error={productCtx && productCtx.error_message && productCtx.error_message.length}
-            name="length"
-            label="Width"
-            //onInput={keyPress.bind(this)}
-            onChange={handleinputChange("length")}
+            />
+            <TextField
+              className={classes.helperinput}
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              // pattern="[a-zA-Z]*"
+              value={productCtx.length}
+              id="length"
+              error={productCtx && productCtx.error_message && productCtx.error_message.length}
+              name="length"
+              label="Width"
+              //onInput={keyPress.bind(this)}
+              onChange={handleinputChange("length")}
 
             //onChange={(e)=>handleinputChange(e,'productname')}
-          />{" "}
-          <TextField
-            className={classes.helperinput}
-            variant="outlined"
-            margin="dense"
-            fullWidth
-            // pattern="[a-zA-Z]*"
-            value={productCtx.minOrderQty}
-            id="minOrderQty"
-            error={productCtx && productCtx.error_message && productCtx.error_message.minOrderQty}
-            name="minOrderQty"
-            label="Minimum Order Quantity"
-            //onInput={keyPress.bind(this)}
-            onChange={handleinputChange("minOrderQty")}
+            />{" "}
+            <TextField
+              className={classes.helperinput}
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              // pattern="[a-zA-Z]*"
+              value={productCtx.minOrderQty}
+              id="minOrderQty"
+              error={productCtx && productCtx.error_message && productCtx.error_message.minOrderQty}
+              name="minOrderQty"
+              label="Minimum Order Quantity"
+              //onInput={keyPress.bind(this)}
+              onChange={handleinputChange("minOrderQty")}
 
             //onChange={(e)=>handleinputChange(e,'productname')}
-          />{" "}
-          <TextField
-            className={classes.helperinput}
-            variant="outlined"
-            margin="dense"
-            fullWidth
-            // pattern="[a-zA-Z]*"
-            value={productCtx.maxOrderQty}
-            id="maxOrderQty"
-            error={productCtx && productCtx.error_message && productCtx.error_message.maxOrderQty}
-            name="maxOrderQty"
-            label="Maximum Order Quantity"
-            //onInput={keyPress.bind(this)}
-            onChange={handleinputChange("maxOrderQty")}
+            />{" "}
+            <TextField
+              className={classes.helperinput}
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              // pattern="[a-zA-Z]*"
+              value={productCtx.maxOrderQty}
+              id="maxOrderQty"
+              error={productCtx && productCtx.error_message && productCtx.error_message.maxOrderQty}
+              name="maxOrderQty"
+              label="Maximum Order Quantity"
+              //onInput={keyPress.bind(this)}
+              onChange={handleinputChange("maxOrderQty")}
 
             //onChange={(e)=>handleinputChange(e,'productname')}
-          />
-          <Autocomplete
-            multiple
-            id="free-solo-2-demo"
-            disabled
-            options={[]}
-            className={classes.fixedTag}
-            value={productCtx.productmaterials}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.materialName} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Product Materials"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  ...params.InputProps,
-                  readOnly: true,
-                  type: "search",
-                }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="free-solo-2-demo"
-            getOptionLabel={(option) => option.productColor}
-            onChange={handleoptionChange("productMetalColor")}
-            options={productCtx.masterData.metalcolour}
-            className={classes.fixedTag}
-            value={productCtx.productMetalColor}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.productColor} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Metal Color"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="free-solo-2-demo"
-            disabled
-            options={[]}
-            className={classes.fixedTag}
-            value={productCtx.productMetalPurity}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.purity} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Metal Purity"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="free-solo-2-demo"
-            className={classes.fixedTag}
-            value={productCtx.product_gender}
-            getOptionLabel={(option) => option.label}
-            onChange={handleoptionChange("product_gender")}
-            options={productCtx.masterData.gender}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Gender"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="free-solo-2-demo"
-            className={classes.fixedTag}
-            getOptionLabel={(option) => option.label}
-            defaultValue={productCtx.themes}
-            options={productCtx.masterData.themes}
-            value={productCtx.themes}
-            onChange={handleoptionChange("themes")}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.themeName} {...getTagProps({ index })} />
-              ))
-            }
-            style={{ display: "none" }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Themes"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="free-solo-2-demo"
-            className={classes.fixedTag}
-            getOptionLabel={(option) => option.label}
-            defaultValue={productCtx.prod_styles}
-            options={productCtx.masterData.styles}
-            onChange={handleoptionChange("prod_styles")}
-            value={productCtx.prod_styles}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.styleName} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Styles"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="free-solo-2-demo"
-            className={classes.fixedTag}
-            value={productCtx.occassions}
-            getOptionLabel={(option) => option.label}
-            defaultValue={productCtx.occassions}
-            options={productCtx.masterData.occasions}
-            onChange={handleoptionChange("occassions")}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.occassionName} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Occasions"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="free-solo-2-demo"
-            className={classes.fixedTag}
-            value={productCtx.collections}
-            getOptionLabel={(option) => option.label}
-            defaultValue={productCtx.collections}
-            options={productCtx.masterData.collections}
-            onChange={handleoptionChange("collections")}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.collectionName} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Collections"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="free-solo-2-demo"
-            className={classes.fixedTag}
-            value={productCtx.stonecount}
-            getOptionLabel={(option) => option.label}
-            defaultValue={productCtx.stonecount}
-            options={productCtx.masterData.stones}
-            onChange={handleoptionChange("stonecount")}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.stonecount} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="No of Stones"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="free-solo-2-demo"
-            className={classes.fixedTag}
-            value={productCtx.stonecolour}
-            getOptionLabel={(option) => option.label}
-            defaultValue={productCtx.stonecolour}
-            options={productCtx.masterData.gemstonecolor}
-            onChange={handleoptionChange("stonecolour")}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" size="small" label={option.stonecolor} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Stone Colour"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={{ ...params.InputProps, type: "search" }}
-              />
-            )}
-          />
-          <FormControlLabel
-            label={productCtx.isactive ? "Disable this product" : "Enable this product"}
-            control={<Switch checked={productCtx.isactive} onChange={handledisableproduct("isactive")} value="checkedA" />}
-          />
-          <Grid
-            item
-            container
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "16px",
-            }}
-          >
-            <Grid item>
-              <Button color="primary" variant="contained" onClick={(e) => saveProductEditItem()}>
-                Update
+            />
+            <Autocomplete
+              multiple
+              id="free-solo-2-demo"
+              disabled
+              options={[]}
+              className={classes.fixedTag}
+              value={productCtx.productmaterials}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.materialName} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Product Materials"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    ...params.InputProps,
+                    readOnly: true,
+                    type: "search",
+                  }}
+                />
+              )}
+            />
+            <Autocomplete
+              multiple
+              id="free-solo-2-demo"
+              getOptionLabel={(option) => option.productColor}
+              onChange={handleoptionChange("productMetalColor")}
+              options={productCtx.masterData.metalcolour}
+              className={classes.fixedTag}
+              value={productCtx.productMetalColor}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.productColor} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Metal Color"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            <Autocomplete
+              multiple
+              id="free-solo-2-demo"
+              disabled
+              options={[]}
+              className={classes.fixedTag}
+              value={productCtx.productMetalPurity}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.purity} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Metal Purity"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            <Autocomplete
+              multiple
+              id="free-solo-2-demo"
+              className={classes.fixedTag}
+              value={productCtx.product_gender}
+              getOptionLabel={(option) => option.label}
+              onChange={handleoptionChange("product_gender")}
+              options={productCtx.masterData.gender}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.label} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Gender"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            <Autocomplete
+              multiple
+              id="free-solo-2-demo"
+              className={classes.fixedTag}
+              getOptionLabel={(option) => option.label}
+              defaultValue={productCtx.themes}
+              options={productCtx.masterData.themes}
+              value={productCtx.themes}
+              onChange={handleoptionChange("themes")}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.themeName} {...getTagProps({ index })} />
+                ))
+              }
+              style={{ display: "none" }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Themes"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            <Autocomplete
+              multiple
+              id="free-solo-2-demo"
+              className={classes.fixedTag}
+              getOptionLabel={(option) => option.label}
+              defaultValue={productCtx.prod_styles}
+              options={productCtx.masterData.styles}
+              onChange={handleoptionChange("prod_styles")}
+              value={productCtx.prod_styles}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.styleName} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Styles"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            <Autocomplete
+              multiple
+              id="free-solo-2-demo"
+              className={classes.fixedTag}
+              value={productCtx.occassions}
+              getOptionLabel={(option) => option.label}
+              defaultValue={productCtx.occassions}
+              options={productCtx.masterData.occasions}
+              onChange={handleoptionChange("occassions")}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.occassionName} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Occasions"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            <Autocomplete
+              multiple
+              id="free-solo-2-demo"
+              className={classes.fixedTag}
+              value={productCtx.collections}
+              getOptionLabel={(option) => option.label}
+              defaultValue={productCtx.collections}
+              options={productCtx.masterData.collections}
+              onChange={handleoptionChange("collections")}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.collectionName} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Collections"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            <Autocomplete
+              multiple
+              id="free-solo-2-demo"
+              className={classes.fixedTag}
+              value={productCtx.stonecount}
+              getOptionLabel={(option) => option.label}
+              defaultValue={productCtx.stonecount}
+              options={productCtx.masterData.stones}
+              onChange={handleoptionChange("stonecount")}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.stonecount} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="No of Stones"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            <Autocomplete
+              multiple
+              id="free-solo-2-demo"
+              className={classes.fixedTag}
+              value={productCtx.stonecolour}
+              getOptionLabel={(option) => option.label}
+              defaultValue={productCtx.stonecolour}
+              options={productCtx.masterData.gemstonecolor}
+              onChange={handleoptionChange("stonecolour")}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip variant="outlined" size="small" label={option.stonecolor} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Stone Colour"
+                  margin="dense"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{ ...params.InputProps, type: "search" }}
+                />
+              )}
+            />
+            <FormControlLabel
+              label={productCtx.isactive ? "Disable this product" : "Enable this product"}
+              control={<Switch checked={productCtx.isactive} onChange={handledisableproduct("isactive")} value="checkedA" />}
+            />
+            <Grid
+              item
+              container
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "16px",
+              }}
+            >
+              <Grid item>
+                <Button color="primary" variant="contained" onClick={(e) => saveProductEditItem()}>
+                  Update
               </Button>
-              {/* <Button color="default" style={{  marginLeft:"16px" }} variant="contained" onClick={(e) => backProductList()}>
+                {/* <Button color="default" style={{  marginLeft:"16px" }} variant="contained" onClick={(e) => backProductList()}>
                   Back
               </Button> */}
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
 
-        <Grid item xs={12} sm={12} md={9} lg={9} spacing={2} style={{ padding: "15px" }}>
-          <Grid container item md={6}></Grid>
-          <Grid style={{ fontSize: ".9rem", padding: "8px" }}>Diamond Table</Grid>
-          <DiamondDetails diamond={productCtx.diamondlist} />
-          {productCtx.gemstonelist.length > 0 ? (
-            <>
-              {" "}
-              <Grid style={{ fontSize: ".9rem", padding: "8px", marginTop: "28px" }}>Gemstone Table</Grid>
-              <GemstoneDetails gemstone={productCtx.gemstonelist} />{" "}
-            </>
-          ) : null}
+          <Grid item xs={12} sm={12} md={9} lg={9} spacing={2} style={{ padding: "15px" }}>
+            <Grid container item md={6}></Grid>
+            <Grid style={{ fontSize: ".9rem", padding: "8px" }}>Diamond Table</Grid>
+            <DiamondDetails diamond={productCtx.diamondlist} />
+            {productCtx.gemstonelist.length > 0 ? (
+              <>
+                {" "}
+                <Grid style={{ fontSize: ".9rem", padding: "8px", marginTop: "28px" }}>Gemstone Table</Grid>
+                <GemstoneDetails gemstone={productCtx.gemstonelist} />{" "}
+              </>
+            ) : null}
 
-          <Grid style={{}}></Grid>
-          <Grid style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}>
-            <SortHeader columnnames={columnnames.varients} getColumnnames={getColumnnames} displytype={1} />{" "}
-          </Grid>
+            <Grid style={{}}></Grid>
+            <Grid style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}>
+              <SortHeader columnnames={columnnames.varients} getColumnnames={getColumnnames} displytype={1} />{" "}
+            </Grid>
 
-          <Variants variants={productCtx.variants} columns={varientcolumns} displycolumns={displycolumns} />
+            <Variants variants={productCtx.variants} columns={varientcolumns} displycolumns={displycolumns} />
 
-          <Grid style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}>
-            <SortHeader
-              title={"Pricing Table"}
-              columnnames={pricingcolumns}
-              displycolumns={displypricingcolumns}
-              getColumnnames={getColumnnames}
-              displytype={2}
+            <Grid style={{ fontSize: ".9rem", padding: "8px", marginTop: "16px" }}>
+              <SortHeader
+                title={"Pricing Table"}
+                columnnames={pricingcolumns}
+                displycolumns={displypricingcolumns}
+                getColumnnames={getColumnnames}
+                displytype={2}
+              />
+              <Button onClick={(e) => Skupricesync(prod_id)} size="small" variant="outlined" color="primary">
+                Price Run For This Product
+            </Button>
+              <span>&nbsp;&nbsp;&nbsp;</span>
+              <Button onClick={(e) => Skumarkupsync(prod_id)} size="small" variant="outlined" color="primary">
+                Run Markup For This Product
+            </Button>
+            </Grid>
+            {isshowpricesummary ? <Pricedetails onClose={dismisspricesummary} values={pricesummaryvalues} /> : null}
+            <Skupricing
+              variants={productCtx.variants}
+              onShow={showpricesummary}
+              columns={displypricingcolumns}
+              displycolumns={displycolumnnames}
             />
-            <Button onClick={(e) => Skupricesync(prod_id)} size="small" variant="outlined" color="primary">
-              Price Run For This Product
-            </Button>
-            <span>&nbsp;&nbsp;&nbsp;</span>
-            <Button onClick={(e) => Skumarkupsync(prod_id)} size="small" variant="outlined" color="primary">
-              Run Markup For This Product
-            </Button>
+            <Grid style={{ fontSize: ".9rem", padding: "8px" }}>Product Images</Grid>
+            {/* {productCtx.productMetalColor.map((colors) => ( */}
+            <Productimages
+              //color={colors.productColor}
+              //isdefault={colors.isdefault}
+              prodimages={productCtx.productImages}
+            />
+            {/* ))} */}
           </Grid>
-          {isshowpricesummary ? <Pricedetails onClose={dismisspricesummary} values={pricesummaryvalues} /> : null}
-          <Skupricing
-            variants={productCtx.variants}
-            onShow={showpricesummary}
-            columns={displypricingcolumns}
-            displycolumns={displycolumnnames}
-          />
-          <Grid style={{ fontSize: ".9rem", padding: "8px" }}>Product Images</Grid>
-          {/* {productCtx.productMetalColor.map((colors) => ( */}
-          <Productimages
-            //color={colors.productColor}
-            //isdefault={colors.isdefault}
-            prodimages={productCtx.productImages}
-          />
-          {/* ))} */}
         </Grid>
       </Grid>
-    </Grid>
-  );
+    );
 }
 
 const useStyles2 = makeStyles((theme) => ({

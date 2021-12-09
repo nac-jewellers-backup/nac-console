@@ -1,25 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import {
-  Paper,
-  Grid,
-  Typography,
-  TextField,
   Button,
-  Table,
-  TableHead,
-  TableCell,
-  TableBody,
-  TableRow,
-  Link,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@material-ui/core";
 
+
+
+
+
+
+  Dialog,
+
+
+  DialogActions, DialogContent, DialogTitle, Grid,
+
+
+
+
+
+
+
+
+  Link, Paper,
+
+
+
+
+  Table,
+
+
+  TableBody, TableCell, TableHead,
+
+
+  TableRow, TextField, Typography
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import React, { useEffect, useState } from "react";
+import { APP_URL, GRAPHQL_DEV_CLIENT } from "../../../../config";
 import { ALLSTYLORISILVERLISTINGPAGE, CREATESILVERLISTINGPAGE, DELETESILVERLANDINGBANNER } from "../../../../graphql/query";
-import { GRAPHQL_DEV_CLIENT, APP_URL } from "../../../../config";
+
 const useStyles2 = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -121,7 +137,7 @@ const SilverListingPage = (props) => {
       web: createlandingbanner.web,
       now: new Date().toISOString(),
     };
-    debugger;
+
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
@@ -135,7 +151,7 @@ const SilverListingPage = (props) => {
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
-        debugger;
+
         setOpen(false);
         window.location.reload();
       })

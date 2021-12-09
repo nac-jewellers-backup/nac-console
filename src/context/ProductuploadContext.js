@@ -65,11 +65,11 @@ const productuploadCtxInitial = {
     gemstonecount: "",
     gemstoneweight: "",
     stonetype: "",
-
+    isactiveVariant: "",
     editleadtime: "",
     editreadytoship: false,
     editisdefault: false,
-    editisactive: false,
+    editisactive: null,
 
     editcostprice: 0,
     editsellingprice: 0,

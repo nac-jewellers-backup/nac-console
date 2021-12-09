@@ -1,54 +1,37 @@
-import React,{ useEffect} from 'react';
-import clsx from 'clsx';
-import {lighten, makeStyles, useTheme } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
+import { Button, Card, Chip, Grid, Input, TextField } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import { lighten, makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-import { Input} from '@material-ui/core';
-import {Card,CardContent} from '@material-ui/core';
-import CardHeader from '@material-ui/core/CardHeader';
-import Toolbar from '@material-ui/core/Toolbar';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
+import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import CancelIcon from '@material-ui/icons/CancelOutlined';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import TableHead from '@material-ui/core/TableHead';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import {Grid} from '@material-ui/core';
-import ConformationAlert from '../../../components/ConformationAlert'
-
-import { Link as RouterLink } from 'react-router-dom'
-import Link from '@material-ui/core/Link'
-import { Query, withApollo } from 'react-apollo';
-import {GEMPRICELIST,GEMSTONEMASTER, DELETEGEMCHARGE,PRODUCTLISTSTATUSEDIT} from '../../../graphql/query';
-import { useHistory } from "react-router-dom";
-import { Button, Switch } from '@material-ui/core';
-import { useMutation,useQuery } from '@apollo/react-hooks';
-import Moment from 'react-moment';
-import {BASE_URL} from '../../../config'
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Filterandsearch from './../../../screens/Productlist/filterandsearch';
-import { NetworkContext } from '../../../context/NetworkContext';
-import Addgemstoneprice from './Addgemstoneprice'
-import { API_URL, GRAPHQL_DEV_CLIENT } from '../../../config';
-
-import CancelIcon from '@material-ui/icons/CancelOutlined';
 import SaveIcon from '@material-ui/icons/Save';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {
- 
-  Chip,
-  TextField
-} from '@material-ui/core';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import { withApollo } from 'react-apollo';
+import Moment from 'react-moment';
+import { useHistory } from "react-router-dom";
+import ConformationAlert from '../../../components/ConformationAlert';
+import { GRAPHQL_DEV_CLIENT } from '../../../config';
+import { NetworkContext } from '../../../context/NetworkContext';
+import { DELETEGEMCHARGE, GEMSTONEMASTER, PRODUCTLISTSTATUSEDIT } from '../../../graphql/query';
+import Addgemstoneprice from './Addgemstoneprice';
+
+
 const columns = [
   { id: 'Gemstone Type', label: 'Gemstone Type' },
   { id: 'From weight', label: 'From weight' },
@@ -57,17 +40,17 @@ const columns = [
   { id: 'Selling Price', label: 'Selling Price' },
   { id: 'Selling Price Type', label: 'Selling Price Type' },
   { id: 'updatedAt', label: 'updatedAt' },
-  { id: 'Edit / Delete', label: 'Edit / Delete', align : 'center' }
+  { id: 'Edit / Delete', label: 'Edit / Delete', align: 'center' }
 
 ];
 const stonecountcolumns = [
   { id: 'Gemstone Type', label: 'Gemstone Type' },
-  
+
   { id: 'Cost Price', label: 'Cost Price' },
   { id: 'Selling Price', label: 'Selling Price' },
   { id: 'Selling Price Type', label: 'Selling Price Type' },
   { id: 'updatedAt', label: 'updatedAt' },
-  { id: 'Edit / Delete', label: 'Edit / Delete', align : 'center' }
+  { id: 'Edit / Delete', label: 'Edit / Delete', align: 'center' }
 
 ];
 
@@ -183,7 +166,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-       
+
         {columns.map(headCell => (
           <TableCell
             key={headCell.id}
@@ -228,13 +211,13 @@ const useToolbarStyles = makeStyles(theme => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: '1 1 100%',
   },
@@ -255,10 +238,10 @@ const EnhancedTableToolbar = props => {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle">
-          Nutrition
-        </Typography>
-      )}
+          <Typography className={classes.title} variant="h6" id="tableTitle">
+            Nutrition
+          </Typography>
+        )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
@@ -267,12 +250,12 @@ const EnhancedTableToolbar = props => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-          
-          </IconButton>
-        </Tooltip>
-      )}
+          <Tooltip title="Filter list">
+            <IconButton aria-label="filter list">
+
+            </IconButton>
+          </Tooltip>
+        )}
     </Toolbar>
   );
 };
@@ -329,23 +312,23 @@ const useStyles2 = makeStyles(theme => ({
   },
 }));
 
-const   AddContact=(props)=> {
+const AddContact = (props) => {
   let history = useHistory();
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [pageCount,setPageCount] = React.useState(0);
-  const [offsetValue,setOffsetValue] = React.useState(0)
+  const [pageCount, setPageCount] = React.useState(0);
+  const [offsetValue, setOffsetValue] = React.useState(0)
   // const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.contactlist.length - page * rowsPerPage);
   const { sendNetworkRequest } = React.useContext(NetworkContext);
-  const [vendorid,setVendorid] = React.useState(props.vendor);
+  const [vendorid, setVendorid] = React.useState(props.vendor);
   const [deleteid, setDeleteid] = React.useState([]);
   const [gemmaster, setGemmaster] = React.useState([]);
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('Product Id');
-  const [editgem,setEditgem] = React.useState({})
-  const [gemlist,setgemlist] = React.useState([])
+  const [editgem, setEditgem] = React.useState({})
+  const [gemlist, setgemlist] = React.useState([])
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -363,21 +346,18 @@ const   AddContact=(props)=> {
   const hidedeleteconformation = () => {
     setIsconformation(false);
   };
- async function handledelete(diamondcontent)
-  {
-    if(deleteid.length > 0)
-    {
-      let variables ={
-        elementId:deleteid[0]
+  async function handledelete(diamondcontent) {
+    if (deleteid.length > 0) {
+      let variables = {
+        elementId: deleteid[0]
       }
-      await props.client.mutate({mutation:DELETEGEMCHARGE,variables})
+      await props.client.mutate({ mutation: DELETEGEMCHARGE, variables })
     }
-    if(deleteid.length > 1)
-    {
-      let variables ={
-        elementId:deleteid[1]
+    if (deleteid.length > 1) {
+      let variables = {
+        elementId: deleteid[1]
       }
-      await props.client.mutate({mutation:DELETEGEMCHARGE,variables})
+      await props.client.mutate({ mutation: DELETEGEMCHARGE, variables })
     }
     // await props.client.mutate({mutation:DELETEGEMCHARGE,variables}).then(res=>{
 
@@ -402,27 +382,27 @@ const   AddContact=(props)=> {
     deleteids.push(diamondData.costprice.id)
     deleteids.push(diamondData.sellprice.id)
 
-     setDeleteid(deleteids)
-     setIsconformation(true);
+    setDeleteid(deleteids)
+    setIsconformation(true);
   }
 
-  async function handleAdd(gemstonedata){
+  async function handleAdd(gemstonedata) {
     var bodydata = {}
     bodydata['gemstone_type'] = gemstonedata.name
     bodydata['weight_start'] = gemstonedata.weightstart
     bodydata['weight_end'] = gemstonedata.weightend
     bodydata['cost_price'] = gemstonedata.costprice
     bodydata['vendor_code'] = props.vendor
-    bodydata['selling_price_type']= gemstonedata.pricetype.label
-    bodydata['selling_price']= gemstonedata.sellingprice
-    bodydata['isadd']=true
+    bodydata['selling_price_type'] = gemstonedata.pricetype.label
+    bodydata['selling_price'] = gemstonedata.sellingprice
+    bodydata['isadd'] = true
 
-   // alert(JSON.stringify(gemstonedata))
+    // alert(JSON.stringify(gemstonedata))
 
-  await sendNetworkRequest('/updategemstoneprice', {}, bodydata)
+    await sendNetworkRequest('/updategemstoneprice', {}, bodydata)
     setOpen(false)
-     getgemlist()
-     setBtnEdit({ ...btnEdit, id:"", action: false })
+    getgemlist()
+    setBtnEdit({ ...btnEdit, id: "", action: false })
 
   }
 
@@ -433,14 +413,14 @@ const   AddContact=(props)=> {
   })
   function handleChangePage(event, newPage) {
     setPage(newPage);
-    setOffsetValue(newPage*rowsPerPage)
+    setOffsetValue(newPage * rowsPerPage)
   }
 
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   }
-  function ProductEdit(id){
+  function ProductEdit(id) {
     // localStorage.setItem('productEditId',id);
     history.push(`product_attributes/${id}`)
   }
@@ -450,23 +430,23 @@ const   AddContact=(props)=> {
     setOrderBy(property);
   };
   function CancelEdit(diamondData) {
-    setBtnEdit({ ...btnEdit, id:'', action: false })
+    setBtnEdit({ ...btnEdit, id: '', action: false })
 
   }
   function handleEdit(diamondData) {
-      setEditgem({
-        ...editgem,
-        cost_price_id : diamondData.costprice.id,
-        weight_start : diamondData.costprice.weight_start,
-        weight_end : diamondData.costprice.weight_end,
-        cost_price : diamondData.costprice.price,
-         selling_price : diamondData.sellprice.price,
-         selling_price_id : diamondData.sellprice.id,
+    setEditgem({
+      ...editgem,
+      cost_price_id: diamondData.costprice.id,
+      weight_start: diamondData.costprice.weight_start,
+      weight_end: diamondData.costprice.weight_end,
+      cost_price: diamondData.costprice.price,
+      selling_price: diamondData.sellprice.price,
+      selling_price_id: diamondData.sellprice.id,
 
-        updatedAt : new Date()
+      updatedAt: new Date()
 
 
-      })
+    })
     // setProductCtx({
     //   ...productCtx,
     //   editleadtime:diamondData.vendorDeliveryTime,
@@ -474,31 +454,30 @@ const   AddContact=(props)=> {
     //   editisdefault:diamondData.isdefault,
     //   editisactive:diamondData.isActive
     // })
-    setBtnEdit({ ...btnEdit, id:diamondData.costprice.id, action: true })
+    setBtnEdit({ ...btnEdit, id: diamondData.costprice.id, action: true })
 
   }
 
- async function handleSave(id){
+  async function handleSave(id) {
     var bodydata = {}
-   
-   await sendNetworkRequest('/updategemstoneprice', {}, editgem)
+
+    await sendNetworkRequest('/updategemstoneprice', {}, editgem)
 
     getgemlist()
-    setBtnEdit({ ...btnEdit, id:"", action: false })
+    setBtnEdit({ ...btnEdit, id: "", action: false })
 
   }
-  async function getgemlist()
-  {
+  async function getgemlist() {
     let bodydata = {
-      vendorid : props.vendor,
-      ratetype : props.viewtype
+      vendorid: props.vendor,
+      ratetype: props.viewtype
     }
-    let response =  await sendNetworkRequest('/getvendorgemprice', {}, bodydata)
-   // setProductlists(response.products)
-   setgemlist(response.gems)
+    let response = await sendNetworkRequest('/getvendorgemprice', {}, bodydata)
+    // setProductlists(response.products)
+    setgemlist(response.gems)
 
   }
-  useEffect( () => {
+  useEffect(() => {
     getgemlist()
   }, [vendorid])
   useEffect(() => {
@@ -506,7 +485,7 @@ const   AddContact=(props)=> {
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: GEMSTONEMASTER, variables: { } })
+      body: JSON.stringify({ query: GEMSTONEMASTER, variables: {} })
     };
     // console.log("helo",setProductCtx)
     fetch(url, opts)
@@ -514,59 +493,59 @@ const   AddContact=(props)=> {
       .then(fatchvalue => {
 
         setGemmaster(fatchvalue.data.allMasterGemstonesTypes.nodes)
-       
+
 
       })
       .catch(console.error)
   }, [])
 
-  const handleinputChange =type => e => {
+  const handleinputChange = type => e => {
     setEditgem({
       ...editgem,
       [type]: e.target.value
     })
-      // setProductCtx({ ...productCtx, [type]: e.target.value})
-    
-   }
-  // function productItemStatusChange(id,isactive){
-    // let variable = {
-    //   "productId": id
-    // };
-    // let status = isactive ? variable.isActive = false :variable.isActive = true;
-    async function productItemStatusChange(id,isactive,refetch){
-      let variables ={
-        productId:id,
-        isActive:isactive ?false:true
-      }
-      await props.client.mutate({mutation:PRODUCTLISTSTATUSEDIT,variables}).then(res=>{
+    // setProductCtx({ ...productCtx, [type]: e.target.value})
 
-        if(res!==null){
-          refetch();
-        }
-      }).catch(console.error)
-    
+  }
+  // function productItemStatusChange(id,isactive){
+  // let variable = {
+  //   "productId": id
+  // };
+  // let status = isactive ? variable.isActive = false :variable.isActive = true;
+  async function productItemStatusChange(id, isactive, refetch) {
+    let variables = {
+      productId: id,
+      isActive: isactive ? false : true
     }
-    // const [productItemStatusChange,{ data }] = useMutation(PRODUCTLISTSTATUSEDIT);
+    await props.client.mutate({ mutation: PRODUCTLISTSTATUSEDIT, variables }).then(res => {
+
+      if (res !== null) {
+        refetch();
+      }
+    }).catch(console.error)
+
+  }
+  // const [productItemStatusChange,{ data }] = useMutation(PRODUCTLISTSTATUSEDIT);
   // }
   return (
     <>
-     <ConformationAlert 
-      title={"Are you sure to delete?"} 
-      positivebtn={"Yes"} 
-      negativebtn={"No"} 
-      message={""} 
-      onSuccess={handledelete}
-      data={deleteid}
-      onCancel={hidedeleteconformation}
-      isshow={isconformation} />
-   <Card className={classes.cardcontent} > 
-    <Grid container justify="left"   alignItems="center" className={classes.cardroot} spacing={4}>
-      <Grid item xs={6}> 
-      <Typography variant="h6"> 
-        {props.title}
-      </Typography> 
-      </Grid>
-      {/* <Grid item> 
+      <ConformationAlert
+        title={"Are you sure to delete?"}
+        positivebtn={"Yes"}
+        negativebtn={"No"}
+        message={""}
+        onSuccess={handledelete}
+        data={deleteid}
+        onCancel={hidedeleteconformation}
+        isshow={isconformation} />
+      <Card className={classes.cardcontent} >
+        <Grid container justify="left" alignItems="center" className={classes.cardroot} spacing={4}>
+          <Grid item xs={6}>
+            <Typography variant="h6">
+              {props.title}
+            </Typography>
+          </Grid>
+          {/* <Grid item> 
       <TextField
           variant="outlined"
           margin="dense"
@@ -577,58 +556,58 @@ const   AddContact=(props)=> {
           name="Cost Price"
       />
       </Grid> */}
-      <Grid item xs={6} style={{textAlign: "right"}}>
-        <Button color="primary" variant="contained"  size="small"  style={{paddingRight: 16, paddingLeft: 16}} onClick={handleClickOpen}>
+          <Grid item xs={6} style={{ textAlign: "right" }}>
+            <Button color="primary" variant="contained" size="small" style={{ paddingRight: 16, paddingLeft: 16 }} onClick={handleClickOpen}>
               Add New
         </Button>
-      </Grid>
+          </Grid>
 
-      </Grid>
-    </Card>
-    <Paper className={classes.root}>
-       
-      {/* <div className={classes.tableWrapper} style={{marginTop:16,marginBottom:16,textAlign: "right"} }>
+        </Grid>
+      </Card>
+      <Paper className={classes.root}>
+
+        {/* <div className={classes.tableWrapper} style={{marginTop:16,marginBottom:16,textAlign: "right"} }>
         
       </div> */}
-      <div className={classes.tableWrapper}>
-      
-        <Table className={classes.table} border={1} borderColor={"#ddd"} size="small" stickyHeader>
-        <TableHead>
-            {props.viewtype == 1 ? 
-            <TableRow>
-              
-              {columns.map(column => (
-              
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow> : <TableRow>
-              
-              {stonecountcolumns.map(column => (
-              
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow> }
-          </TableHead>
-          <TableBody>
-          {/* <Query
+        <div className={classes.tableWrapper}>
+
+          <Table className={classes.table} border={1} borderColor={"#ddd"} size="small" stickyHeader>
+            <TableHead>
+              {props.viewtype == 1 ?
+                <TableRow>
+
+                  {columns.map(column => (
+
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow> : <TableRow>
+
+                  {stonecountcolumns.map(column => (
+
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow>}
+            </TableHead>
+            <TableBody>
+              {/* <Query
               query={GEMPRICELIST}
               onCompleted={data => setPageCount( data.allGemstonePriceSettings.totalCount )}
               variables={{ "vendorCode": 'STYPA 010',"rateType": 1}}>
               {
                   ({ data, loading, error, refetch }) => {
-                    debugger
+                    
                       if (loading) {
                           // return <Loader />
                       }
@@ -638,19 +617,19 @@ const   AddContact=(props)=> {
                       }
                       if (data) {
                           return <> */}
-                               {stableSort(gemlist, getComparator(order, orderBy)).map((row, index) => (
-                                  <TableRow key={row.gemstoneType}>
-                                  <TableCell component="th" scope="row">
-                                     {row.costprice.gemstone_type}
-                                    
-                                  </TableCell>
-                                  {props.viewtype == 1 ? 
-                                  <>
-                                  <TableCell align="left">
-                                  <Typography className={classes.heading}> 
-                                    {row.costprice.weight_start}
-                                   </Typography>
-                                  {/* {
+              {stableSort(gemlist, getComparator(order, orderBy)).map((row, index) => (
+                <TableRow key={row.gemstoneType}>
+                  <TableCell component="th" scope="row">
+                    {row.costprice.gemstone_type}
+
+                  </TableCell>
+                  {props.viewtype == 1 ?
+                    <>
+                      <TableCell align="left">
+                        <Typography className={classes.heading}>
+                          {row.costprice.weight_start}
+                        </Typography>
+                        {/* {
                                     btnEdit.action && btnEdit.id == row.costprice.id ? <Input
                                     variant="outlined"
                                     margin="dense"
@@ -665,12 +644,12 @@ const   AddContact=(props)=> {
                                     <Typography className={classes.heading}> 
                                     {row.costprice.weight_start}
                                    </Typography>  } */}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                    <Typography className={classes.heading}> 
-                                    {row.costprice.weight_end}
-                                   </Typography> 
-                                  {/* {
+                      </TableCell>
+                      <TableCell align="left">
+                        <Typography className={classes.heading}>
+                          {row.costprice.weight_end}
+                        </Typography>
+                        {/* {
                                     btnEdit.action && btnEdit.id == row.costprice.id ? <Input
                                     variant="outlined"
                                     margin="dense"
@@ -685,108 +664,108 @@ const   AddContact=(props)=> {
                                     <Typography className={classes.heading}> 
                                     {row.costprice.weight_end}
                                    </Typography>  } */}
-                                    </TableCell>
-                                    </> : null}
-                                    <TableCell align="left">
-                                  {
-                                    btnEdit.action && btnEdit.id == row.costprice.id ? <Input
-                                    variant="outlined"
-                                    margin="dense"
-                                    label="Cost Price"
-                                    fullWidth
-                                    className={classes.helperinput}
-                                    value= {editgem.cost_price}
-                                    onChange={handleinputChange('cost_price')}
-                                    id="productvendorcode"
-                                    name="Cost Price"
-                                    /> : 
-                                    <Typography className={classes.heading}> 
-                                    {row.costprice.price}
-                                   </Typography>  }
-                                    </TableCell>
-                                    <TableCell align="left">
-                                  {
-                                    btnEdit.action && btnEdit.id == row.costprice.id ? <Input
-                                    variant="outlined"
-                                    margin="dense"
-                                    label="Cost Price"
-                                    fullWidth
-                                    className={classes.helperinput}
-                                    value= {editgem.selling_price}
-                                    onChange={handleinputChange('selling_price')}
-                                    id="productvendorcode"
-                                    name="Cost Price"
-                                    /> : 
-                                    <Typography className={classes.heading}> 
-                                    {row.sellprice.price}
-                                   </Typography>  }
-                                    </TableCell>
+                      </TableCell>
+                    </> : null}
+                  <TableCell align="left">
+                    {
+                      btnEdit.action && btnEdit.id == row.costprice.id ? <Input
+                        variant="outlined"
+                        margin="dense"
+                        label="Cost Price"
+                        fullWidth
+                        className={classes.helperinput}
+                        value={editgem.cost_price}
+                        onChange={handleinputChange('cost_price')}
+                        id="productvendorcode"
+                        name="Cost Price"
+                      /> :
+                        <Typography className={classes.heading}>
+                          {row.costprice.price}
+                        </Typography>}
+                  </TableCell>
+                  <TableCell align="left">
+                    {
+                      btnEdit.action && btnEdit.id == row.costprice.id ? <Input
+                        variant="outlined"
+                        margin="dense"
+                        label="Cost Price"
+                        fullWidth
+                        className={classes.helperinput}
+                        value={editgem.selling_price}
+                        onChange={handleinputChange('selling_price')}
+                        id="productvendorcode"
+                        name="Cost Price"
+                      /> :
+                        <Typography className={classes.heading}>
+                          {row.sellprice.price}
+                        </Typography>}
+                  </TableCell>
 
-                                  <TableCell align="left">
-                                  {
-                                    btnEdit.action && btnEdit.id == row.costprice.id ?  <Autocomplete
-                                      id="free-solo-2-demo"
-                                      fullWidth
-                                      disableClearable
-                                      className={classes.fixedTag}
-                                      getOptionLabel={option => option.name}
-                                      options={[{label: 1,name:"Flat"},{label:2,name:"Percentage"}]}
-                                      renderTags={(value, getTagProps) =>
-                                      value.map((option, index) => (
-                                      <Chip variant="outlined" size="small" label={option.name} {...getTagProps({ index })} />
-                                      ))
-                                      }
-                                      renderInput={params => (
-                                      <TextField
-                                      {...params}
-                                      label="Price Type"
-                                      margin="dense"
-                                      variant="outlined"
-                                      fullWidth
-                                      InputProps={{ ...params.InputProps, readOnly: true, type: 'search' }}
-                                      />
-                                      )}
-                                      /> : <Typography className={classes.heading}> 
-                                      {row.sellprice.selling_price_type === 1 ? 'Flat' : 'Percentage'} </Typography>  }
+                  <TableCell align="left">
+                    {
+                      btnEdit.action && btnEdit.id == row.costprice.id ? <Autocomplete
+                        id="free-solo-2-demo"
+                        fullWidth
+                        disableClearable
+                        className={classes.fixedTag}
+                        getOptionLabel={option => option.name}
+                        options={[{ label: 1, name: "Flat" }, { label: 2, name: "Percentage" }]}
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip variant="outlined" size="small" label={option.name} {...getTagProps({ index })} />
+                          ))
+                        }
+                        renderInput={params => (
+                          <TextField
+                            {...params}
+                            label="Price Type"
+                            margin="dense"
+                            variant="outlined"
+                            fullWidth
+                            InputProps={{ ...params.InputProps, readOnly: true, type: 'search' }}
+                          />
+                        )}
+                      /> : <Typography className={classes.heading}>
+                          {row.sellprice.selling_price_type === 1 ? 'Flat' : 'Percentage'} </Typography>}
 
-                                    </TableCell>
+                  </TableCell>
 
-                                  <TableCell align="left">            
-                                  <Moment format="DD MMM YYYY hh:mm a">
-                                  {row.updatedAt}
-                                  </Moment>
-                                  </TableCell>
-                                  {
-                                    btnEdit.action && btnEdit.id == row.costprice.id ?
-                                      <TableCell  style = {{width: 170}} align="center">
-                                        <Button onClick={(e) => handleSave(row.generatedSku)}><SaveIcon />
-                                        </Button>
-                                        <Button onClick={(e) => CancelEdit(row)}><CancelIcon />
-                                        </Button>
-                                      </TableCell> :
-                                      <TableCell align="center" style = {{width: 170}}>
-                                        <Button onClick={(e) => handleEdit(row)}><EditIcon />
-                                        </Button>
-                                        <Button onClick={(e) => handleDelete(row)}><DeleteIcon />
-                                        </Button>
-                                      </TableCell>
-                                  }
-                                </TableRow>
-                              ))}
-                          {/* </>
+                  <TableCell align="left">
+                    <Moment format="DD MMM YYYY hh:mm a">
+                      {row.updatedAt}
+                    </Moment>
+                  </TableCell>
+                  {
+                    btnEdit.action && btnEdit.id == row.costprice.id ?
+                      <TableCell style={{ width: 170 }} align="center">
+                        <Button onClick={(e) => handleSave(row.generatedSku)}><SaveIcon />
+                        </Button>
+                        <Button onClick={(e) => CancelEdit(row)}><CancelIcon />
+                        </Button>
+                      </TableCell> :
+                      <TableCell align="center" style={{ width: 170 }}>
+                        <Button onClick={(e) => handleEdit(row)}><EditIcon />
+                        </Button>
+                        <Button onClick={(e) => handleDelete(row)}><DeleteIcon />
+                        </Button>
+                      </TableCell>
+                  }
+                </TableRow>
+              ))}
+              {/* </>
                       }
                       else{
                       return <div>{"Fetch Products"}</div>
                       } 
                   }}*/}
-          {/* </Query> */}
-            {/* {emptyRows > 0 && (
+              {/* </Query> */}
+              {/* {emptyRows > 0 && (
               <TableRow style={{ height: 48 * emptyRows }}>
                 <TableCell colSpan={6} />
               </TableRow>
             )} */}
-          </TableBody>
-        {/* <TableFooter>
+            </TableBody>
+            {/* <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[10,20,200,500]}
@@ -803,11 +782,11 @@ const   AddContact=(props)=> {
               />
             </TableRow>
           </TableFooter> */}
-        </Table> 
-      </div>
-      {open ? <Addgemstoneprice gems={gemmaster} viewtype={props.viewtype} isadd={open} title={props.title} actionSave={handleAdd} actionclose={handleClose}/> : null} 
+          </Table>
+        </div>
+        {open ? <Addgemstoneprice gems={gemmaster} viewtype={props.viewtype} isadd={open} title={props.title} actionSave={handleAdd} actionclose={handleClose} /> : null}
 
-    </Paper>
+      </Paper>
     </>
   );
 }

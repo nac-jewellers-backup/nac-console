@@ -1,52 +1,36 @@
-import React,{ useEffect} from 'react';
-import clsx from 'clsx';
-import {lighten, makeStyles, useTheme } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
+import { Button, Card, Grid, Input } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import { lighten, makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-import {Grid,Card} from '@material-ui/core';
-
-import Toolbar from '@material-ui/core/Toolbar';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
+import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import CancelIcon from '@material-ui/icons/CancelOutlined';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import TableHead from '@material-ui/core/TableHead';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { Link as RouterLink } from 'react-router-dom'
-import Link from '@material-ui/core/Link'
-import { Input} from '@material-ui/core';
-import { Query, withApollo } from 'react-apollo';
-import {MAKINGCHARGEPRICELIST,PRODUCTLISTSTATUSEDIT,METALMASTER, DELETEMAKINGCHARGE} from '../../../graphql/query';
-import { useHistory } from "react-router-dom";
-import { Button, Switch } from '@material-ui/core';
-import { useMutation,useQuery } from '@apollo/react-hooks';
-import Moment from 'react-moment';
-import {BASE_URL} from '../../../config'
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Filterandsearch from './../../../screens/Productlist/filterandsearch';
-import CancelIcon from '@material-ui/icons/CancelOutlined';
-import Addmakingchargeprice from './Addmakingchargeprice'
 import SaveIcon from '@material-ui/icons/Save';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import { Query, withApollo } from 'react-apollo';
+import Moment from 'react-moment';
+import { useHistory } from "react-router-dom";
+import ConformationAlert from '../../../components/ConformationAlert';
+import { GRAPHQL_DEV_CLIENT } from '../../../config';
 import { NetworkContext } from '../../../context/NetworkContext';
-import ConformationAlert from '../../../components/ConformationAlert'
-import { API_URL, GRAPHQL_DEV_CLIENT } from '../../../config';
+import { DELETEMAKINGCHARGE, MAKINGCHARGEPRICELIST, METALMASTER, PRODUCTLISTSTATUSEDIT } from '../../../graphql/query';
+import Addmakingchargeprice from './Addmakingchargeprice';
 
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import {
- 
-  Chip,
-  TextField
-} from '@material-ui/core';
+
 const columns = [
   { id: 'Metal', label: 'Metal' },
   { id: 'Purity', label: 'Purity' },
@@ -55,7 +39,7 @@ const columns = [
   { id: 'Cost Price', label: 'Cost Price' },
 
   { id: 'updated On', label: 'updated On' },
-  { id: 'Edit / Delete', label: 'Edit / Delete', align : 'center' }
+  { id: 'Edit / Delete', label: 'Edit / Delete', align: 'center' }
 
 ];
 
@@ -73,7 +57,7 @@ function TablePaginationActions(props) {
   const classes = useStyles1();
   const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
-  
+
   function handleFirstPageButtonClick(event) {
     onChangePage(event, 0);
   }
@@ -171,7 +155,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-       
+
         {columns.map(headCell => (
           <TableCell
             key={headCell.id}
@@ -216,13 +200,13 @@ const useToolbarStyles = makeStyles(theme => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: '1 1 100%',
   },
@@ -243,10 +227,10 @@ const EnhancedTableToolbar = props => {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle">
-          Nutrition
-        </Typography>
-      )}
+          <Typography className={classes.title} variant="h6" id="tableTitle">
+            Nutrition
+          </Typography>
+        )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
@@ -255,12 +239,12 @@ const EnhancedTableToolbar = props => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-          
-          </IconButton>
-        </Tooltip>
-      )}
+          <Tooltip title="Filter list">
+            <IconButton aria-label="filter list">
+
+            </IconButton>
+          </Tooltip>
+        )}
     </Toolbar>
   );
 };
@@ -316,25 +300,25 @@ const useStyles2 = makeStyles(theme => ({
   },
 }));
 
-const   AddContact=(props)=> {
+const AddContact = (props) => {
   let history = useHistory();
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [pageCount,setPageCount] = React.useState(0);
-  const [offsetValue,setOffsetValue] = React.useState(0)
+  const [pageCount, setPageCount] = React.useState(0);
+  const [offsetValue, setOffsetValue] = React.useState(0)
   const { sendNetworkRequest } = React.useContext(NetworkContext);
-  const [vendorid,setVendorid] = React.useState(props.vendor);
-  const [editmc,setEditmc] = React.useState({})
-  const [puritymaster,setPuritymaster] = React.useState([])
+  const [vendorid, setVendorid] = React.useState(props.vendor);
+  const [editmc, setEditmc] = React.useState({})
+  const [puritymaster, setPuritymaster] = React.useState([])
 
   // const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.contactlist.length - page * rowsPerPage);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('Product Id');
-  const [editdiamond,setEditdiamond] = React.useState({})
-  const [mchargelist,setMchargelist]= React.useState([])
-  const [deleteid,setDeleteid]= React.useState('')
-  const [metalmaster,setMetalmaster]= React.useState([])
+  const [editdiamond, setEditdiamond] = React.useState({})
+  const [mchargelist, setMchargelist] = React.useState([])
+  const [deleteid, setDeleteid] = React.useState('')
+  const [metalmaster, setMetalmaster] = React.useState([])
 
   const [btnEdit, setBtnEdit] = React.useState({
     action: false,
@@ -359,14 +343,13 @@ const   AddContact=(props)=> {
   const hidedeleteconformation = () => {
     setIsconformation(false);
   };
- async function handledelete(datacontent)
-  {
-    let variables ={
-      elementId:deleteid
+  async function handledelete(datacontent) {
+    let variables = {
+      elementId: deleteid
     }
-    await props.client.mutate({mutation:DELETEMAKINGCHARGE,variables}).then(res=>{
+    await props.client.mutate({ mutation: DELETEMAKINGCHARGE, variables }).then(res => {
 
-      if(res!==null){
+      if (res !== null) {
         //refetch();
         // refetchval()
       }
@@ -381,11 +364,11 @@ const   AddContact=(props)=> {
     setIsconformation(true);
   }
   function CancelEdit(diamondData) {
-    setBtnEdit({ ...btnEdit, id:'', action: false, add: true })
+    setBtnEdit({ ...btnEdit, id: '', action: false, add: true })
 
   }
   async function handleAdd(makingcontent) {
-    let bodydata ={}
+    let bodydata = {}
     bodydata['material'] = makingcontent.metal.name;
     bodydata['weight_start'] = makingcontent.weightstart;
     bodydata['weight_end'] = makingcontent.weightend;
@@ -396,21 +379,21 @@ const   AddContact=(props)=> {
     bodydata['selling_price'] = makingcontent.sellingprice;
     bodydata['isadd'] = true
 
-     await sendNetworkRequest('/updatemakingcharge', {}, bodydata)
+    await sendNetworkRequest('/updatemakingcharge', {}, bodydata)
 
-     setBtnEdit({ ...btnEdit, id:"", action: false })
-     setOpen(false)
-     getmclist()
+    setBtnEdit({ ...btnEdit, id: "", action: false })
+    setOpen(false)
+    getmclist()
 
   }
   function handleEdit(diamondData) {
-      setEditmc({
-        ...editmc,
-        price : diamondData.price,
-        updatedAt : new Date()
+    setEditmc({
+      ...editmc,
+      price: diamondData.price,
+      updatedAt: new Date()
 
 
-      })
+    })
     // setProductCtx({
     //   ...productCtx,
     //   editleadtime:diamondData.vendorDeliveryTime,
@@ -418,17 +401,16 @@ const   AddContact=(props)=> {
     //   editisdefault:diamondData.isdefault,
     //   editisactive:diamondData.isActive
     // })
-    setBtnEdit({ ...btnEdit, id:diamondData.id, action: true })
+    setBtnEdit({ ...btnEdit, id: diamondData.id, action: true })
 
   }
-  async function getmclist()
-  {
+  async function getmclist() {
     let bodydata = {
-      vendorid : props.vendor
+      vendorid: props.vendor
     }
 
-    let response =  await sendNetworkRequest('/getvendormakingprice', {}, bodydata)
-   setMchargelist(response.gems)
+    let response = await sendNetworkRequest('/getvendormakingprice', {}, bodydata)
+    setMchargelist(response.gems)
 
   }
   useEffect(() => {
@@ -436,7 +418,7 @@ const   AddContact=(props)=> {
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: METALMASTER, variables: { } })
+      body: JSON.stringify({ query: METALMASTER, variables: {} })
     };
     // console.log("helo",setProductCtx)
     fetch(url, opts)
@@ -450,28 +432,28 @@ const   AddContact=(props)=> {
       .catch(console.error)
   }, [])
 
-  useEffect( () => {
+  useEffect(() => {
     getmclist()
   }, [vendorid])
-  async function handleSave(id){
+  async function handleSave(id) {
     var bodydata = {}
-   
 
-   await sendNetworkRequest('/updatemakingcharge', {}, editmc)
 
-    setBtnEdit({ ...btnEdit, id:"", action: false })
+    await sendNetworkRequest('/updatemakingcharge', {}, editmc)
+
+    setBtnEdit({ ...btnEdit, id: "", action: false })
     getmclist()
   }
   function handleChangePage(event, newPage) {
     setPage(newPage);
-    setOffsetValue(newPage*rowsPerPage)
+    setOffsetValue(newPage * rowsPerPage)
   }
 
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   }
-  function ProductEdit(id){
+  function ProductEdit(id) {
     // localStorage.setItem('productEditId',id);
     history.push(`product_attributes/${id}`)
   }
@@ -480,53 +462,53 @@ const   AddContact=(props)=> {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-  const handleinputChange =type => e => {
+  const handleinputChange = type => e => {
     setEditmc({
       ...editmc,
       [type]: e.target.value
     })
-      // setProductCtx({ ...productCtx, [type]: e.target.value})
-    
-   }
-  // function productItemStatusChange(id,isactive){
-    // let variable = {
-    //   "productId": id
-    // };
-    // let status = isactive ? variable.isActive = false :variable.isActive = true;
-    async function productItemStatusChange(id,isactive,refetch){
-      let variables ={
-        productId:id,
-        isActive:isactive ?false:true
-      }
-      await props.client.mutate({mutation:PRODUCTLISTSTATUSEDIT,variables}).then(res=>{
+    // setProductCtx({ ...productCtx, [type]: e.target.value})
 
-        if(res!==null){
-          refetch();
-        }
-      }).catch(console.error)
-    
+  }
+  // function productItemStatusChange(id,isactive){
+  // let variable = {
+  //   "productId": id
+  // };
+  // let status = isactive ? variable.isActive = false :variable.isActive = true;
+  async function productItemStatusChange(id, isactive, refetch) {
+    let variables = {
+      productId: id,
+      isActive: isactive ? false : true
     }
-    // const [productItemStatusChange,{ data }] = useMutation(PRODUCTLISTSTATUSEDIT);
+    await props.client.mutate({ mutation: PRODUCTLISTSTATUSEDIT, variables }).then(res => {
+
+      if (res !== null) {
+        refetch();
+      }
+    }).catch(console.error)
+
+  }
+  // const [productItemStatusChange,{ data }] = useMutation(PRODUCTLISTSTATUSEDIT);
   // }
   return (
     <>
-     <ConformationAlert 
-      title={"Are you sure to delete?"} 
-      positivebtn={"Yes"} 
-      negativebtn={"No"} 
-      message={""} 
-      data={deleteid}
-      onSuccess={handledelete}
-      onCancel={hidedeleteconformation}
-      isshow={isconformation} />
-    <Card className={classes.cardcontent} > 
-    <Grid container justify="left"   alignItems="center" className={classes.cardroot} spacing={4}>
-      <Grid item xs={6}> 
-      <Typography variant="h6"> 
-        {props.title}
-      </Typography> 
-      </Grid>
-      {/* <Grid item > 
+      <ConformationAlert
+        title={"Are you sure to delete?"}
+        positivebtn={"Yes"}
+        negativebtn={"No"}
+        message={""}
+        data={deleteid}
+        onSuccess={handledelete}
+        onCancel={hidedeleteconformation}
+        isshow={isconformation} />
+      <Card className={classes.cardcontent} >
+        <Grid container justify="left" alignItems="center" className={classes.cardroot} spacing={4}>
+          <Grid item xs={6}>
+            <Typography variant="h6">
+              {props.title}
+            </Typography>
+          </Grid>
+          {/* <Grid item > 
       <TextField
           variant="outlined"
           margin="dense"
@@ -537,62 +519,62 @@ const   AddContact=(props)=> {
           name="Cost Price"
       />
       </Grid> */}
-       <Grid item xs={6} style={{textAlign: "right"}}>
-        <Button color="primary" variant="contained"  size="small"   style={{paddingRight: 16, paddingLeft: 16}} onClick={handleClickOpen}>
+          <Grid item xs={6} style={{ textAlign: "right" }}>
+            <Button color="primary" variant="contained" size="small" style={{ paddingRight: 16, paddingLeft: 16 }} onClick={handleClickOpen}>
               Add New
         </Button>
-      </Grid>
+          </Grid>
 
-      </Grid>
-    </Card>
-    <Paper className={classes.root}>
-     
-      
+        </Grid>
+      </Card>
+      <Paper className={classes.root}>
 
 
-      <div className={classes.tableWrapper}>
-      
-        <Table className={classes.table} border={1} borderColor={"#ddd"} size="small" stickyHeader>
-        <TableHead>
-            <TableRow>
-              {columns.map(column => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label === 'Cost Price' ? props.ratetype == 1 ? "Cost Price" : "Selling Price"  : column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-          <Query
-              query={MAKINGCHARGEPRICELIST}
-              onCompleted={data => setPageCount( data.allMakingChargeSettings.totalCount )}
-              variables={{ "vendorCode": props.vendor, "ratetype": props.ratetype}}>
-              {
+
+
+        <div className={classes.tableWrapper}>
+
+          <Table className={classes.table} border={1} borderColor={"#ddd"} size="small" stickyHeader>
+            <TableHead>
+              <TableRow>
+                {columns.map(column => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label === 'Cost Price' ? props.ratetype == 1 ? "Cost Price" : "Selling Price" : column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <Query
+                query={MAKINGCHARGEPRICELIST}
+                onCompleted={data => setPageCount(data.allMakingChargeSettings.totalCount)}
+                variables={{ "vendorCode": props.vendor, "ratetype": props.ratetype }}>
+                {
                   ({ data, loading, error, refetch }) => {
-                    debugger
-                      if (loading) {
-                          // return <Loader />
-                      }
-                      if (error) {
-                        return <div>{error}</div>
-                          // return false
-                      }
-                      if (data) {
-                          return <>
-                              {data.allMakingChargeSettings.nodes.map((row, index) => (
-                                  <TableRow key={row.material}>
-                                  <TableCell component="th" scope="row">
-                                     {row.material}
-                                    
-                                  </TableCell>
-                                  <TableCell align="left">{row.purity}</TableCell>
 
-                                  <TableCell align="left">
-                                  {/* {
+                    if (loading) {
+                      // return <Loader />
+                    }
+                    if (error) {
+                      return <div>{error}</div>
+                      // return false
+                    }
+                    if (data) {
+                      return <>
+                        {data.allMakingChargeSettings.nodes.map((row, index) => (
+                          <TableRow key={row.material}>
+                            <TableCell component="th" scope="row">
+                              {row.material}
+
+                            </TableCell>
+                            <TableCell align="left">{row.purity}</TableCell>
+
+                            <TableCell align="left">
+                              {/* {
                                     btnEdit.action && btnEdit.id == row.id ? <Input
                                     variant="outlined"
                                     margin="dense"
@@ -604,13 +586,13 @@ const   AddContact=(props)=> {
                                     id="productvendorcode"
                                     name="Cost Price"
                                     /> :  */}
-                                    <Typography className={classes.heading}> 
-                                    {row.weightStart}
-                                   </Typography>  
-                                    </TableCell>
+                              <Typography className={classes.heading}>
+                                {row.weightStart}
+                              </Typography>
+                            </TableCell>
 
-                                    <TableCell align="left">
-                                  {/* {
+                            <TableCell align="left">
+                              {/* {
                                     btnEdit.action && btnEdit.id == row.id ? <Input
                                     variant="outlined"
                                     margin="dense"
@@ -622,33 +604,33 @@ const   AddContact=(props)=> {
                                     id="productvendorcode"
                                     name="Cost Price"
                                     /> :  */}
-                                    <Typography className={classes.heading}> 
-                                    {row.weightEnd}
-                                   </Typography>  
-                                    </TableCell>
-
-                                  
+                              <Typography className={classes.heading}>
+                                {row.weightEnd}
+                              </Typography>
+                            </TableCell>
 
 
-                                    <TableCell align="left">
-                                  {
-                                    btnEdit.action && btnEdit.id == row.id ? <Input
-                                    variant="outlined"
-                                    margin="dense"
-                                    label="Cost Price"
-                                    fullWidth
-                                    className={classes.helperinput}
-                                    value= {editmc.price}
-                                    onChange={handleinputChange('selling_price')}
-                                    id="productvendorcode"
-                                    name="Cost Price"
-                                    /> : 
-                                    <Typography className={classes.heading}> 
+
+
+                            <TableCell align="left">
+                              {
+                                btnEdit.action && btnEdit.id == row.id ? <Input
+                                  variant="outlined"
+                                  margin="dense"
+                                  label="Cost Price"
+                                  fullWidth
+                                  className={classes.helperinput}
+                                  value={editmc.price}
+                                  onChange={handleinputChange('selling_price')}
+                                  id="productvendorcode"
+                                  name="Cost Price"
+                                /> :
+                                  <Typography className={classes.heading}>
                                     {row.price}
-                                   </Typography>  }
-                                    </TableCell>
+                                  </Typography>}
+                            </TableCell>
 
-                                    {/* <TableCell align="left">
+                            {/* <TableCell align="left">
                                   {
                                     btnEdit.action && btnEdit.id == row.id ?  <Autocomplete
                                       id="free-solo-2-demo"
@@ -678,42 +660,42 @@ const   AddContact=(props)=> {
                                     </TableCell> */}
 
 
-                                  <TableCell align="left">            
-                                  <Moment format="DD MMM YYYY hh:mm a">
-                                  {row.updatedAt}
-                                  </Moment>
-                                  </TableCell>
-                                  {
-                                    btnEdit.action && btnEdit.id == row.id ?
-                                      <TableCell  style = {{width: 170}} align="left">
-                                        <Button onClick={(e) => handleSave(row.id)}><SaveIcon />
-                                        </Button>
-                                        <Button onClick={(e) => CancelEdit(row)}><CancelIcon />
-                                        </Button>
-                                      </TableCell> :
-                                      <TableCell align="left" style = {{width: 170}}>
-                                        <Button onClick={(e) => handleEdit(row)}><EditIcon />
-                                        </Button>
-                                        <Button onClick={(e) => handleDelete(row)}><DeleteIcon />
-                                        </Button>
-                                      </TableCell>
-                                  }
-                                </TableRow>
-                              ))}
-                          </>
-                      }
-                      else{
+                            <TableCell align="left">
+                              <Moment format="DD MMM YYYY hh:mm a">
+                                {row.updatedAt}
+                              </Moment>
+                            </TableCell>
+                            {
+                              btnEdit.action && btnEdit.id == row.id ?
+                                <TableCell style={{ width: 170 }} align="left">
+                                  <Button onClick={(e) => handleSave(row.id)}><SaveIcon />
+                                  </Button>
+                                  <Button onClick={(e) => CancelEdit(row)}><CancelIcon />
+                                  </Button>
+                                </TableCell> :
+                                <TableCell align="left" style={{ width: 170 }}>
+                                  <Button onClick={(e) => handleEdit(row)}><EditIcon />
+                                  </Button>
+                                  <Button onClick={(e) => handleDelete(row)}><DeleteIcon />
+                                  </Button>
+                                </TableCell>
+                            }
+                          </TableRow>
+                        ))}
+                      </>
+                    }
+                    else {
                       return <div>{"Fetch Products"}</div>
-                      }
+                    }
                   }}
-          </Query>
-            {/* {emptyRows > 0 && (
+              </Query>
+              {/* {emptyRows > 0 && (
               <TableRow style={{ height: 48 * emptyRows }}>
                 <TableCell colSpan={6} />
               </TableRow>
             )} */}
-          </TableBody>
-         {/* <TableFooter>
+            </TableBody>
+            {/* <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[10,100,200,500]}
@@ -731,11 +713,11 @@ const   AddContact=(props)=> {
               />
             </TableRow>
           </TableFooter> */}
-        </Table> 
-      </div>
-      {open ? <Addmakingchargeprice metals={metalmaster} purities={puritymaster}  isadd={open} title={"Add Making Charge Setup"} actionSave={handleAdd} actionclose={handleClose}/> : null} 
+          </Table>
+        </div>
+        {open ? <Addmakingchargeprice metals={metalmaster} purities={puritymaster} isadd={open} title={"Add Making Charge Setup"} actionSave={handleAdd} actionclose={handleClose} /> : null}
 
-    </Paper>
+      </Paper>
     </>
   );
 }
