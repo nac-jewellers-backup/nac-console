@@ -11,6 +11,7 @@ import { ProductContext } from "../context/ProductuploadContext";
 import {
   Addshippingattributes,
   Addtaxattributes,
+  Bookappoinment,
   CategoryList,
   Configuration,
   Customerdetails,
@@ -105,6 +106,10 @@ const MainApp = () => {
           <PrivateRoute
             path={route.producttypes}
             component={Masterproducttypes}
+          />
+          <PrivateRoute
+            path={route.Bookappoinment}
+            component={Bookappoinment}
           />
           <PrivateRoute
             path={route.voucherdiscount}

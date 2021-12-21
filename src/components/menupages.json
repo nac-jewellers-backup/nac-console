@@ -73,6 +73,11 @@
       "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/BannerNSS.svg"
     },
     {
+      "name": "Book Appoinment",
+      "url": "/bookappoinment",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/HolidayNSS.png"
+    },
+    {
       "name": "Inventory & Shipping Setup",
       "url": "inventory-shipping-setup",
       "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/Inventory+%26+ShippingsetupNSS.png",

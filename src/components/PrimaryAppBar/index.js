@@ -1,23 +1,20 @@
-import React from "react";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import Badge from "@material-ui/core/Badge";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import MoreIcon from "@material-ui/icons/MoreVert";
-import { useStyles } from "./styles";
-import { withRouter } from "react-router-dom";
-import SideBar from "../SideBar";
-import { GlobalContext } from "../../context";
 import { CssBaseline } from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import MenuIcon from "@material-ui/icons/Menu";
+import MoreIcon from "@material-ui/icons/MoreVert";
 import clsx from "clsx";
+import React from "react";
+import { withRouter } from "react-router-dom";
+import { GlobalContext } from "../../context";
+import SideBar from "../SideBar";
 import "./style.css";
+import { useStyles } from "./styles";
 
 function PAppBar() {
   const classes = useStyles();
@@ -134,7 +131,7 @@ function PAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography style={{ color: "#fff" }} variant="h4" noWrap>
-            Stylori
+            NAC jewellery
           </Typography>
 
           <div className={classes.grow} />
