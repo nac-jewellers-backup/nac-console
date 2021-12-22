@@ -1,6 +1,5 @@
 export * from "./Addshippingattributes";
 export * from "./Addtaxattributes";
-export * from "./bookappoinment";
 export * from "./CategoryList";
 export * from "./Configuration";
 export * from "./Customerdetails";
@@ -13,7 +12,9 @@ export * from "./HolidayManager";
 export * from "./Inventory";
 export * from "./Login";
 export * from "./Manageadminusers";
+export * from "./manageshedule";
 export * from "./Manageusers";
+export * from "./mangeappoinment";
 export * from "./Markuppricesetup";
 export * from "./Masterattribute";
 export * from "./Mastercategories";

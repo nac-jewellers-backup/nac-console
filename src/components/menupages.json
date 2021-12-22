@@ -73,9 +73,21 @@
       "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/BannerNSS.svg"
     },
     {
-      "name": "Book Appoinment",
-      "url": "/bookappoinment",
-      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/HolidayNSS.png"
+      "name": "Appoinment Management",
+      "url": "Appoinment Management",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/HolidayNSS.png",
+      "submenu": [
+        {
+          "name": "Manageshedule",
+          "url": "/manageshedule",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/HolidayNSS.png"
+        },
+        {
+          "name": "Manageappoinment",
+          "url": "/manageappoinment",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/Warehouse+-++OutlineNSS.png"
+        }
+      ]
     },
     {
       "name": "Inventory & Shipping Setup",

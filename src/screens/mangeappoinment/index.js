@@ -94,7 +94,7 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
-export const Bookappoinment = (props) => {
+export const Manageappoinment = (props) => {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -111,7 +111,7 @@ export const Bookappoinment = (props) => {
   return (
     <Paper className={classes.root}>
       <div className={classes.tableWrapper}>
-        <Typography className={classes.title}>Book Appointment</Typography>
+        <Typography className={classes.title}>Manage Appointment</Typography>
         <Table
           className={classes.table}
           border={1}

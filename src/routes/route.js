@@ -88,7 +88,8 @@ const route = {
 
   Comments: "/comments",
   Newarrival: "/newarrival",
-  Bookappoinment: "/bookappoinment",
+  Manageappoinment: "/manageappoinment",
+  Manageshedule: "/manageshedule",
 };
 
 export default route;

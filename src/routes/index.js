@@ -11,7 +11,6 @@ import { ProductContext } from "../context/ProductuploadContext";
 import {
   Addshippingattributes,
   Addtaxattributes,
-  Bookappoinment,
   CategoryList,
   Configuration,
   Customerdetails,
@@ -23,6 +22,8 @@ import {
   Inventory,
   Login,
   Manageadminusers,
+  Manageappoinment,
+  ManageShedule,
   Manageusers,
   Markupprice,
   Masterattribute,
@@ -108,8 +109,8 @@ const MainApp = () => {
             component={Masterproducttypes}
           />
           <PrivateRoute
-            path={route.Bookappoinment}
-            component={Bookappoinment}
+            path={route.Manageappoinment}
+            component={Manageappoinment}
           />
           <PrivateRoute
             path={route.voucherdiscount}
@@ -274,6 +275,7 @@ const MainApp = () => {
           <PrivateRoute path={route.warehouse} component={Warehouse} />
           <PrivateRoute path={route.inventory} component={Inventory} />
           <PrivateRoute path={route.silverbanner} component={Silverbanner} />
+          <PrivateRoute path={route.Manageshedule} component={ManageShedule} />
           <PrivateRoute
             path={route.silverlistingbanner}
             component={SilverListingbanner}

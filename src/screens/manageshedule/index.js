@@ -1,22 +1,11 @@
 import {
   Grid,
   IconButton,
-  LinearProgress,
-  Paper,
-  Switch,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  makeStyles,
   Tooltip,
   Typography,
 } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import EditIcon from "@material-ui/icons/Edit";
-import moment from "moment";
 import React from "react";
 import { useApolloClient, useQuery } from "react-apollo";
 import { AlertContext } from "../../context";
@@ -26,11 +15,13 @@ import {
   UPDATE_WAREHOUSE,
 } from "../../graphql/mutation";
 import { WAREHOUSELIST } from "../../graphql/query";
-import WarehouseModal from "./WarehouseModal";
+import SheduleModal from "./shedulemodal";
+import SheduleModalShow from "./shedulemodalshow";
 
-export const Warehouse = (props) => {
+export const ManageShedule = (props) => {
   const { loading, data, error, refetch } = useQuery(WAREHOUSELIST);
   const [open, setOpen] = React.useState(false);
+  const [openmodal, setOpenmodal] = React.useState({});
   const [type, setType] = React.useState();
   const [item, setItem] = React.useState({ name: "", shippingInDays: "" });
 
@@ -42,6 +33,25 @@ export const Warehouse = (props) => {
   const client = useApolloClient();
 
   const snack = React.useContext(AlertContext);
+  const useStyles = makeStyles((theme) => ({
+    datecard: {
+      backgroundColor: "white",
+      padding: "12px",
+      cursor: "pointer",
+      borderTop: "4px solid #3F51B5",
+      "&:hover": {
+        borderTop: "5px solid #3F51B5",
+        boxShadow: "0px 3px 6px #c1c1c1",
+      },
+    },
+    date: {
+      fontSize: "22px",
+      padding: "10px 0px",
+    },
+    day: {
+      fontSize: "14px",
+    },
+  }));
 
   const onClose = () => {
     setOpen(false);
@@ -175,7 +185,54 @@ export const Warehouse = (props) => {
         });
       });
   };
+  const dummydata = [
+    {
+      id: 1,
+      date: "22",
+      month: "Jun",
+      year: "2021",
+      day: "Mon",
+      time: [
+        "22/12/2021 09:41:05",
+        "22/12/2021 09:41:05",
+        "22/12/2021 09:41:05",
+      ],
+    },
+    {
+      id: 2,
+      date: "19",
+      month: "Jun",
+      year: "2021",
+      day: "Thu",
+      time: [
+        "22/12/2021 09:41:05",
+        "22/12/2021 09:41:05",
+        "22/12/2021 09:41:05",
+      ],
+    },
+    {
+      id: 3,
+      date: "10",
+      month: "Jun",
+      year: "2021",
+      day: "Fri",
+      time: [
+        "22/12/2021 09:41:05",
+        "22/12/2021 09:41:05",
+        "22/12/2021 09:41:05",
+      ],
+    },
+  ];
+  const handlemodalshow = (lab) => {
+    let key = lab.toString();
 
+    setOpenmodal({
+      ...openmodal,
+      [key]: !openmodal[key],
+    });
+  };
+
+  const classes = useStyles();
   return (
     <Grid container spacing={3}>
       <Grid
@@ -186,7 +243,7 @@ export const Warehouse = (props) => {
         justify="flex-start"
         alignItems="center"
       >
-        <Typography variant="h4">Warehouse</Typography>
+        <Typography variant="h4">Manage Shedule</Typography>
         <IconButton
           style={{ color: "#000" }}
           onClick={() => {
@@ -199,100 +256,30 @@ export const Warehouse = (props) => {
           </Tooltip>
         </IconButton>
       </Grid>
-      <Grid container item xs={12} sm={12} spacing={2}>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell align={"center"}>Name</TableCell>
-                <TableCell align={"center"}>Shipping In Days</TableCell>
-                <TableCell align={"center"}>Created On</TableCell>
-                <TableCell align={"center"}>Last Updated On</TableCell>
-                <TableCell align={"center"}>Status</TableCell>
-                <TableCell align={"center"}>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {loading && (
-                <TableRow>
-                  <TableCell colSpan={6} align={"center"} padding="none">
-                    <LinearProgress />
-                  </TableCell>
-                </TableRow>
-              )}
-              {error && (
-                <TableRow>
-                  <TableCell colSpan={6} align={"center"}>
-                    <Typography>
-                      Some Error occured please try again!
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              )}
-              {data && data?.allWarehouses?.nodes.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} align={"center"}>
-                    <Typography>No Warehouses found!</Typography>
-                  </TableCell>
-                </TableRow>
-              )}
-              {data &&
-                data?.allWarehouses?.nodes.length > 0 &&
-                data?.allWarehouses?.nodes.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell align={"center"} padding="none">
-                      {item.name}
-                    </TableCell>
-                    <TableCell align={"center"} padding="none">
-                      {item.shippingInDays}
-                    </TableCell>
-                    <TableCell align={"center"} padding="none">
-                      {moment(item.createdAt).format("DD/MM/YYYY HH:mm:ss")}
-                    </TableCell>
-                    <TableCell align={"center"} padding="none">
-                      {moment(item.updatedAt).format("DD/MM/YYYY HH:mm:ss")}
-                    </TableCell>
-                    <TableCell align={"center"} padding="none">
-                      <Switch
-                        checked={item.isActive}
-                        onChange={() => handleSwitch(item.id, item.isActive)}
-                        name="active"
-                        color="primary"
-                      />
-                    </TableCell>
-                    <TableCell align={"center"} padding="none">
-                      <IconButton
-                        color="inherit"
-                        onClick={() => {
-                          setType("Edit");
-                          setOpen(true);
-                          setItem(item);
-                        }}
-                      >
-                        <Tooltip title="Edit">
-                          <EditIcon />
-                        </Tooltip>
-                      </IconButton>
-                      <IconButton
-                        color="inherit"
-                        onClick={() => {
-                          setType("Delete");
-                          setOpen(true);
-                          setItem(item);
-                        }}
-                      >
-                        <Tooltip title="Delete">
-                          <DeleteForeverIcon />
-                        </Tooltip>
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+      <Grid container spacing={2}>
+        {dummydata.map((val) => {
+          return (
+            <Grid item xs={1}>
+              <div
+                className={classes.datecard}
+                onClick={() => {
+                  handlemodalshow(val.id);
+                }}
+              >
+                <Typography className={classes.day}>{val.day}</Typography>
+                <Typography className={classes.date}>{val.date}</Typography>
+                <Typography className={classes.day}>{val.year}</Typography>
+              </div>
+              <SheduleModalShow
+                open={openmodal[val.id]}
+                data={val}
+                close={() => handlemodalshow(val.id)}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
-      <WarehouseModal
+      <SheduleModal
         open={open}
         type={type}
         item={item}
