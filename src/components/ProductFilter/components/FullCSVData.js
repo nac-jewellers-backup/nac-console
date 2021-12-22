@@ -1,10 +1,19 @@
 import React from "react";
-import { Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField, CircularProgress, Grid } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  CircularProgress,
+  Grid,
+} from "@material-ui/core";
 import Slide from "@material-ui/core/Slide";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { useApolloClient } from "react-apollo";
 import { gql } from "apollo-boost";
-import {AlertContext} from "../../../context/AlertContext";
+import { AlertContext } from "../../../context/AlertContext";
 import { NetworkContext } from "../../../context/NetworkContext";
 import exportFromJSON from "export-from-json";
 
@@ -15,7 +24,7 @@ const FullCSVData = (props) => {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const [loader, setLoader] = React.useState(false);
-  const [productType, setProductType] = React.useState(null);
+  const [productType, setProductType] = React.useState("");
   const client = useApolloClient();
   const snack = React.useContext(AlertContext);
   const { sendNetworkRequest } = React.useContext(NetworkContext);
@@ -41,7 +50,9 @@ const FullCSVData = (props) => {
         `,
       })
       .then((res) => {
-        setOptions(res.data.type.nodes.map((i) => i.name));
+        setOptions(
+          res.data.type.nodes.filter((i) => i.name).map((i) => i.name)
+        );
       })
       .catch((err) => {
         console.error(err);
@@ -82,7 +93,12 @@ const FullCSVData = (props) => {
 
   return (
     <Grid>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen} style={{ marginRight: "8px" }}>
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={handleClickOpen}
+        style={{ marginRight: "8px" }}
+      >
         Full Data Download
       </Button>
       <Dialog
@@ -93,7 +109,9 @@ const FullCSVData = (props) => {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Choose Product Type to download data?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">
+          {"Choose Product Type to download data?"}
+        </DialogTitle>
         <DialogContent>
           <Autocomplete
             id="type"
@@ -104,7 +122,9 @@ const FullCSVData = (props) => {
             onChange={(e, value) => {
               setProductType(value);
             }}
-            renderInput={(params) => <TextField {...params} label="Product Type" variant="outlined" />}
+            renderInput={(params) => (
+              <TextField {...params} label="Product Type" variant="outlined" />
+            )}
           />
         </DialogContent>
         <DialogActions>

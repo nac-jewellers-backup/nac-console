@@ -1386,7 +1386,7 @@ const PRODUCTEDIT = gql`
         }
         __typename
       }
-      productCollectionsByProductId {
+      productCollectionsByProductId(condition: { isActive: true }) {
         nodes {
           collectionName
           id
