@@ -9,6 +9,7 @@ import { Alert } from "@material-ui/lab";
 import { IMAGEDELETE } from "../../graphql/query";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
+import { useLocation } from "react-router-dom";
 const useStyles2 = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -77,6 +78,8 @@ export default function Productimages(props) {
   const [productimages, setProductimages] = React.useState(props.prodimages);
   const { sendNetworkRequest } = React.useContext(NetworkContext);
 
+  product_id = useLocation().pathname.split('/').pop()
+
   React.useEffect(() => {
     setProductimages(props.prodimages);
   }, [props.prodimages]);
@@ -144,7 +147,7 @@ export default function Productimages(props) {
     var options = {
       headers: {
         "Content-Type": filetype,
-        "Access-Control-Allow-Origin": "*",
+        // "Access-Control-Allow-Origin": "*",
       },
     };
 
