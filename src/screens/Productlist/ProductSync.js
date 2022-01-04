@@ -212,6 +212,7 @@ const ProductSync = (props) => {
     setProgress(0);
     var Product_lists = data.Product_lists;
     delete data.Product_lists;
+    setBackDrop(true);
     sendNetworkRequest(
       "/product_sync",
       {},
@@ -221,6 +222,7 @@ const ProductSync = (props) => {
       }
     )
       .then((res) => {
+        setBackDrop(false);
         snack.setSnack({
           open: true,
           severity: "success",
@@ -229,6 +231,7 @@ const ProductSync = (props) => {
       })
       .catch((err) => {
         console.log(err);
+        setBackDrop(false);
         snack.setSnack({
           open: true,
           severity: "error",
@@ -387,7 +390,7 @@ const ProductSync = (props) => {
                   errorTagNo.length > 0
                     ? `${errorTagNo.join(
                         ","
-                      )} already exists these could not be synced again!`
+                      )} already exists syncing again could cause loss of data. Please proceed with caution and validate the same in product edit!`
                     : ``
                 }
               />
