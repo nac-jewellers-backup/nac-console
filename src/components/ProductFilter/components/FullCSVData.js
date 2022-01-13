@@ -8,6 +8,8 @@ import {
   TextField,
   CircularProgress,
   Grid,
+  Switch,
+  FormControlLabel,
 } from "@material-ui/core";
 import Slide from "@material-ui/core/Slide";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -25,6 +27,7 @@ const FullCSVData = (props) => {
   const [options, setOptions] = React.useState([]);
   const [loader, setLoader] = React.useState(false);
   const [productType, setProductType] = React.useState("");
+  const [include, setInclude] = React.useState(false);
   const client = useApolloClient();
   const snack = React.useContext(AlertContext);
   const { sendNetworkRequest } = React.useContext(NetworkContext);
@@ -68,7 +71,7 @@ const FullCSVData = (props) => {
       });
     }
     setLoader(true);
-    sendNetworkRequest("/getcsvdata", {}, { type: productType })
+    sendNetworkRequest("/getcsvdata", {}, { type: productType, include })
       .then((data) => {
         exportFromJSON({
           data,
@@ -125,6 +128,19 @@ const FullCSVData = (props) => {
             renderInput={(params) => (
               <TextField {...params} label="Product Type" variant="outlined" />
             )}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={include}
+                onChange={() => {
+                  setInclude(!include);
+                }}
+                color="primary"
+                name="include"
+              />
+            }
+            label={"Include disabled products"}
           />
         </DialogContent>
         <DialogActions>
