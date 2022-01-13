@@ -142,18 +142,20 @@ const ProductSync = (props) => {
 
   var handleAddChip = (chip) => {
     var _ = data;
-    _.new_tagno.push(chip);
-    setData({ ..._ });
-    client
-      .query({ query: VERIFYTAGNO, variables: { tagno: chip } })
-      .then(({ data }) => {
-        if (data?.list?.nodes && data?.list?.nodes.length >= 1) {
-          setErrorTagNo([...errorTagNo, chip]);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    chip.split(",").forEach((item) => {
+      _.new_tagno.push(item);
+      setData({ ..._ });
+      client
+        .query({ query: VERIFYTAGNO, variables: { tagno: item } })
+        .then(({ data }) => {
+          if (data?.list?.nodes && data?.list?.nodes.length >= 1) {
+            setErrorTagNo([...errorTagNo, item]);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
   };
 
   var handleDeleteChip = (chip, index) => {
@@ -383,6 +385,7 @@ const ProductSync = (props) => {
                 onDelete={handleDeleteChip}
                 fullWidth
                 newChipKeyCodes={[13, 32]}
+                newChipKeys={[","]}
                 variant="outlined"
                 label={"TAG Number"}
                 error={errorTagNo.length > 0}
