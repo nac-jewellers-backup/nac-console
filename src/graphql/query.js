@@ -181,8 +181,15 @@ const PRODUCTCATEGORY = gql`
         name
       }
     }
+    allMasterHashTags {
+      nodes {
+        id
+        name
+      }
+    }
   }
 `;
+
 const PRODUCTFILTERMASTER = gql`
   query {
     allMasterProductCategories {
@@ -1284,9 +1291,7 @@ const PRODUCTEDIT = gql`
         nodes {
           productColor
           id
-          __typename
         }
-        __typename
       }
       productName
       productType
@@ -1295,12 +1300,10 @@ const PRODUCTEDIT = gql`
       earringBacking
       isactive
       prodDescription
-      productMaterialsByProductSku {
+      productMaterialsByProductSku(condition: { isActive: true }) {
         nodes {
           materialName
-          __typename
         }
-        __typename
       }
       productDiamondsByProductSku {
         nodes {
@@ -1317,10 +1320,7 @@ const PRODUCTEDIT = gql`
           stoneWeight
           stoneAmount
           stoneRate
-
-          __typename
         }
-        __typename
       }
       productGemstonesByProductSku {
         nodes {
@@ -1337,9 +1337,7 @@ const PRODUCTEDIT = gql`
           stoneWeight
           stoneAmount
           stoneRate
-          __typename
         }
-        __typename
       }
       productImagesByProductId(orderBy: IMAGE_POSITION_ASC) {
         nodes {
@@ -1350,65 +1348,55 @@ const PRODUCTEDIT = gql`
           ishover
           isdefault
           productColor
-          __typename
         }
-        __typename
       }
       productPuritiesByProductId {
         nodes {
           purity
           id
-          __typename
         }
-        __typename
       }
       productThemesByProductId(condition: { isActive: true }) {
         nodes {
           themeName
           id
-          __typename
         }
-        __typename
       }
       productStonecolorsByProductId {
         nodes {
           id
           stonecolor
-          __typename
         }
-        __typename
       }
       productStylesByProductId(condition: { isActive: true }) {
         nodes {
           styleName
           id
-          __typename
         }
-        __typename
       }
       productCollectionsByProductId(condition: { isActive: true }) {
         nodes {
           collectionName
           id
-          __typename
         }
-        __typename
       }
       productOccassionsByProductId(condition: { isActive: true }) {
         nodes {
           occassionName
           id
-          __typename
         }
-        __typename
       }
       productStonecountsByProductId {
         nodes {
           id
           stonecount
-          __typename
         }
-        __typename
+      }
+      productHashTagsByProductId(condition: { isActive: true }) {
+        nodes {
+          id
+          name: hashTag
+        }
       }
       transSkuListsByProductId {
         nodes {
@@ -1443,22 +1431,18 @@ const PRODUCTEDIT = gql`
               skuDescription
               certificate
               ringsizeImage
-              __typename
             }
-            __typename
           }
           maxOrderQty
           minOrderQty
-          __typename
         }
-        __typename
       }
       productCategory
       sizeVarient
       height
       length
       width
-      __typename
+
       productVendorCode
     }
   }

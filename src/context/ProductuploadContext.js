@@ -33,7 +33,14 @@ const productuploadCtxInitial = {
       value: 1,
       label: "Diamond",
     },
-    materials: ["Diamond", "Gold", "Gemstone", "Solitaire", "Silver", "Platinum"],
+    materials: [
+      "Diamond",
+      "Gold",
+      "Gemstone",
+      "Solitaire",
+      "Silver",
+      "Platinum",
+    ],
     gemstontypes: "",
     gemstonshapes: "",
     product_code: "",
@@ -56,7 +63,9 @@ const productuploadCtxInitial = {
     editVariants: [],
     editDiamondLists: [],
     editGemstoneLists: [],
-    productVariantSize: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
+    productVariantSize: [
+      8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+    ],
     variant_size: [],
     gemstonetype: "",
     gemstoneshape: "",
@@ -97,6 +106,7 @@ const productuploadCtxInitial = {
     prod_styles: [],
     occassions: [],
     collections: [],
+    hashtags: [],
     stonecount: [],
     stonecolour: [],
     product_images: {},
@@ -133,7 +143,9 @@ const mapDataToCtx = (apiData, mapper, mappertype) => {
 
 export const ProductProvider = (props) => {
   console.info("PROPS", props, props.value.mappertype);
-  const [productCtx, setProductCtx] = React.useState(mapDataToCtx(props.value.data, props.value.mapper, props.value.mappertype));
+  const [productCtx, setProductCtx] = React.useState(
+    mapDataToCtx(props.value.data, props.value.mapper, props.value.mappertype)
+  );
   // on Mount get Data from storage
   // on Unmount store data to storage
 
@@ -146,7 +158,11 @@ export const ProductProvider = (props) => {
       value={{
         productCtx,
         setProductCtx,
-        masterData: mapDataToCtx(props.value.data, props.value.mapper, props.value.mappertype),
+        masterData: mapDataToCtx(
+          props.value.data,
+          props.value.mapper,
+          props.value.mappertype
+        ),
       }}
     >
       {props.children}
