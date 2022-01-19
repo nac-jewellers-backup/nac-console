@@ -23,6 +23,7 @@ import {
   TableCell,
   TableBody,
   Backdrop,
+  Tooltip,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import ChipInput from "material-ui-chip-input";
@@ -36,6 +37,8 @@ import { Autocomplete } from "@material-ui/lab";
 import { useApolloClient, useQuery } from "react-apollo";
 import { VERIFYTAGNO, WAREHOUSELIST } from "../../graphql/query";
 import { isEmpty } from "validate.js";
+import axios from "axios";
+import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -58,6 +61,17 @@ const useStyles = makeStyles((theme) => ({
   },
   errorTable: {
     margin: 10,
+  },
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+  input: {
+    display: "none",
+  },
+  customWidth: {
+    maxWidth: 420,
   },
 }));
 
@@ -285,6 +299,30 @@ const ProductSync = (props) => {
       });
   };
 
+  const handleUpload = (file) => {
+    var bodyFormData = new FormData();
+    bodyFormData.set("file", file);
+
+    axios
+      .post(API_URL + "/file_upload_sync", bodyFormData)
+      .then((res) => {
+        if (res) {
+          snack.setSnack({
+            open: true,
+            msg: "Successfully started sync!",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        snack.setSnack({
+          open: true,
+          severity: "error",
+          msg: "Some error occured!",
+        });
+      });
+  };
+
   return (
     <Dialog fullScreen open={open} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
@@ -357,7 +395,7 @@ const ProductSync = (props) => {
             </RadioGroup>
           </FormControl>
         </Grid>
-        <Grid xs={12} style={{ padding: "9px" }}>
+        <Grid item xs={12} style={{ padding: "9px" }}>
           <TextField
             value={data.sync_url}
             onChange={handleChange}
@@ -467,6 +505,89 @@ const ProductSync = (props) => {
             <LinearProgressWithLabel value={progress} />
           </Grid>
         )}
+        <Grid
+          container
+          item
+          xs={12}
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Typography
+            variant="h5"
+            component="h5"
+            style={{
+              width: "100%",
+              textAlign: "center",
+              borderBottom: "1px solid #000",
+              lineHeight: "0.1em",
+              margin: "10px 0 20px",
+            }}
+          >
+            <span style={{ background: "#fff", padding: "0 10px" }}>OR</span>
+          </Typography>
+        </Grid>
+        <Grid
+          container
+          item
+          xs={12}
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <div className={classes.root}>
+            <input
+              className={classes.input}
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+              id="file"
+              type="file"
+              onChange={(event) => {
+                const files = event.target.files;
+                if (files) {
+                  handleUpload(files[0]);
+                }
+              }}
+            />
+            <label htmlFor="file">
+              <Tooltip
+                title={
+                  <div
+                    style={{
+                      whiteSpace: "normal",
+                      textAlign: "left",
+                    }}
+                  >
+                    1.Please make sure data is in sample file format.
+                    <br />
+                    2.materials,collections,occasions,themes,styles,stone_color,stone_count,hashtags
+                    should be comma seperated and already existing in respective
+                    masters.
+                    <br />
+                    3.Diamonds and Gemstones to be added in separate sheets, if
+                    multiple entries add each row with same tag no.
+                  </div>
+                }
+                classes={{ tooltip: classes.customWidth }}
+                arrow
+              >
+                <Button variant="contained" color="primary" component="span">
+                  Upload Excel file
+                </Button>
+              </Tooltip>
+            </label>
+          </div>
+          <IconButton
+            onClick={() => {
+              const link = document.createElement("a");
+              link.download = `sample_upload.xlsx`;
+              link.href =
+                "https://s3.ap-southeast-1.amazonaws.com/media.nacjewellers.com/resources/assets/sample_upload.xlsx";
+              link.click();
+            }}
+          >
+            <CloudDownloadIcon />
+          </IconButton>
+        </Grid>
         <Backdrop className={classes.backdrop} open={backDrop}>
           <CircularProgress color="inherit" />
         </Backdrop>
