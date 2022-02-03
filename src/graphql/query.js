@@ -464,7 +464,7 @@ allMasterDiamondTypes(orderBy: UPDATED_AT_DESC) {
 `;
 
 const PAYMENTSTATUSMASTER = `
-query  {
+{
   allOrderStatusMasters {
     nodes {
       createdAt
@@ -473,8 +473,8 @@ query  {
       name
       updatedAt
     }
-  },
-  allPaymentStatusMasters {
+  }
+  allPaymentStatusMasters(condition: {isActive: true}) {
     nodes {
       name
       createdAt
@@ -484,6 +484,7 @@ query  {
     }
   }
 }
+
 `;
 const DIAMONDSETTINGS = `
 query  {
@@ -2130,6 +2131,52 @@ const DELETENEWARRIVALPRODUCT = `mutation MyMutation($ProductId: String!) {
 }
 
 `;
+
+
+
+
+
+const GETORDERCOMMUNICATIONLOGS = `
+query MyQuery($id: UUID!) {
+  orderById(id: $id) {
+    awbNumber
+    cartId
+    comments
+    createdAt
+    id
+    paymentId
+    paymentMode
+    paymentStatus
+    updatedAt
+    userProfileId
+    communicationLogsByOrderId(orderBy: UPDATED_AT_DESC) {
+      nodes {
+        createdAt
+        id
+        messageType
+        orderId
+        senderResponseId
+        type
+      }
+    }
+  }
+}
+
+`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export {
   ALLBANNERS,
   ALLLISTINGBANNERS,
@@ -2233,4 +2280,5 @@ export {
   ALLNEWARRIVALPRODUCT,
   ISACTIVENEWARRIVALPRODUCT,
   DELETENEWARRIVALPRODUCT,
+  GETORDERCOMMUNICATIONLOGS
 };
