@@ -344,6 +344,7 @@ const ProductSync = (props) => {
               autoFocus
               color="inherit"
               onClick={validatePreSync}
+              disabled
               startIcon={<AssignmentTurnedInOutlinedIcon />}
             >
               {"Validate Product Sync"}
@@ -355,9 +356,9 @@ const ProductSync = (props) => {
             variant="outlined"
             onClick={handleRun}
             startIcon={<SyncIcon />}
-            disabled={
-              data.action_type !== "price_sync" && !validatedTagNo?.status
-            }
+            // disabled={
+            //   data.action_type !== "price_sync" && !validatedTagNo?.status
+            // }
           >
             {data.action_type === "price_sync"
               ? "Run Price Sync"
