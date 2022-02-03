@@ -127,7 +127,6 @@ const OrderInfo = (props) => {
     fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
-      
         snack.setSnack({
           open: true,
           msg: "Mail Send Successfully!",
@@ -243,6 +242,10 @@ const OrderInfo = (props) => {
             </TableRow>
             <TableRow>
               <TableCell>Email ID</TableCell>
+              <TableCell>{order.user_profile.email}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Mobile Number</TableCell>
               <TableCell>
                 {order.shopping_cart
                   ? order.shopping_cart.cart_addresses
@@ -252,10 +255,6 @@ const OrderInfo = (props) => {
                     : ""
                   : ""}
               </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Mobile Number</TableCell>
-              <TableCell>{order.user_profile.email}</TableCell>
             </TableRow>
 
             <TableRow>
