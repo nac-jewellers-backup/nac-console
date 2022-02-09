@@ -72,6 +72,7 @@ import {
   Voucherdiscount,
   VoucherdiscountListing,
   Warehouse,
+  AbandonedCart
 } from "../screens";
 import Editcategory from "../screens/CategoryList/components/editpage/editcategory";
 import newmaterial from "../screens/CategoryList/components/newmaterial/newmaterial";
@@ -286,6 +287,7 @@ const MainApp = () => {
           />
           <PrivateRoute path={route.Comments} component={Review} />
           <PrivateRoute path={route.Newarrival} component={Newarrival} />
+          <PrivateRoute path={route.abandoned_cart} component={AbandonedCart} />
         </Switch>
       </NetworkProvider>
       {/* </ProductProvider> */}

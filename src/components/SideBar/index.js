@@ -36,7 +36,8 @@ function SideBar() {
     if (
       type === "Pricing" ||
       type == "Inventory & Shipping Setup" ||
-      type == "Appoinment Management"
+      type == "Appoinment Management" ||
+      type === "Orders"
     ) {
       setGlobalCtx({
         ...globalCtx,

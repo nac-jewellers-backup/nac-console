@@ -90,6 +90,7 @@ const route = {
   Newarrival: "/newarrival",
   Manageappoinment: "/manageappoinment",
   Manageshedule: "/manageshedule",
+  abandoned_cart: "/cart-details",
 };
 
 export default route;
