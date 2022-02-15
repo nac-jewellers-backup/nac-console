@@ -34,6 +34,11 @@
           "name": "Price Run",
           "url": "/priceupdate",
           "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/PricerunNSS.svg"
+        },
+        {
+          "name": "Price Upload",
+          "url": "/price_upload",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/PricerunNSS.svg"
         }
       ]
     },
