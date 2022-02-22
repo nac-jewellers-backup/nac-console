@@ -124,6 +124,7 @@ export function Component(props) {
   });
 
   let prod_id = props.location.pathname.split("/")[2];
+  let product_sku = "";
   const classes = useStyle();
   function keyPress(evt) {
     const productname = evt.target.validity.valid
@@ -395,11 +396,11 @@ export function Component(props) {
     setPricesummaryvalue(price_summary);
     setIsshowpricesummary(true);
   }
-  function Skupricesync(diamondData) {
+  function Skupricesync(product_id) {
     let bodydata = {
-      req_product_id: diamondData,
+      product_sku: [product_id],
     };
-    sendNetworkRequest("/productpriceupdate", {}, bodydata);
+    sendNetworkRequest("/price_run_latest", {}, bodydata);
   }
   function Skumarkupsync(diamondData) {
     let bodydata = {
@@ -1174,9 +1175,7 @@ export function Component(props) {
             className={classes.fixedTag}
             value={productCtx.hashtags}
             getOptionLabel={(option) => option.name}
-            getOptionSelected={(option, value) =>
-              option.name === value.name
-            }
+            getOptionSelected={(option, value) => option.name === value.name}
             options={productCtx.masterData.hashtags}
             onChange={handleoptionChange("hashtags")}
             renderTags={(value, getTagProps) =>
@@ -1365,6 +1364,7 @@ export function Component(props) {
               size="small"
               variant="outlined"
               color="primary"
+              disabled={true}
             >
               Run Markup For This Product
             </Button>

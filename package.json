@@ -41,7 +41,7 @@
     "react-preview-image": "^1.0.5",
     "react-primitives": "^0.8.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.0.1",
+    "react-scripts": "^3.0.1",
     "react-select": "^3.2.0",
     "s": "^1.0.0",
     "socket.io-client": "^4.1.1",
