@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import clsx from 'clsx';
+import React, { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import clsx from "clsx";
 // import moment from 'moment';
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 // import PerfectScrollbar from 'react-perfect-scrollbar';
-import { makeStyles } from '@material-ui/styles';
-import CreateIcon from '@material-ui/icons/Create';
-import DeleteIcon from '@material-ui/icons/Delete';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import { makeStyles } from "@material-ui/styles";
+import CreateIcon from "@material-ui/icons/Create";
+import DeleteIcon from "@material-ui/icons/Delete";
+import RefreshIcon from "@material-ui/icons/Refresh";
 
-import { NetworkContext } from '../../../../context/NetworkContext';
+import { NetworkContext } from "../../../../context/NetworkContext";
 
 import {
   Button,
@@ -26,42 +26,42 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  colors
-} from '@material-ui/core';
+  colors,
+} from "@material-ui/core";
 
-import { Label, ReviewStars } from '../../../../components';
+import { Label, ReviewStars } from "../../../../components";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {},
   filterButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   content: {
-    padding: 0
+    padding: 0,
   },
   inner: {
-    overflowX: "auto"
+    overflowX: "auto",
   },
   actions: {
     padding: theme.spacing(0, 1),
-    justifyContent: 'flex-end'
-  }
+    justifyContent: "flex-end",
+  },
 }));
 
-const Results = props => {
+const Results = (props) => {
   const { className, orders, ...rest } = props;
 
   const classes = useStyles();
-  const {sendNetworkRequest} = React.useContext(NetworkContext)
+  const { sendNetworkRequest } = React.useContext(NetworkContext);
 
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [status, setStatus] = useState({});
 
-  const handleSelectAll = event => {
+  const handleSelectAll = (event) => {
     const selectedOrders = event.target.checked
-      ? orders.map(order => order.id)
+      ? orders.map((order) => order.id)
       : [];
 
     setSelectedOrders(selectedOrders);
@@ -91,33 +91,34 @@ const Results = props => {
     setPage(page);
   };
   function handleAdd(e) {
-    setStatus({...status, [e.id]:"0 out of "+props.products.length})
+    setStatus({ ...status, [e.id]: "0 out of " + props.products.length });
 
-    props.update(e)
+    props.update(e);
   }
   function handleupdate(e) {
-    setStatus({...status, [e.id]:"0 out of "+props.products.length})
+    setStatus({ ...status, [e.id]: "0 out of " + props.products.length });
 
-    props.resumeupdate(e)
+    props.resumeupdate(e);
   }
-  
 
   function handledownload(e) {
-    props.downloadlog()
+    props.downloadlog();
   }
- async function handlestatus(e) {
-   let bodydata = {
-    "component":e.label
-   }
-  let response = await sendNetworkRequest('/getcomponentpricestatus', {}, bodydata, false)
+  async function handlestatus(e) {
+    let bodydata = {
+      component: e.label,
+    };
+    let response = await sendNetworkRequest(
+      "/getcomponentpricestatus",
+      {},
+      bodydata,
+      false
+    );
 
-    setStatus({...status, [e.id]: response.message})
+    setStatus({ ...status, [e.id]: response.message });
   }
-  async function getpricestatus(component)
-  {
-
-  }
-  const handleChangeRowsPerPage = event => {
+  async function getpricestatus(component) {}
+  const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(event.target.value);
   };
 
@@ -125,14 +126,11 @@ const Results = props => {
     canceled: colors.grey[600],
     pending: colors.orange[600],
     completed: colors.green[600],
-    rejected: colors.red[600]
+    rejected: colors.red[600],
   };
 
   return (
-    <div
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <div {...rest} className={clsx(classes.root, className)}>
       {/* <Typography
         color="textSecondary"
         gutterBottom
@@ -141,71 +139,79 @@ const Results = props => {
         {orders.length} Records found. Page {page + 1} of{' '}
         {Math.ceil(orders.length / rowsPerPage)}
       </Typography> */}
-      <Card style={{marginTop : 16}}>
-        
+      <Card style={{ marginTop: 16 }}>
         <CardContent className={classes.content}>
           {/* <PerfectScrollbar> */}
-            <div className={classes.inner}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    
-                    <TableCell>Components</TableCell>
-                    
-                    <TableCell align="center">Action</TableCell>
+          <div className={classes.inner}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Components</TableCell>
 
-                    <TableCell align="center">Status</TableCell>
-                    <TableCell align="center">Restart</TableCell>
+                  <TableCell align="center">Action</TableCell>
 
-                    <TableCell align="center">Log</TableCell>
+                  <TableCell align="center">Status</TableCell>
+                  <TableCell align="center">Restart</TableCell>
 
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {props.pricingrows.map(order => (
-                    <TableRow
-                      // key={order.id}
-                      // selected={selectedOrders.indexOf(order.id) !== -1}
-                    >
-                      
-                     
-
-                      <TableCell >{order.id}</TableCell>
-                      <TableCell align="center">  
-                        <Button variant="outlined"  onClick={(e) => handleAdd(order)} size="small" color="primary" className={classes.margin}>
-                          ₹ Run
-                        </Button>
-                      </TableCell>
-                      
-                      <TableCell align="center">
-                        {status[order.id] ? status[order.id] : ""}
-                        
-                      <IconButton aria-label="delete" onClick={(e) => handlestatus(order)}  color="primary">
-                          <RefreshIcon />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell align="center">
-                      <Button color="primary"  onClick={(e) => handleupdate(order)} size="small">
-                        Re Run
-
+                  <TableCell align="center">Log</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {props.pricingrows.map((order) => (
+                  <TableRow
+                  // key={order.id}
+                  // selected={selectedOrders.indexOf(order.id) !== -1}
+                  >
+                    <TableCell>{order.id}</TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="outlined"
+                        onClick={(e) => handleAdd(order)}
+                        size="small"
+                        color="primary"
+                        className={classes.margin}
+                      >
+                        ₹ Run
                       </Button>
-                      </TableCell>
-                      <TableCell align="center">
-                      <Button color="primary"  onClick={(e) => handledownload()} size="small">
+                    </TableCell>
+
+                    <TableCell align="center">
+                      {status[order.id] ? status[order.id] : ""}
+
+                      <IconButton
+                        aria-label="delete"
+                        onClick={(e) => handlestatus(order)}
+                        color="primary"
+                      >
+                        <RefreshIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        color="primary"
+                        onClick={(e) => handleupdate(order)}
+                        size="small"
+                      >
+                        Re Run
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        color="primary"
+                        onClick={(e) => handledownload()}
+                        size="small"
+                      >
                         Download
                       </Button>
-                      </TableCell>
-                     
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
           {/* </PerfectScrollbar> */}
         </CardContent>
-        <CardActions className={classes.actions}>
-          
-        </CardActions>
+        <CardActions className={classes.actions}></CardActions>
       </Card>
       {/* <TableEditBar selected={selectedOrders} /> */}
     </div>
@@ -214,11 +220,11 @@ const Results = props => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  orders: PropTypes.array.isRequired
+  orders: PropTypes.array.isRequired,
 };
 
 Results.defaultProps = {
-  orders: []
+  orders: [],
 };
 
 export default Results;

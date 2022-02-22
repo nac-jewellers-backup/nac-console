@@ -34,6 +34,11 @@
           "name": "Price Run",
           "url": "/priceupdate",
           "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/PricerunNSS.svg"
+        },
+        {
+          "name": "Price Upload",
+          "url": "/price_upload",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/PricerunNSS.svg"
         }
       ]
     },
@@ -48,9 +53,21 @@
       "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/VendorListNSS.svg"
     },
     {
-      "name": "Order List",
-      "url": "/orderlist",
-      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/OrderListNSS.svg"
+      "name": "Orders",
+      "url": "order",
+      "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/OrderListNSS.svg",
+      "submenu": [
+        {
+          "name": "Order List",
+          "url": "/orderlist",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/HolidayNSS.png"
+        },
+        {
+          "name": "Abandoned Cart Details",
+          "url": "/cart-details",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/Warehouse+-++OutlineNSS.png"
+        }
+      ]
     },
     {
       "name": "Configuration",

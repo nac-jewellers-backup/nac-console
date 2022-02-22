@@ -70,8 +70,8 @@ export const Masterscreens = withRouter((props) => {
 
   async function search(taxcontent) {
     const filteredHomes = mastervalue.filter((x) =>
-      x.name.toLowerCase()
-        ? x.name.toLowerCase().match(taxcontent + ".*")
+      x?.name?.toLowerCase()
+        ? x?.name?.toLowerCase().match(taxcontent + ".*")
         : null
     );
     setFiltervalue(filteredHomes);

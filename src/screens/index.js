@@ -62,4 +62,6 @@ export * from "./Vendorpricesetup";
 export * from "./Voucherdiscount";
 export * from "./VoucherdiscountListing";
 export * from "./Warehouse";
+export * from "./AbandonedCart";
+export * from "./PriceUpload";
 // export * from "./cms";

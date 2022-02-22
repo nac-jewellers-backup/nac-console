@@ -1937,6 +1937,140 @@ mutation MyMutation(
 
 `;
 
+const ABANDONEDCART = gql`
+  query (
+    $first: Int
+    $offset: Int
+    $orderBy: [ShoppingCartsOrderBy!]
+    $condition: ShoppingCartCondition
+    $filter: ShoppingCartFilter
+  ) {
+    allShoppingCarts(
+      first: $first
+      offset: $offset
+      orderBy: $orderBy
+      condition: $condition
+      filter: $filter
+    ) {
+      nodes {
+        id
+        isActive
+        netAmount
+        status
+        taxAmount
+        userprofileId
+        user: userProfileByUserprofileId {
+          id
+          firstName
+          lastName
+          username
+          email
+          mobile
+        }
+        cart_items: shoppingCartItemsByShoppingCartId {
+          nodes {
+            productSku
+            qty
+            transSkuListByProductSku {
+              generatedSku
+              skuId
+              productListByProductId {
+                productName
+              }
+            }
+          }
+        }
+        grossAmount
+        discountedPrice
+        discount
+        createdAt
+        updatedAt
+      }
+      totalCount
+    }
+  }
+`;
+
+const CARTBYID = gql`
+  query ($id: UUID!) {
+    cart: shoppingCartById(id: $id) {
+      id
+      isActive
+      netAmount
+      status
+      taxAmount
+      userprofileId
+      grossAmount
+      discountedPrice
+      discount
+      createdAt
+      updatedAt
+      address: cartAddressesByCartId {
+        nodes {
+          id
+          addressline1
+          addressline2
+          city
+          contactNumber
+          country
+          countryCode
+          createdAt
+          firstname
+          lastname
+          pincode
+          salutation
+          state
+          updatedAt
+          addressType
+        }
+      }
+      user: userProfileByUserprofileId {
+        id
+        firstName
+        lastName
+        username
+        email
+        mobile
+        isemailverified
+        ismobileverified
+      }
+      cart_items: shoppingCartItemsByShoppingCartId {
+        nodes {
+          productSku
+          qty
+          transSkuListByProductSku {
+            markupPrice
+            markupPriceTax
+            discountPrice
+            discountPriceTax
+            generatedSku
+            skuId
+            productListByProductId {
+              productName
+              productImagesByProductId(
+                condition: { isdefault: true, imagePosition: 1 }
+              ) {
+                nodes {
+                  productId
+                  imageUrl
+                }
+              }
+            }
+          }
+        }
+      }
+      follow_ups: communicationLogsByCartId {
+        nodes {
+          type
+          messageType
+          senderResponseId
+          createdAt
+        }
+      }
+    }
+  }
+`;
+
 const CREATESTYLORISILVERROUTINGPAGE = `
 mutation MyMutation(
   $now: Datetime!
@@ -2265,4 +2399,6 @@ export {
   ISACTIVENEWARRIVALPRODUCT,
   DELETENEWARRIVALPRODUCT,
   GETORDERCOMMUNICATIONLOGS,
+  ABANDONEDCART,
+  CARTBYID,
 };

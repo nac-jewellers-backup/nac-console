@@ -378,6 +378,21 @@ const OrderInfo = (props) => {
           ) : (
             ""
           )}
+          {updateOrder.paymentStatus === "Paid" ? (
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ margin: "4px 0px" }}
+                onClick={() => sendEmail(order?.id, "payment")}
+              >
+                Payment Confirmation Email
+              </Button>
+              <span>&nbsp;&nbsp;&nbsp;</span>{" "}
+            </>
+          ) : (
+            ""
+          )}
           {updateOrder.paymentStatus === "Paid" &&
           updateOrder.orderStatus === "Shipped" ? (
             <>

@@ -24,6 +24,7 @@ const route = {
   voucherdiscount: "/voucherdiscount",
   salediscount: "/salediscount",
   priceupdate: "/priceupdate",
+  priceupload: "/price_upload",
   productAttributes: "/product_attributes",
   diamondDetails: "/diamond_details",
   gemstoneDetails: "/gemstone-details",
@@ -90,6 +91,7 @@ const route = {
   Newarrival: "/newarrival",
   Manageappoinment: "/manageappoinment",
   Manageshedule: "/manageshedule",
+  abandoned_cart: "/cart-details",
 };
 
 export default route;
