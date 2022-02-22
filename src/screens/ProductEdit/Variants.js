@@ -32,6 +32,7 @@ const columns = [
   { id: "Ready to Ship", label: "Ready to Ship" },
 
   { id: "Default", label: "Default" },
+  { id: "Show PriceBreakup", label: "Show PriceBreakup" },
   {
     id: "Active",
     label: "Active",
@@ -92,8 +93,8 @@ function TablePaginationActions(props) {
         {theme.direction === "rtl" ? (
           <KeyboardArrowRight />
         ) : (
-            <KeyboardArrowLeft />
-          )}
+          <KeyboardArrowLeft />
+        )}
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
@@ -103,8 +104,8 @@ function TablePaginationActions(props) {
         {theme.direction === "rtl" ? (
           <KeyboardArrowLeft />
         ) : (
-            <KeyboardArrowRight />
-          )}
+          <KeyboardArrowRight />
+        )}
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
@@ -176,8 +177,6 @@ const useStyles2 = makeStyles((theme) => ({
 }));
 
 export default function Variants(props) {
-  console.log(props, ">>>>>>>>>>>>>>")
-    ;
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
 
@@ -196,12 +195,10 @@ export default function Variants(props) {
     checkedA: true,
     checkedB: true,
   });
-  function handleChangeisdefault(variantId) { }
+  function handleChangeisdefault(variantId) {}
 
   const handleChangeswitch = (name) => (event) => {
-
     setProductCtx({ ...productCtx, [name]: event.target.checked });
-
 
     //  setState({ ...state, [name]: event.target.checked });
   };
@@ -229,15 +226,15 @@ export default function Variants(props) {
     let editVariants = productCtx.editVariants;
     let editStatus =
       editVariants &&
-        editVariants.some(
-          (check_variant, index) => check_variant.id === variantId
-        )
+      editVariants.some(
+        (check_variant, index) => check_variant.id === variantId
+      )
         ? (editVariants =
-          editVariants &&
-          editVariants.filter(
-            (edit_variant_filter, index) =>
-              edit_variant_filter.id !== variantId
-          ))
+            editVariants &&
+            editVariants.filter(
+              (edit_variant_filter, index) =>
+                edit_variant_filter.id !== variantId
+            ))
         : editVariants.push(editVaraint);
     setProductCtx({
       ...productCtx,
@@ -251,18 +248,12 @@ export default function Variants(props) {
       rowsPerPage,
       props.variants && props.variants.length - page * rowsPerPage
     );
-  // function VariantEdit(id) {
-  //   alert(id)
-  //   setBtnEdit({ ...btnEdit, id, action: true })
-  // }
+
   function handleChangePage(event, newPage) {
     setPage(newPage);
   }
   const handleinputChange = (type) => (e) => {
-    // const re = /^[a-zA-Z \b]+$/;
-    // if (e.target.value === '' || re.test(e.target.value)) {
     setProductCtx({ ...productCtx, [type]: e.target.value });
-    // }
   };
 
   function handleChangeRowsPerPage(event) {
@@ -270,8 +261,7 @@ export default function Variants(props) {
     setPage(0);
   }
   function DiamondEdit(diamondData) {
-
-    console.log(diamondData)
+    console.log(diamondData);
 
     setProductCtx({
       ...productCtx,
@@ -284,15 +274,11 @@ export default function Variants(props) {
     setBtnEdit({ ...btnEdit, id: diamondData.generatedSku, action: true });
   }
   function DiamondSave(id) {
-
     var bodydata = {};
-    // if (productCtx.editleadtime) {
 
     let list_data = props.variants;
     let Skuchangedata = list_data.map((skulistdata, index) => {
-
       if (id === skulistdata.generatedSku) {
-
         skulistdata.vendorDeliveryTime = productCtx.editleadtime;
         skulistdata.isdefault = productCtx.editisdefault;
         skulistdata.isActive = productCtx.editisactive;
@@ -304,18 +290,17 @@ export default function Variants(props) {
         bodydata["discount"] = productCtx.discount;
         bodydata["isReadyToShip"] = productCtx.editreadytoship;
         bodydata["generatedSku"] = id;
+        bodydata["showPriceBreakup"] = productCtx.showPriceBreakup;
 
         return skulistdata;
       }
       return skulistdata;
     });
-    // }
-    console.log(bodydata)
-      ;
     sendNetworkRequest("/updateskuinfo", {}, bodydata);
 
     setBtnEdit({ ...btnEdit, id: "", action: false });
   }
+
   return (
     <Paper className={classes.root}>
       <div className={classes.tableWrapper}>
@@ -418,13 +403,13 @@ export default function Variants(props) {
                             //onInput={keyPress.bind(this)}
                             onChange={handleinputChange("editleadtime")}
 
-                          //onChange={(e)=>handleinputChange(e,'productname')}
+                            //onChange={(e)=>handleinputChange(e,'productname')}
                           />
                         ) : (
-                            <Typography className={classes.heading}>
-                              {row.vendorDeliveryTime}
-                            </Typography>
-                          )}{" "}
+                          <Typography className={classes.heading}>
+                            {row.vendorDeliveryTime}
+                          </Typography>
+                        )}{" "}
                       </TableCell>
                     ) : null}
 
@@ -453,13 +438,13 @@ export default function Variants(props) {
                             //onInput={keyPress.bind(this)}
                             onChange={handleinputChange("discount")}
 
-                          //onChange={(e)=>handleinputChange(e,'productname')}
+                            //onChange={(e)=>handleinputChange(e,'productname')}
                           />
                         ) : (
-                            <Typography className={classes.heading}>
-                              {row.discountDesc}
-                            </Typography>
-                          )}{" "}
+                          <Typography className={classes.heading}>
+                            {row.discountDesc}
+                          </Typography>
+                        )}{" "}
                       </TableCell>
                     ) : null}
                     {props.displycolumns.indexOf("Ready To Ship") > -1 ? (
@@ -513,7 +498,7 @@ export default function Variants(props) {
                     {props.displycolumns.indexOf("Active") > -1 ? (
                       <TableCell style={{ width: 40 }} align="center">
                         <Switch
-                          checked={row.isActive}
+                          // checked={row.showPriceBreakup}
                           checked={
                             btnEdit.action && btnEdit.id == row.generatedSku
                               ? productCtx.editisactive
@@ -529,6 +514,21 @@ export default function Variants(props) {
                         />
                       </TableCell>
                     ) : null}
+                    {props.displycolumns.indexOf("Show PriceBreakup") > -1 ? (
+                      <TableCell style={{ width: 40 }} align="center">
+                        <Switch
+                          checked={productCtx.showPriceBreakup}
+                          onChange={
+                            btnEdit.action && btnEdit.id == row.generatedSku
+                              ? handleChangeswitch("showPriceBreakup")
+                              : null
+                          }
+                          value="checkedA"
+                          inputProps={{ "aria-label": "secondary checkbox" }}
+                        />
+                      </TableCell>
+                    ) : null}
+
                     {btnEdit.action && btnEdit.id == row.generatedSku ? (
                       <TableCell style={{ width: 20 }} align="center">
                         <Button onClick={(e) => DiamondSave(row.generatedSku)}>
@@ -539,12 +539,12 @@ export default function Variants(props) {
                         </Button>
                       </TableCell>
                     ) : (
-                        <TableCell align="center" style={{ width: 20 }}>
-                          <Button onClick={(e) => DiamondEdit(row)}>
-                            <EditIcon />
-                          </Button>
-                        </TableCell>
-                      )}
+                      <TableCell align="center" style={{ width: 20 }}>
+                        <Button onClick={(e) => DiamondEdit(row)}>
+                          <EditIcon />
+                        </Button>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
             {emptyRows == 0 && (

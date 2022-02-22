@@ -357,16 +357,7 @@ const OrderInfo = (props) => {
                 <span style={{ color: "red" }}>{errorMsg}</span>
               </TableCell>
             </TableRow>
-            {/* <TableRow>
-              <TableCell>Communication Logs :</TableCell>
-              <TableCell></TableCell>
-            </TableRow> */}
-            {/* {communicationLogs.map((val) => (
-              <TableRow>
-                <TableCell>{val?.type ?? ""}</TableCell>
-                <TableCell>{val?.senderResponseId ?? ""}</TableCell>
-              </TableRow>
-            ))} */}
+          
           </TableBody>
         </Table>
       </CardContent>

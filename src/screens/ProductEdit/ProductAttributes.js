@@ -135,47 +135,15 @@ export function Component(props) {
     setstate({ ...state, create_variant: false });
   }
   const handleoptionChange = (type) => (event, value) => {
-    // if (type === "masterProductSize") {
-    //
-    //   let productSizeString = null;
-    //   console.log(type, value);
-    //   if (typeof value === Object) {
-    //     setProductCtx({ ...productCtx, [type]: value.sizeValue });
-    //   } else if (typeof value === Array) {
-    //     productSizeString = value.reduce((acc, str) => {
-    //       return acc.push(str);
-    //     }, []);
-
-    //     setProductCtx({ ...productCtx, [type]: productSizeString.toString() });
-    //   }
-
-    //   console.log(productSizeString);
-    // } else {
-    //   setProductCtx({ ...productCtx, [type]: value });
-    // }
-    //
-    // if (type === "productSize") {
-    //   if (typeof value === Object) {
-    //     setProductCtx({ ...productCtx, [type]: [value] });
-    //   }
-    // } else if (typeof value === Array) {
-    //   setProductCtx({ ...productCtx, [type]: value });
-    // } else {
     setProductCtx({ ...productCtx, [type]: value });
-    // }
   };
 
   const handleinputChange = (type) => (e) => {
     const re = /^[a-zA-Z \b]+$/;
 
-    // if (e.target.value === "" || re.test(e.target.value)) {
     setProductCtx({ ...productCtx, [type]: e.target.value });
-    // }
   };
-  // const handleinputChange = type => (event, value) => {
-  //   alert(event.target.value)
-  //       setProductCtx({ ...productCtx, [type]: value})
-  // }
+
   function dismisspricesummary() {
     setIsshowpricesummary(false);
   }
@@ -201,7 +169,6 @@ export function Component(props) {
 
   function createVariant() {
     let diamondTypesArray = [];
-    // let diamondClaritySku = [];
     productCtx.diamondlist &&
       productCtx.diamondlist.map((diamond_type) => {
         let diamond_data = {
@@ -234,28 +201,6 @@ export function Component(props) {
       .catch((err) => {
         console.log(err);
       });
-
-    // let params = {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ query: PRODUCTDIAMONDTYPES }),
-    // };
-    // fetch(GRAPHQL_DEV_CLIENT, params)
-    //   .then((res) => res.json())
-    //   .then((diamondtypesData) => {
-    //     console.log(
-    //       diamondtypesData.data.allMasterDiamondTypes.nodes,
-    //       "diamondtypesdata"
-    //     );
-    //     setProductCtx({
-    //       ...productCtx,
-    //       productDiamondTypes:
-    //         diamondtypesData.data.allMasterDiamondTypes.nodes,
-    //     });
-    //   })
-    //   .catch(console.error);
-
-    //setstate({ ...state, create_variant: true })
   }
   async function saveProductEditItem() {
     console.log(productCtx.product_type);
@@ -521,8 +466,6 @@ export function Component(props) {
           }
         });
 
-        console.log();
-
         setProductCtx({
           ...productCtx,
           productname: productListByProductId.productName,
@@ -567,6 +510,9 @@ export function Component(props) {
           length: productListByProductId?.length,
           earringbacking: earring_backing,
           hashtags: productListByProductId?.productHashTagsByProductId?.nodes,
+          showPriceBreakup:
+            productListByProductId?.transSkuListsByProductId?.nodes[0]
+              ?.showPriceBreakup,
           // productSize: productSize_arr ?? [{}],
           // productDiamondClarity:diamondClaritySku,
         });
@@ -1174,9 +1120,7 @@ export function Component(props) {
             className={classes.fixedTag}
             value={productCtx.hashtags}
             getOptionLabel={(option) => option.name}
-            getOptionSelected={(option, value) =>
-              option.name === value.name
-            }
+            getOptionSelected={(option, value) => option.name === value.name}
             options={productCtx.masterData.hashtags}
             onChange={handleoptionChange("hashtags")}
             renderTags={(value, getTagProps) =>

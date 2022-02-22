@@ -1426,7 +1426,8 @@ const PRODUCTEDIT = gql`
           vendorDeliveryTime
           id
           isActive
-
+          showPriceBreakup
+          calcType
           transSkuDescriptionsBySkuId {
             nodes {
               skuDescription
@@ -2132,10 +2133,6 @@ const DELETENEWARRIVALPRODUCT = `mutation MyMutation($ProductId: String!) {
 
 `;
 
-
-
-
-
 const GETORDERCOMMUNICATIONLOGS = `
 query MyQuery($id: UUID!) {
   orderById(id: $id) {
@@ -2163,19 +2160,6 @@ query MyQuery($id: UUID!) {
 }
 
 `;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export {
   ALLBANNERS,
@@ -2280,5 +2264,5 @@ export {
   ALLNEWARRIVALPRODUCT,
   ISACTIVENEWARRIVALPRODUCT,
   DELETENEWARRIVALPRODUCT,
-  GETORDERCOMMUNICATIONLOGS
+  GETORDERCOMMUNICATIONLOGS,
 };

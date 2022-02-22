@@ -332,13 +332,11 @@ export default function GemstoneDetails(props) {
     setPage(0);
   }
   const handleoptionChange = (type) => (event, value) => {
-    console.log(type, event.target.value, value, "aaaaaaa")
-    debugger;
+   
     setProductCtx({ ...productCtx, [type]: value });
   };
   const handleInputChange = (type) => (e) => {
-    console.log(type, e.target.value, "aaaaaaa")
-    debugger;
+  
     setProductCtx({ ...productCtx, [type]: e.target.value });
   };
   return (
