@@ -1,10 +1,10 @@
 //export const GRAPHQL_DEV_CLIENT = "http://auth-dev.ap-south-1.elasticbeanstalk.com/graphql"
 //export const API_URL = "http://auth-dev.ap-south-1.elasticbeanstalk.com"
-export const BASE_URL = "https://api-staging.nacjewellers.net";
-export const API_URL = "https://api-staging.nacjewellers.net";
-export const APP_URL = "https://staging.nacjewellers.net";
-export const GRAPHQL_DEV_CLIENT = "https://api-staging.nacjewellers.net/graphql";
-export const URL = "https://console-staging.nacjewellers.net";
+export const BASE_URL = "https://api.nacjewellers.net";
+export const API_URL = "https://api.nacjewellers.net";
+export const APP_URL = "https://nacjewellers.net";
+export const GRAPHQL_DEV_CLIENT = "https://api.nacjewellers.net/graphql";
+export const URL = "https://console.nacjewellers.net";
 export const BASE_IMAGE_URL = "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/";
 //  export const GRAPHQL_DEV_CLIENT = "https://api-staging.nacjewellers.net/graphql"
 //  export const API_URL = "https://api-staging.nacjewellers.net"
