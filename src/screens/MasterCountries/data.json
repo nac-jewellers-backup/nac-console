@@ -1,0 +1,37 @@
+{
+  "columns": [
+    { "label": "Name", "key": "name", "id": "Name", "type": 1 },
+    { "label": "Nice name", "key": "nicename", "id": "Nice Name", "type": 1 },
+    { "label": "Num Code", "key": "numcode", "id": "Num Code", "type": 1 },
+    {
+      "label": "Phone Code",
+      "key": "phonecode",
+      "id": "Phone Code",
+      "type": 1
+    },
+    { "label": "Currency", "key": "currency", "id": "Currency", "type": 1 },
+    {
+      "label": "Currency Alias",
+      "key": "currencyAlias",
+      "id": "currencyAlias",
+      "type": 1
+    },
+    {
+      "label": "Currency Symbol",
+      "key": "currencySymbol",
+      "id": "currencySymbol",
+      "type": 1
+    },
+    {
+      "label": "Active",
+      "key": "isActive",
+      "id": "Active",
+      "type": 2
+    },
+    {
+      "label": "Actions",
+      "key": "action",
+      "id": "Actions"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "columns": [
+    { "label": "Metal Name", "key": "metalName", "id": "metalName", "type": 1 },
+    {
+      "label": "Display Name",
+      "key": "displayName",
+      "id": "displayName",
+      "type": 1
+    },
+    {
+      "label": "Disply Price",
+      "key": "displayPrice",
+      "id": "displayPrice",
+      "type": 1
+    },
+    {
+      "label": "Active",
+      "key": "isActive",
+      "id": "Active",
+      "type": 2
+    },
+    {
+      "label": "Actions",
+      "key": "action",
+      "id": "Actions"
+    }
+  ]
+}

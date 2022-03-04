@@ -70,6 +70,8 @@ const route = {
   seo: "/seopriority",
   taxsettings: "/taxsettings",
   masterattributes: "/masterattributes",
+  mastercountries: "/countries",
+  dailyMetalRate: "/daily_metal_rate",
 
   masterstones: "/masterstones",
   masterstonecolors: "/masterstonecolors",
