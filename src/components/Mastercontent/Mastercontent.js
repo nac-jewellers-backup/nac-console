@@ -290,6 +290,9 @@ const useStyles2 = makeStyles((theme) => ({
     width: 20,
     height: 20,
   },
+  button: {
+    marginLeft: theme.spacing(2),
+  },
 }));
 
 const Vendor = (props) => {
@@ -532,8 +535,19 @@ const Vendor = (props) => {
             </Grid>
           </Grid>
           <Grid fullwidth item xs={3} sm={3} style={{ "text-align": "right" }}>
+            {props?.fxSyncAPI && (
+              <Button
+                className={classes.button}
+                variant="contained"
+                onClick={() => props.fxSyncAPI()}
+                color="primary"
+              >
+                Sync Latest Fx Rate
+              </Button>
+            )}
             {props.button_title ? (
               <Button
+                className={classes.button}
                 variant="contained"
                 onClick={() => addnewvendor()}
                 color="primary"

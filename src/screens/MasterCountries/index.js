@@ -7,10 +7,12 @@ import Page from "../../components/Page/Page";
 import tableData from "./data.json";
 import { makeStyles } from "@material-ui/core/styles";
 import { LinearProgress, Typography } from "@material-ui/core";
+import { NetworkContext } from "../../context/NetworkContext";
+import { AlertContext } from "../../context";
 
 let fetchMasterCountries = gql`
-  query {
-    allMasterCountries {
+  query ($name: String) {
+    allMasterCountries(filter: { name: { includesInsensitive: $name } }) {
       nodes {
         id
         name
@@ -20,6 +22,7 @@ let fetchMasterCountries = gql`
         currency
         currencyAlias
         currencySymbol
+        fxConversionRate
         isActive
       }
     }
@@ -58,9 +61,11 @@ const useStyles = makeStyles((theme) => ({
 export const MasterCountry = (props) => {
   const classes = useStyles();
   const client = useApolloClient();
+  const [search, setSearch] = React.useState(null);
+  const { sendNetworkRequest } = React.useContext(NetworkContext);
+  const snack = React.useContext(AlertContext);
 
   const addMasterCountry = (data) => {
-    console.log(data);
     let { alias, isedit, __typename, ...rest } = data;
     let currentTimeStamp = new Date();
     let body = {};
@@ -70,6 +75,7 @@ export const MasterCountry = (props) => {
         variables: {
           input: {
             ...rest,
+            fxConversionRate: Number(rest.fxConversionRate),
             createdAt: currentTimeStamp,
             updatedAt: currentTimeStamp,
           },
@@ -82,6 +88,7 @@ export const MasterCountry = (props) => {
           id: rest.id,
           masterCountryPatch: {
             ...rest,
+            fxConversionRate: Number(rest.fxConversionRate),
             updatedAt: currentTimeStamp,
           },
         },
@@ -97,7 +104,26 @@ export const MasterCountry = (props) => {
       });
   };
 
-  const { data, loading, error, refetch } = useQuery(fetchMasterCountries);
+  const syncFXAPI = () => {
+    sendNetworkRequest("/fxSynclatest", null, {})
+      .then((res) => {
+        snack.setSnack({ open: true, msg: res.message });
+        refetch();
+      })
+      .catch((err) => {
+        snack.setSnack({
+          open: true,
+          msg: "Some Error occured, Please try again!",
+        });
+      });
+  };
+
+  const { data, loading, error, refetch } = useQuery(fetchMasterCountries, {
+    variables: {
+      name: search,
+    },
+    fetchPolicy: "network-only",
+  });
 
   return (
     <Page title={"Country List"}>
@@ -105,8 +131,11 @@ export const MasterCountry = (props) => {
       {loading && <LinearProgress className={classes.root} />}
       {!loading && (
         <Mastercontent
+          title={"Country & Fx Rate"}
           button_title="Add New"
+          fxSyncAPI={syncFXAPI}
           onCreate={addMasterCountry}
+          onSearch={setSearch}
           columns={tableData.columns}
           values={data?.allMasterCountries?.nodes}
         />

@@ -23,6 +23,12 @@
       "type": 1
     },
     {
+      "label": "Fx Rate (INR)",
+      "key": "fxConversionRate",
+      "id": "fxConversionRate",
+      "type": 1
+    },
+    {
       "label": "Active",
       "key": "isActive",
       "id": "Active",

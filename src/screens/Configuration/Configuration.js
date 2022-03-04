@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
 export const Configuration = withRouter((props) => {
   const master_options = [
     "Daily Metal Rate",
-    "Countries",
+    "Countries & Fx Rates",
     "Attribute Master",
     "Categories",
     "ProductTypes",
