@@ -498,7 +498,7 @@ const AddContact = (props) => {
               id="free-solo-2-demo"
               className={classes.fixedTag}
               defaultValue={pricecomponent}
-              options={["Diamond", "Gem Stone", "Gold", "Making Charge", "All"]}
+              options={["Diamond", "Gemstone", "Gold", "Making Charge", "All"]}
               onChange={handlecomponentChange("earringbacking")}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (

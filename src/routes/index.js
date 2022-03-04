@@ -74,6 +74,8 @@ import {
   Warehouse,
   AbandonedCart,
   PriceUpload,
+  MasterCountry,
+  DailyMetalRate,
 } from "../screens";
 import Editcategory from "../screens/CategoryList/components/editpage/editcategory";
 import newmaterial from "../screens/CategoryList/components/newmaterial/newmaterial";
@@ -290,6 +292,14 @@ const MainApp = () => {
           <PrivateRoute path={route.Newarrival} component={Newarrival} />
           <PrivateRoute path={route.abandoned_cart} component={AbandonedCart} />
           <PrivateRoute path={route.priceupload} component={PriceUpload} />
+          <PrivateRoute
+            path={route.mastercountries}
+            component={MasterCountry}
+          />
+          <PrivateRoute
+            path={route.dailyMetalRate}
+            component={DailyMetalRate}
+          />
         </Switch>
       </NetworkProvider>
       {/* </ProductProvider> */}

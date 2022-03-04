@@ -32,7 +32,7 @@ export default function CustomizedBreadcrumbs(props) {
     <Breadcrumbs aria-label="breadcrumb">
       <StyledBreadcrumb
         component="a"
-        href={props.url ? URL + props.url : URL + "configuration"}
+        href={"/configuration"}
         label={props.name ? props.name : "Configuration"}
         icon={<ArrowBackIosIcon fontSize="small" />}
       />

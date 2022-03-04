@@ -45,8 +45,6 @@ import { NetworkContext } from "../../context/NetworkContext";
 import EditContent from "./components/EditContent";
 import "./tmp.css";
 
-
-
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 // const columns = [
@@ -109,8 +107,8 @@ function TablePaginationActions(props) {
         {theme.direction === "rtl" ? (
           <KeyboardArrowRight />
         ) : (
-            <KeyboardArrowLeft />
-          )}
+          <KeyboardArrowLeft />
+        )}
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
@@ -120,8 +118,8 @@ function TablePaginationActions(props) {
         {theme.direction === "rtl" ? (
           <KeyboardArrowLeft />
         ) : (
-            <KeyboardArrowRight />
-          )}
+          <KeyboardArrowRight />
+        )}
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
@@ -188,13 +186,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-        color: theme.palette.secondary.main,
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-      }
+          color: theme.palette.secondary.main,
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        }
       : {
-        color: theme.palette.text.primary,
-        backgroundColor: theme.palette.secondary.dark,
-      },
+          color: theme.palette.text.primary,
+          backgroundColor: theme.palette.secondary.dark,
+        },
   title: {
     flex: "1 1 100%",
   },
@@ -219,10 +217,10 @@ const EnhancedTableToolbar = (props) => {
           {numSelected} selected
         </Typography>
       ) : (
-          <Typography className={classes.title} variant="h6" id="tableTitle">
-            Nutrition
-          </Typography>
-        )}
+        <Typography className={classes.title} variant="h6" id="tableTitle">
+          Nutrition
+        </Typography>
+      )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
@@ -231,10 +229,10 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : (
-          <Tooltip title="Filter list">
-            <IconButton aria-label="filter list"></IconButton>
-          </Tooltip>
-        )}
+        <Tooltip title="Filter list">
+          <IconButton aria-label="filter list"></IconButton>
+        </Tooltip>
+      )}
     </Toolbar>
   );
 };
@@ -291,6 +289,9 @@ const useStyles2 = makeStyles((theme) => ({
     marginRight: theme.spacing(0.5),
     width: 20,
     height: 20,
+  },
+  button: {
+    marginLeft: theme.spacing(2),
   },
 }));
 
@@ -534,8 +535,19 @@ const Vendor = (props) => {
             </Grid>
           </Grid>
           <Grid fullwidth item xs={3} sm={3} style={{ "text-align": "right" }}>
+            {props?.fxSyncAPI && (
+              <Button
+                className={classes.button}
+                variant="contained"
+                onClick={() => props.fxSyncAPI()}
+                color="primary"
+              >
+                Sync Latest Fx Rate
+              </Button>
+            )}
             {props.button_title ? (
               <Button
+                className={classes.button}
                 variant="contained"
                 onClick={() => addnewvendor()}
                 color="primary"
@@ -592,78 +604,78 @@ const Vendor = (props) => {
                                 </Button>
                               </>
                             ) : (
-                                <Button onClick={(e) => Editvendor(row)}>
-                                  <EditIcon />
-                                </Button>
-                              )}
+                              <Button onClick={(e) => Editvendor(row)}>
+                                <EditIcon />
+                              </Button>
+                            )}
                           </TableCell>
                         ) : (
-                            <>
-                              {btnEdit.action && btnEdit.id == row.id ? (
-                                <TableCell align="left">
-                                  {columnname.type === 2 ? (
-                                    <Switch
-                                      onChange={handleChange(columnname.key)}
-                                      checked={editcontent[columnname.key]}
-                                      color="primary"
-                                      name="checkedB"
-                                      inputProps={{
-                                        "aria-label": "primary checkbox",
+                          <>
+                            {btnEdit.action && btnEdit.id == row.id ? (
+                              <TableCell align="left">
+                                {columnname.type === 2 ? (
+                                  <Switch
+                                    onChange={handleChange(columnname.key)}
+                                    checked={editcontent[columnname.key]}
+                                    color="primary"
+                                    name="checkedB"
+                                    inputProps={{
+                                      "aria-label": "primary checkbox",
+                                    }}
+                                  />
+                                ) : null}
+                                {columnname.type === 6 ? (
+                                  <Button variant="outlined" color="primary">
+                                    {columnname.controllabel}
+                                  </Button>
+                                ) : null}
+                                {columnname.type == 3 ? (
+                                  <Autocomplete
+                                    multiple
+                                    id="combo-box-demo"
+                                    options={
+                                      columnname.mastervaluekey
+                                        ? props.masters[
+                                            columnname.mastervaluekey
+                                          ]
+                                        : props.masters
+                                    }
+                                    margin="dense"
+                                    fullWidth
+                                    value={editcontent[columnname.defaultkey]}
+                                    onChange={handleoptionChange(
+                                      columnname.defaultkey
+                                    )}
+                                    getOptionLabel={(option) => option.name}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        label={columnname.label}
+                                        variant="outlined"
+                                      />
+                                    )}
+                                  />
+                                ) : null}
+                                {columnname.type == 9 ? (
+                                  <>
+                                    <FilePond
+                                      oninit={() => handleInit()}
+                                      labelIdle="Add Banner Image"
+                                      onaddfile={(error, fileItem) => {
+                                        if (!error) {
+                                          uploadimagetoserver(
+                                            fileItem,
+                                            columnname.key,
+                                            "add"
+                                          );
+                                        } else {
+                                          // alert(row[columnname.key])
+                                        }
                                       }}
                                     />
-                                  ) : null}
-                                  {columnname.type === 6 ? (
-                                    <Button variant="outlined" color="primary">
-                                      {columnname.controllabel}
-                                    </Button>
-                                  ) : null}
-                                  {columnname.type == 3 ? (
-                                    <Autocomplete
-                                      multiple
-                                      id="combo-box-demo"
-                                      options={
-                                        columnname.mastervaluekey
-                                          ? props.masters[
-                                          columnname.mastervaluekey
-                                          ]
-                                          : props.masters
-                                      }
-                                      margin="dense"
-                                      fullWidth
-                                      value={editcontent[columnname.defaultkey]}
-                                      onChange={handleoptionChange(
-                                        columnname.defaultkey
-                                      )}
-                                      getOptionLabel={(option) => option.name}
-                                      renderInput={(params) => (
-                                        <TextField
-                                          {...params}
-                                          label={columnname.label}
-                                          variant="outlined"
-                                        />
-                                      )}
-                                    />
-                                  ) : null}
-                                  {columnname.type == 9 ? (
-                                    <>
-                                      <FilePond
-                                        oninit={() => handleInit()}
-                                        labelIdle="Add Banner Image"
-                                        onaddfile={(error, fileItem) => {
-                                          if (!error) {
-                                            uploadimagetoserver(
-                                              fileItem,
-                                              columnname.key,
-                                              "add"
-                                            );
-                                          } else {
-                                            // alert(row[columnname.key])
-                                          }
-                                        }}
-                                      />
-                                      <div className={classes.imagecontainer}>
-                                        {editcontent[columnname.key]
-                                          ? editcontent[columnname.key]
+                                    <div className={classes.imagecontainer}>
+                                      {editcontent[columnname.key]
+                                        ? editcontent[columnname.key]
                                             .split(",")
                                             .map((row, index) => (
                                               <Badge
@@ -691,70 +703,70 @@ const Vendor = (props) => {
                                                 />
                                               </Badge>
                                             ))
-                                          : null}
-                                      </div>
-                                    </>
-                                  ) : null}
-                                  {columnname.type == 5 ? (
-                                    <Autocomplete
-                                      id="combo-box-demo"
-                                      options={
-                                        props.masters[columnname.mastervaluekey]
-                                      }
-                                      margin="dense"
-                                      fullWidth
-                                      options={
-                                        columnname.mastervaluekey
-                                          ? props.masters[
-                                          columnname.mastervaluekey
+                                        : null}
+                                    </div>
+                                  </>
+                                ) : null}
+                                {columnname.type == 5 ? (
+                                  <Autocomplete
+                                    id="combo-box-demo"
+                                    // options={
+                                    //   props.masters[columnname.mastervaluekey]
+                                    // }
+                                    margin="dense"
+                                    fullWidth
+                                    options={
+                                      columnname.mastervaluekey
+                                        ? props.masters[
+                                            columnname.mastervaluekey
                                           ]
-                                          : props.masters
-                                      }
-                                      onChange={handleoptionChange(
-                                        columnname.defaultkey
-                                      )}
-                                      value={editcontent[columnname.defaultkey]}
-                                      getOptionLabel={(option) => option.name}
-                                      renderInput={(params) => (
-                                        <TextField
-                                          {...params}
-                                          label={columnname.label}
-                                          variant="outlined"
-                                        />
-                                      )}
-                                    />
-                                  ) : null}
-                                  {columnname.type == 4 ? (
-                                    <Typography>
-                                      {" "}
-                                      {row[columnname.key]}
-                                    </Typography>
-                                  ) : null}
-                                  {columnname.type == 8 ? (
-                                    <Button
-                                      onClick={() => props.onPermissionadd(row)}
-                                      variant="outlined"
-                                      size="small"
-                                      color="primary"
-                                    >
-                                      View
-                                    </Button>
-                                  ) : null}
-                                  {!columnname.type || columnname.type == 1 ? (
-                                    <TextField
-                                      variant="outlined"
-                                      margin="dense"
-                                      id={columnname.key}
-                                      name={columnname.key}
-                                      value={editcontent[columnname.key]}
-                                      onChange={handleInputChange(columnname.key)}
-                                      label={columnname.label}
-                                    />
-                                  ) : null}{" "}
-                                </TableCell>
-                              ) : (
-                                  <TableCell>
-                                    {/* {columnname.type === 8 ?
+                                        : props.masters
+                                    }
+                                    onChange={handleoptionChange(
+                                      columnname.defaultkey
+                                    )}
+                                    value={editcontent[columnname.defaultkey]}
+                                    getOptionLabel={(option) => option.name}
+                                    renderInput={(params) => (
+                                      <TextField
+                                        {...params}
+                                        label={columnname.label}
+                                        variant="outlined"
+                                      />
+                                    )}
+                                  />
+                                ) : null}
+                                {columnname.type == 4 ? (
+                                  <Typography>
+                                    {" "}
+                                    {row[columnname.key]}
+                                  </Typography>
+                                ) : null}
+                                {columnname.type == 8 ? (
+                                  <Button
+                                    onClick={() => props.onPermissionadd(row)}
+                                    variant="outlined"
+                                    size="small"
+                                    color="primary"
+                                  >
+                                    View
+                                  </Button>
+                                ) : null}
+                                {!columnname.type || columnname.type == 1 ? (
+                                  <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    id={columnname.key}
+                                    name={columnname.key}
+                                    value={editcontent[columnname.key]}
+                                    onChange={handleInputChange(columnname.key)}
+                                    label={columnname.label}
+                                  />
+                                ) : null}{" "}
+                              </TableCell>
+                            ) : (
+                              <TableCell>
+                                {/* {columnname.type === 8 ?
                   <Button
                   color="primary"
                   component={RouterLink}
@@ -766,68 +778,68 @@ const Vendor = (props) => {
                 </Button>
                 : null} */}
 
-                                    {columnname.type == 8 ? (
-                                      <Button
-                                        onClick={() => props.onPermissionadd(row)}
-                                        variant="outlined"
-                                        size="small"
-                                        color="primary"
-                                      >
-                                        View
-                                      </Button>
-                                    ) : null}
-                                    {columnname.type === 6 ? (
-                                      <Button
-                                        onClick={() => props.onPermissionadd(row)}
-                                        variant="outlined"
-                                        size="small"
-                                        color="primary"
-                                      >
-                                        {columnname.controllabel}
-                                      </Button>
-                                    ) : null}
+                                {columnname.type == 8 ? (
+                                  <Button
+                                    onClick={() => props.onPermissionadd(row)}
+                                    variant="outlined"
+                                    size="small"
+                                    color="primary"
+                                  >
+                                    View
+                                  </Button>
+                                ) : null}
+                                {columnname.type === 6 ? (
+                                  <Button
+                                    onClick={() => props.onPermissionadd(row)}
+                                    variant="outlined"
+                                    size="small"
+                                    color="primary"
+                                  >
+                                    {columnname.controllabel}
+                                  </Button>
+                                ) : null}
 
-                                    {columnname.type === 9 ? (
-                                      <AvatarGroup max={2}>
-                                        {row[columnname.key]
-                                          ? row[columnname.key]
-                                            .split(",")
-                                            .map((row, index) => (
-                                              <Avatar
-                                                alt="Remy Sharp"
-                                                src={row}
-                                                onClick={() => previewimage(row)}
-                                                className={classes.small}
-                                              />
-                                            ))
-                                          : null}{" "}
-                                        {/* className={classes.small} />)) : null } */}
-                                      </AvatarGroup>
-                                    ) : null}
-                                    {columnname.type === 2 ? (
-                                      <Switch
-                                        color="primary"
-                                        name="checkedB"
-                                        onChange={handleInputChange(columnname.key)}
-                                        checked={row[columnname.key]}
-                                        inputProps={{
-                                          "aria-label": "primary checkbox",
-                                        }}
-                                      />
-                                    ) : null}
-                                    {columnname.type != 2 &&
-                                      columnname.type != 6 &&
-                                      columnname.type != 8 &&
-                                      columnname.type != 9 ? (
-                                        <Typography>
-                                          {" "}
-                                          {row[columnname.key]}
-                                        </Typography>
-                                      ) : null}
-                                  </TableCell>
-                                )}
-                            </>
-                          )}
+                                {columnname.type === 9 ? (
+                                  <AvatarGroup max={2}>
+                                    {row[columnname.key]
+                                      ? row[columnname.key]
+                                          .split(",")
+                                          .map((row, index) => (
+                                            <Avatar
+                                              alt="Remy Sharp"
+                                              src={row}
+                                              onClick={() => previewimage(row)}
+                                              className={classes.small}
+                                            />
+                                          ))
+                                      : null}{" "}
+                                    {/* className={classes.small} />)) : null } */}
+                                  </AvatarGroup>
+                                ) : null}
+                                {columnname.type === 2 ? (
+                                  <Switch
+                                    color="primary"
+                                    name="checkedB"
+                                    onChange={handleInputChange(columnname.key)}
+                                    checked={row[columnname.key]}
+                                    inputProps={{
+                                      "aria-label": "primary checkbox",
+                                    }}
+                                  />
+                                ) : null}
+                                {columnname.type != 2 &&
+                                columnname.type != 6 &&
+                                columnname.type != 8 &&
+                                columnname.type != 9 ? (
+                                  <Typography>
+                                    {" "}
+                                    {row[columnname.key]}
+                                  </Typography>
+                                ) : null}
+                              </TableCell>
+                            )}
+                          </>
+                        )}
                       </>
                     ))}
                   </TableRow>
@@ -853,7 +865,7 @@ const Vendor = (props) => {
                   }}
                   onChangePage={handleChangePage}
                   onChangeRowsPerPage={handleChangeRowsPerPage}
-                // ActionsComponent={TablePaginationActions}
+                  // ActionsComponent={TablePaginationActions}
                 />
               </TableRow>
             </TableFooter>
