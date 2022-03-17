@@ -2295,6 +2295,43 @@ query MyQuery($id: UUID!) {
 
 `;
 
+const ALL_APPOINTMENTS_DATE = `
+  query MyQuery {
+    allAppointmentDates(
+      condition: { isActive: true }
+      orderBy: START_DATE_TIME_ASC
+    ) {
+      nodes {
+        createdAt
+        createdBy
+        endDate
+        id
+        isActive
+        startDate
+        startDateTime
+        updatedAt
+        updatedBy
+        appointmentDateTimeSlotsByAppointmentDateId(
+          condition: { isActive: true }
+          orderBy: START_DATE_TIME_ASC
+        ) {
+          nodes {
+            appointmentDateId
+            createdAt
+            createdBy
+            endDateTime
+            startDateTime
+            endTime
+            id
+            isActive
+            startTime
+          }
+        }
+      }
+    }
+  }
+`;
+
 export {
   ALLBANNERS,
   ALLLISTINGBANNERS,
@@ -2401,4 +2438,5 @@ export {
   GETORDERCOMMUNICATIONLOGS,
   ABANDONEDCART,
   CARTBYID,
+  ALL_APPOINTMENTS_DATE,
 };
