@@ -124,6 +124,7 @@ let CREATE_APPOINTMENT_DATE = gql`
     $updatedAt: Datetime!
     $isActive: Boolean
     $date: Datetime
+    $startDate: Date
   ) {
     createAppointmentDate(
       input: {
@@ -134,6 +135,8 @@ let CREATE_APPOINTMENT_DATE = gql`
           startDateTime: $date
           endDateTime: $date
           isActive: $isActive
+          startDate: $startDate
+          endDate: $startDate
         }
       }
     ) {
@@ -162,6 +165,8 @@ let CREATE_APPOINTMENT_TIME = gql`
     $endDateTime: Datetime
     $appointmentDateId: UUID
     $updatedAt: Datetime!
+    $startTime: Time
+    $endTime: Time
   ) {
     createAppointmentDateTimeSlot(
       input: {
@@ -173,6 +178,8 @@ let CREATE_APPOINTMENT_TIME = gql`
           startDateTime: $startDateTime
           isActive: true
           appointmentDateId: $appointmentDateId
+          startTime: $startTime
+          endTime: $endTime
         }
       }
     ) {

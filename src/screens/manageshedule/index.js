@@ -120,7 +120,7 @@ export const ManageShedule = (props) => {
           createdAt: new Date(),
           updatedAt: new Date(),
           date: date,
-
+          startDate: moment(date).format("YYYY-MM-DD"),
           isActive: true,
         },
       })
@@ -156,6 +156,8 @@ export const ManageShedule = (props) => {
           startDateTime: timeValue.startTime,
           endDateTime: timeValue.endTime,
           appointmentDateId: id,
+          startTime: moment(timeValue.startTime).format("HH:mm:ss"),
+          endTime: moment(timeValue.endTime).format("HH:mm:ss"),
         },
       })
       .then((res) => {
@@ -249,7 +251,7 @@ export const ManageShedule = (props) => {
         justify="flex-start"
         alignItems="center"
       >
-        <Typography variant="h4">Manage Shedule</Typography>
+        <Typography variant="h4">Manage Schedule</Typography>
         <IconButton
           style={{ color: "#000" }}
           onClick={() => {

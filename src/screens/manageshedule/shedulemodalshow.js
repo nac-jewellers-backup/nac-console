@@ -53,7 +53,7 @@ const SheduleModalShow = (props) => {
       maxWidth="md"
       fullWidth={true}
     >
-      <DialogTitle id="Shedule-Modal">
+      <DialogTitle id="Schedule-Modal">
         <Typography className={classes.title}>
           {moment(props.startDateTime).format("MMM")} -
           {moment(props.startDateTime).format("DD")} -

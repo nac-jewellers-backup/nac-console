@@ -21,14 +21,14 @@ const SheduleModal = (props) => {
     <Dialog
       open={props.open}
       onClose={props.onClose}
-      aria-labelledby={"Shedule-Modal"}
+      aria-labelledby={"Schedule-Modal"}
     >
       <DialogTitle
         id="Shedule-Modal"
         disableTypography
         className={classes.root}
       >
-        <Typography variant="h6">{`Add Shedule Date`}</Typography>
+        <Typography variant="h6">{`Add Schedule Date`}</Typography>
       </DialogTitle>
       <DialogContent className={classes.root}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>

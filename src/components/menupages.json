@@ -95,7 +95,7 @@
       "icon": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/HolidayNSS.png",
       "submenu": [
         {
-          "name": "Manage shedule",
+          "name": "Manage schedule",
           "url": "/manageshedule",
           "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Inventory+and+shipping+icons/HolidayNSS.png"
         },
