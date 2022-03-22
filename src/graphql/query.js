@@ -2331,7 +2331,33 @@ const ALL_APPOINTMENTS_DATE = `
     }
   }
 `;
+const SHOW_APPOINMENT_DETAILS = `
+query MyQuery {
+  allAppointments(orderBy: CREATED_AT_DESC) {
+    nodes {
+      id
+      mobile
+      mobileCountryCode
+      customerName
+      email
+      appointmentDateTimeSlotBySlotId {
+        startTime
+        startDateTime
+        endDateTime
+        createdBy
+        appointmentDateId
+        endTime
+      }
+      storeLocationByLocationId {
+        address
+        name
+      }
+      locationId
+    }
+  }
+}
 
+`;
 export {
   ALLBANNERS,
   ALLLISTINGBANNERS,
@@ -2439,4 +2465,5 @@ export {
   ABANDONEDCART,
   CARTBYID,
   ALL_APPOINTMENTS_DATE,
+  SHOW_APPOINMENT_DETAILS,
 };
