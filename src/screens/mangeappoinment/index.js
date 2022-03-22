@@ -10,7 +10,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import React, { useEffect, useState } from "react";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
-
+import moment from "moment";
 import { SHOW_APPOINMENT_DETAILS } from "../../graphql/query";
 const columns = [
   { id: "user_id", label: "Id" },
@@ -128,8 +128,12 @@ export const Manageappoinment = (props) => {
                       <TableCell align="left">{row?.email ?? ""}</TableCell>
                       <TableCell align="left">{row?.mobile ?? ""}</TableCell>
                       <TableCell align="left">
-                        {row?.appointmentDateTimeSlotBySlotId?.startDateTime ??
-                          ""}
+                        {row?.appointmentDateTimeSlotBySlotId?.startDateTime
+                          ? moment(
+                              row?.appointmentDateTimeSlotBySlotId
+                                ?.startDateTime
+                            ).format("Do MMM YYYY")
+                          : ""}
                       </TableCell>
                       <TableCell align="left">
                         {row?.storeLocationByLocationId?.name ?? ""}
