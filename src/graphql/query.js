@@ -2358,6 +2358,33 @@ query MyQuery {
 }
 
 `;
+
+const PRICE_RUN_LOGS = gql`
+  query ($first: Int, $offset: Int) {
+    allPriceRunningHistories(
+      first: $first
+      offset: $offset
+      orderBy: UPDATED_AT_DESC
+    ) {
+      nodes {
+        id
+        completedProductCount
+        pricingComponent
+        logs: pricingLogsByPriceRunningHistoryId {
+          nodes {
+            requestedProducts
+            successfullyExecutedProducts
+            failedProducts
+          }
+        }
+        createdAt
+        updatedAt
+      }
+      totalCount
+    }
+  }
+`;
+
 export {
   ALLBANNERS,
   ALLLISTINGBANNERS,
@@ -2466,4 +2493,5 @@ export {
   CARTBYID,
   ALL_APPOINTMENTS_DATE,
   SHOW_APPOINMENT_DETAILS,
+  PRICE_RUN_LOGS,
 };
