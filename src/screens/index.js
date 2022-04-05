@@ -66,4 +66,5 @@ export * from "./AbandonedCart";
 export * from "./PriceUpload";
 export * from "./MasterCountries";
 export * from "./DailyMetalPrice";
+export * from "./PriceLogs";
 // export * from "./cms";

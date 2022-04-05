@@ -2295,6 +2295,96 @@ query MyQuery($id: UUID!) {
 
 `;
 
+const ALL_APPOINTMENTS_DATE = `
+  query MyQuery {
+    allAppointmentDates(
+      condition: { isActive: true }
+      orderBy: START_DATE_TIME_ASC
+    ) {
+      nodes {
+        createdAt
+        createdBy
+        endDate
+        id
+        isActive
+        startDate
+        startDateTime
+        updatedAt
+        updatedBy
+        appointmentDateTimeSlotsByAppointmentDateId(
+          condition: { isActive: true }
+          orderBy: START_DATE_TIME_ASC
+        ) {
+          nodes {
+            appointmentDateId
+            createdAt
+            createdBy
+            endDateTime
+            startDateTime
+            endTime
+            id
+            isActive
+            startTime
+          }
+        }
+      }
+    }
+  }
+`;
+const SHOW_APPOINMENT_DETAILS = `
+query MyQuery {
+  allAppointments(orderBy: CREATED_AT_DESC) {
+    nodes {
+      id
+      mobile
+      mobileCountryCode
+      customerName
+      email
+      appointmentDateTimeSlotBySlotId {
+        startTime
+        startDateTime
+        endDateTime
+        createdBy
+        appointmentDateId
+        endTime
+      }
+      storeLocationByLocationId {
+        address
+        name
+      }
+      locationId
+    }
+  }
+}
+
+`;
+
+const PRICE_RUN_LOGS = gql`
+  query ($first: Int, $offset: Int) {
+    allPriceRunningHistories(
+      first: $first
+      offset: $offset
+      orderBy: UPDATED_AT_DESC
+    ) {
+      nodes {
+        id
+        completedProductCount
+        pricingComponent
+        logs: pricingLogsByPriceRunningHistoryId {
+          nodes {
+            requestedProducts
+            successfullyExecutedProducts
+            failedProducts
+          }
+        }
+        createdAt
+        updatedAt
+      }
+      totalCount
+    }
+  }
+`;
+
 export {
   ALLBANNERS,
   ALLLISTINGBANNERS,
@@ -2401,4 +2491,7 @@ export {
   GETORDERCOMMUNICATIONLOGS,
   ABANDONEDCART,
   CARTBYID,
+  ALL_APPOINTMENTS_DATE,
+  SHOW_APPOINMENT_DETAILS,
+  PRICE_RUN_LOGS,
 };

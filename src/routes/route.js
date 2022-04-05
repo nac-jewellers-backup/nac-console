@@ -94,6 +94,7 @@ const route = {
   Manageappoinment: "/manageappoinment",
   Manageshedule: "/manageshedule",
   abandoned_cart: "/cart-details",
+  pricelogs: "/price-logs",
 };
 
 export default route;

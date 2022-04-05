@@ -1,29 +1,21 @@
 import React, { useEffect, useState } from "react";
-import clsx from "clsx";
-import { AlertContext, VoucherContext } from "../../context";
+import { AlertContext } from "../../context";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import Dialog from "@material-ui/core/Dialog";
-import Grid from "@material-ui/core/Grid";
-import Fullloader from "../../components/Loader";
 
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import uuid from "uuid/v1";
+import { Button, Link } from "@material-ui/core";
+
+import { makeStyles } from "@material-ui/core/styles";
 import Page from "../../components/Page";
-import { Header, Results, AboutVoucher } from "./components";
+import { Results, AboutVoucher } from "./components";
 import { productCategory } from "../../services/mapper";
 import { NetworkContext } from "../../context/NetworkContext";
 import FullLoader from "../../components/Loader";
 const rows = [
-  // { id: 'Diamond', label: 'Diamond' },
-  // { id: 'Gemstone', label: 'Gemstone' },
-  // { id: 'Metal & Making Charge', label: 'Gold' },
   { id: "Markup & Discount price update", label: "updateskuprice" },
 ];
 const useStyles = makeStyles((theme) => ({
-  root: {
-    //  padding: theme.spacing(3)
-  },
+  root: {},
   aboutvoucher: {
     marginTop: theme.spacing(3),
   },
@@ -34,15 +26,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PriceupdateContent(props) {
   const classes = useStyles();
-  const [orders, setOrders] = useState([]);
 
   const [masters, setMasters] = useState([]);
   const { sendNetworkRequest } = React.useContext(NetworkContext);
   const snack = React.useContext(AlertContext);
-  const [sizes, setSizes] = useState([]);
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [vendors, setVendors] = useState([]);
+  const [, setCategories] = useState([]);
+  const [, setVendors] = useState([]);
   const [startrun, setStartrun] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -86,7 +76,6 @@ export default function PriceupdateContent(props) {
     var bodydata = {};
     bodydata = {
       component: component.label,
-      // req_product_id : products
     };
     let response = await sendNetworkRequest(
       "/getincompletepricerun",
@@ -136,26 +125,14 @@ export default function PriceupdateContent(props) {
     setProducts(response.products);
     setCategories(response.category);
     setVendors(response.vendorlist);
-    // if(response.status < 400){
-    //   alert(JSON.stringify(products))
-    // }
   }
   async function downloadlog() {
     window.location.href = "https://api-staging.stylori.com/getlogfile";
-    // let response = await sendNetworkRequest('/getlogfile', {}, "", false)
   }
-  async function getsizes() {
-    let response = await sendNetworkRequest("/getsizes", {}, {}, false);
-    if (response.status < 400) {
-      setSizes(response.sizes);
-    } else {
-      alert("succes21s");
-    }
-  }
+
   useEffect(() => {
     let mounted = true;
-    //filterapllied()
-    //getsizes();
+
     setMasters(productCategory.mapper(props.data));
     return () => {
       mounted = false;
@@ -184,6 +161,19 @@ export default function PriceupdateContent(props) {
           update={updateprices}
           resumeupdate={rerun}
         />
+        <div
+          style={{
+            padding: "12px 0px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Link href="/price-logs">
+            <Button color="primary" variant="contained">
+              Price History Logs
+            </Button>
+          </Link>
+        </div>
       </Page>
     </MuiPickersUtilsProvider>
   );

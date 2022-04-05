@@ -8,73 +8,21 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import { GRAPHQL_DEV_CLIENT } from "../../config";
+import moment from "moment";
+import { SHOW_APPOINMENT_DETAILS } from "../../graphql/query";
 const columns = [
-  { id: "user_id", label: "User Id" },
+  { id: "user_id", label: "Id" },
   { id: "name", label: "Name" },
   { id: "email", label: "Email" },
   { id: "mobile", label: "Mobile" },
   { id: "date", label: "Date" },
   { id: "location", label: "Location" },
-  { id: "time", label: "Time" },
+  { id: "StartTime", label: "Start Time" },
+  { id: "EndTime", label: "End Time" },
 ];
-const row = [
-  {
-    userid: "1",
-    username: "siva",
-    date: "22-01-2021",
-    location: "T.Nager",
-    email: "siva22@gmail.com",
-    phone: "1234567890",
-    time: "12.00 am",
-  },
-  {
-    userid: "2",
-    username: "vijay",
-    date: "20-02-2021",
-    location: "T.Nager",
-    email: "vijay22@gmail.com",
-    phone: "1234567890",
-    time: "1.00 pm",
-  },
-  {
-    userid: "3",
-    username: "surya",
-    date: "12-02-2021",
-    location: "T.Nager",
-    email: "surya22@gmail.com",
-    phone: "1234567890",
-    time: "4.00 pm",
-  },
-  {
-    userid: "4",
-    username: "ajith",
-    date: "30-03-2021",
-    location: "T.Nager",
-    email: "ajith22@gmail.com",
-    phone: "1234567890",
-    time: "8.00 pm",
-  },
-  {
-    userid: "5",
-    username: "karthik",
-    date: "21-04-2021",
-    location: "T.Nager",
-    email: "karthik22@gmail.com",
-    phone: "1234567890",
-    time: "6.00 pm",
-  },
-  {
-    userid: "6",
-    username: "Kaviya",
-    date: "12-01-2021",
-    location: "T.Nager",
-    email: "kaviya22@gmail.com",
-    phone: "1234567890",
-    time: "7.00 pm",
-  },
-];
+
 const useStyles2 = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -98,7 +46,7 @@ export const Manageappoinment = (props) => {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const [data, setData] = useState([]);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -107,6 +55,40 @@ export const Manageappoinment = (props) => {
     setRowsPerPage(event.target.value);
     setPage(0);
   };
+
+  useEffect(() => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: SHOW_APPOINMENT_DETAILS,
+      }),
+    };
+    fetch(url, opts)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res.data.allAppointments.nodes);
+        debugger;
+        setData(res.data.allAppointments.nodes);
+      })
+      .catch(console.error);
+  }, []);
+
+  function tConvert(time) {
+    // Check correct time format and split into components
+    time = time
+      .toString()
+      .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+    if (time.length > 1) {
+      // If time format correct
+      time = time.slice(1); // Remove full string match value
+      time[5] = +time[0] < 12 ? "AM" : "PM"; // Set AM/PM
+      time[0] = +time[0] % 12 || 12; // Adjust hours
+    }
+    return time.join(""); // return adjusted time or original string
+  }
 
   return (
     <Paper className={classes.root}>
@@ -134,25 +116,51 @@ export const Manageappoinment = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {row
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => (
-                <TableRow key={row.id}>
-                  <TableCell align="left">{row.userid}</TableCell>
-                  <TableCell align="left">{row.username}</TableCell>
-                  <TableCell align="left">{row.email}</TableCell>
-                  <TableCell align="left">{row.phone}</TableCell>
-                  <TableCell align="left">{row.date}</TableCell>
-                  <TableCell align="left">{row.location}</TableCell>
-                  <TableCell align="left">{row.time}</TableCell>
-                </TableRow>
-              ))}
+            {data && data.length > 0
+              ? data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => (
+                    <TableRow key={row.id}>
+                      <TableCell align="left">{row?.id ?? ""}</TableCell>
+                      <TableCell align="left">
+                        {row?.customerName ?? ""}
+                      </TableCell>
+                      <TableCell align="left">{row?.email ?? ""}</TableCell>
+                      <TableCell align="left">{row?.mobile ?? ""}</TableCell>
+                      <TableCell align="left">
+                        {row?.appointmentDateTimeSlotBySlotId?.startDateTime
+                          ? moment(
+                              row?.appointmentDateTimeSlotBySlotId
+                                ?.startDateTime
+                            ).format("Do MMM YYYY")
+                          : ""}
+                      </TableCell>
+                      <TableCell align="left">
+                        {row?.storeLocationByLocationId?.name ?? ""}
+                      </TableCell>
+                      <TableCell align="left">
+                        {row?.appointmentDateTimeSlotBySlotId?.startTime
+                          ? tConvert(
+                              row?.appointmentDateTimeSlotBySlotId?.startTime
+                            )
+                          : ""}
+                      </TableCell>
+                      <TableCell align="left">
+                        {row?.appointmentDateTimeSlotBySlotId?.endTime
+                          ? tConvert(
+                              row?.appointmentDateTimeSlotBySlotId?.endTime
+                            )
+                          : ""}
+                      </TableCell>
+                    </TableRow>
+                  ))
+              : "No Data"}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 15, 20, 25, 50, 100]}
-                count={row.length}
+                count={data.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
