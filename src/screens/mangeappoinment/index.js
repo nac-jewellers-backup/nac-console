@@ -68,8 +68,7 @@ export const Manageappoinment = (props) => {
     fetch(url, opts)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res.data.allAppointments.nodes);
-        debugger;
+      
         setData(res.data.allAppointments.nodes);
       })
       .catch(console.error);

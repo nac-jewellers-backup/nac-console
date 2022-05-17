@@ -95,6 +95,7 @@ const route = {
   Manageshedule: "/manageshedule",
   abandoned_cart: "/cart-details",
   pricelogs: "/price-logs",
+  imageUpload:"/imageUpload",
 };
 
 export default route;

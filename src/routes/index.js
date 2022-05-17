@@ -77,6 +77,7 @@ import {
   MasterCountry,
   DailyMetalRate,
   PriceLogs,
+  ImageUpload
 } from "../screens";
 import Editcategory from "../screens/CategoryList/components/editpage/editcategory";
 import newmaterial from "../screens/CategoryList/components/newmaterial/newmaterial";
@@ -126,6 +127,7 @@ const MainApp = () => {
           <PrivateRoute path={route.orderlist} component={OrderList} />
           <PrivateRoute path={route.userorders} component={OrderList} />
           <PrivateRoute path={route.address} component={Useraddresses} />
+          <PrivateRoute path={route.imageUpload} component={ImageUpload} />
 
           <PrivateRoute path={route.vendorPrice} component={Vendorprice} />
           <PrivateRoute path={route.markupPrice} component={Markupprice} />
