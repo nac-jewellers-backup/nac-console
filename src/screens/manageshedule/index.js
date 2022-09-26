@@ -1,9 +1,12 @@
 import {
+  Box,
   Grid,
   IconButton,
   makeStyles,
   Tooltip,
   Typography,
+  Select,
+  MenuItem
 } from "@material-ui/core";
 import moment from "moment";
 import uuid from "uuid/v1";
@@ -11,7 +14,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import React, { useEffect, useState } from "react";
 import { useApolloClient } from "react-apollo";
 import { AlertContext } from "../../context";
-
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
 import SheduleModal from "./shedulemodal";
 import SheduleModalShow from "./shedulemodalshow";
@@ -23,6 +26,8 @@ import {
   DELETE_APPOINTMENT_TIME,
   DELETE_APPOINTMENT_DATE,
 } from "../../graphql/mutation";
+import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 export const ManageShedule = (props) => {
   // States
@@ -51,11 +56,19 @@ export const ManageShedule = (props) => {
         boxShadow: "0px 3px 6px #c1c1c1",
       },
     },
+    input: {
+      display: "none",
+    },
+    calenderCard:{
+      display:"flex",flexWrap:"wrap",marginLeft:"14px"
+    },
     closedCard: {
       backgroundColor: "white",
       padding: "12px",
       cursor: "pointer",
-      borderTop: "4px solid red",
+      border: "1px solid grey",
+      width:"165px",
+      height:"130px",
       "&:hover": {
         borderTop: "5px solid red",
         boxShadow: "0px 3px 6px #c1c1c1",
@@ -246,12 +259,37 @@ export const ManageShedule = (props) => {
       <Grid
         container
         item
-        xs={12}
+        xs={6}
         direction="row"
         justify="flex-start"
         alignItems="center"
       >
         <Typography variant="h4">Manage Schedule</Typography>
+
+        <input
+          accept=".csv"
+          className={classes.input}
+          id="icon-button-file"
+          type="file"
+          // onChange={(event) => {
+          //   const files = event.target.files;
+          //   if (files) {
+          //     handleUpload(files[0]);
+          //   }
+          // }}
+        />
+        <label htmlFor="icon-button-file">
+          <IconButton
+            color="primary"
+            aria-label="upload picture"
+            component="span"
+          >
+            <Tooltip title="Upload Holidays">
+              <CloudUploadIcon />
+            </Tooltip>
+          </IconButton>
+        </label>
+
         <IconButton
           style={{ color: "#000" }}
           onClick={() => {
@@ -264,11 +302,51 @@ export const ManageShedule = (props) => {
           </Tooltip>
         </IconButton>
       </Grid>
-      <Grid container spacing={2}>
+      <Grid
+        container
+        item
+        xs={6}
+        spacing={1}
+        direction="row"
+        justify="flex-end"
+        alignItems="center"
+      >
+        <Grid item xs={6}>
+        <Typography className={classes.available}>Year :</Typography>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <TimePicker
+                className={classes.inputField}
+                name="startTime"
+                placeholder="Select Start Time"
+                inputVariant="outlined"
+                value={props?.timeValue?.startTime ?? null}
+                fullWidth
+                onChange={(value) => props.handleTimeValue(value, "startTime")}
+                minDate={new Date()}
+              />
+          </MuiPickersUtilsProvider>
+        </Grid>
+        <Grid item xs={6}>
+        <Typography className={classes.available}>Month :</Typography>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <TimePicker
+                className={classes.inputField}
+                name="startTime"
+                placeholder="Select Start Time"
+                inputVariant="outlined"
+                value={props?.timeValue?.startTime ?? null}
+                fullWidth
+                onChange={(value) => props.handleTimeValue(value, "startTime")}
+                minDate={new Date()}
+              />
+          </MuiPickersUtilsProvider>
+        </Grid>     
+      </Grid>
+      <div className={classes.calenderCard}>
         {appointmentDate && appointmentDate.length > 0 ? (
           appointmentDate.map((val) => {
             return (
-              <Grid item xs={1} key={val.id}>
+              <Box  key={val.id}>
                 <div
                   className={
                     moment(
@@ -312,13 +390,13 @@ export const ManageShedule = (props) => {
                     deleteDate={deleteDate}
                   />
                 )}
-              </Grid>
+              </Box>
             );
           })
         ) : (
           <p>No Data</p>
         )}
-      </Grid>
+      </div>
       <SheduleModal
         open={open}
         type={type}

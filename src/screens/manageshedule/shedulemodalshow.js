@@ -147,12 +147,12 @@ const SheduleModalShow = (props) => {
           {" "}
           Close
         </Button>
-        <Button
+        {/* <Button
           variant="contained"
           onClick={() => props.deleteDate(props.appointmentDateId)}
         >
           Delete Date
-        </Button>
+        </Button> */}
       </DialogActions>
     </Dialog>
   );
