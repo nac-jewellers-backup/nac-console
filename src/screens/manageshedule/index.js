@@ -6,7 +6,8 @@ import {
   Tooltip,
   Typography,
   Select,
-  MenuItem
+  MenuItem,
+  Button
 } from "@material-ui/core";
 import moment from "moment";
 import uuid from "uuid/v1";
@@ -26,7 +27,7 @@ import {
   DELETE_APPOINTMENT_TIME,
   DELETE_APPOINTMENT_DATE,
 } from "../../graphql/mutation";
-import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { TimePicker, MuiPickersUtilsProvider,DatePicker } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
 export const ManageShedule = (props) => {
@@ -61,6 +62,12 @@ export const ManageShedule = (props) => {
     },
     calenderCard:{
       display:"flex",flexWrap:"wrap",marginLeft:"14px"
+    },
+    inputField: {
+      marginBottom: theme.spacing(1),
+      "& .MuiOutlinedInput-input":{
+        padding: "12.5px 14px"
+      }
     },
     closedCard: {
       backgroundColor: "white",
@@ -195,6 +202,7 @@ export const ManageShedule = (props) => {
 
     setShowTime(!showTime);
   };
+  
   const deleteTime = async (id) => {
     await client
       .mutate({
@@ -223,6 +231,7 @@ export const ManageShedule = (props) => {
         });
       });
   };
+
   const deleteDate = async (id) => {
     setOpenAppointmentTime(false);
     await client
@@ -311,36 +320,33 @@ export const ManageShedule = (props) => {
         justify="flex-end"
         alignItems="center"
       >
-        <Grid item xs={6}>
+        <Grid item xs={5}>
         <Typography className={classes.available}>Year :</Typography>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <TimePicker
+              <DatePicker
                 className={classes.inputField}
                 name="startTime"
                 placeholder="Select Start Time"
                 inputVariant="outlined"
-                value={props?.timeValue?.startTime ?? null}
                 fullWidth
-                onChange={(value) => props.handleTimeValue(value, "startTime")}
                 minDate={new Date()}
               />
           </MuiPickersUtilsProvider>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={5}>
         <Typography className={classes.available}>Month :</Typography>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <TimePicker
+              <DatePicker
                 className={classes.inputField}
                 name="startTime"
                 placeholder="Select Start Time"
                 inputVariant="outlined"
-                value={props?.timeValue?.startTime ?? null}
                 fullWidth
-                onChange={(value) => props.handleTimeValue(value, "startTime")}
                 minDate={new Date()}
               />
           </MuiPickersUtilsProvider>
-        </Grid>     
+        </Grid>
+        <Grid item xs={2} style={{marginTop:'10px'}}><Button variant="contained">Filter</Button></Grid>     
       </Grid>
       <div className={classes.calenderCard}>
         {appointmentDate && appointmentDate.length > 0 ? (
