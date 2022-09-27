@@ -27,8 +27,10 @@ import {
   DELETE_APPOINTMENT_TIME,
   DELETE_APPOINTMENT_DATE,
 } from "../../graphql/mutation";
-import { TimePicker, MuiPickersUtilsProvider,DatePicker } from "@material-ui/pickers";
+import { TimePicker, MuiPickersUtilsProvider,DatePicker,KeyboardDatePicker} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+// import timeGridPlugin from "@fullcalendar/timegrid";
+
 
 export const ManageShedule = (props) => {
   // States
@@ -73,9 +75,11 @@ export const ManageShedule = (props) => {
       backgroundColor: "white",
       padding: "12px",
       cursor: "pointer",
-      border: "1px solid grey",
-      width:"165px",
+      border: "1px solid black",
+      boxShadow: "0px 3px 6px #c1c1c1",
+      width:"140px",
       height:"130px",
+      margin:5,
       "&:hover": {
         borderTop: "5px solid red",
         boxShadow: "0px 3px 6px #c1c1c1",
@@ -262,6 +266,7 @@ export const ManageShedule = (props) => {
       });
   };
 
+
   const classes = useStyles();
   return (
     <Grid container spacing={3}>
@@ -274,7 +279,6 @@ export const ManageShedule = (props) => {
         alignItems="center"
       >
         <Typography variant="h4">Manage Schedule</Typography>
-
         <input
           accept=".csv"
           className={classes.input}
@@ -293,7 +297,7 @@ export const ManageShedule = (props) => {
             aria-label="upload picture"
             component="span"
           >
-            <Tooltip title="Upload Holidays">
+            <Tooltip title="Upload Dates">
               <CloudUploadIcon />
             </Tooltip>
           </IconButton>
@@ -321,34 +325,23 @@ export const ManageShedule = (props) => {
         alignItems="center"
       >
         <Grid item xs={5}>
-        <Typography className={classes.available}>Year :</Typography>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DatePicker
-                className={classes.inputField}
-                name="startTime"
-                placeholder="Select Start Time"
-                inputVariant="outlined"
-                fullWidth
-                minDate={new Date()}
-              />
+        <Typography className={classes.available}>Month and Year :</Typography>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              autoOk
+              variant="inline"
+              inputVariant="outlined"
+              format="yyyy/MM"
+              margin="normal"
+              views={['year', 'month']}
+              style={{ marginTop: 0 }}
+            />
           </MuiPickersUtilsProvider>
         </Grid>
-        <Grid item xs={5}>
-        <Typography className={classes.available}>Month :</Typography>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DatePicker
-                className={classes.inputField}
-                name="startTime"
-                placeholder="Select Start Time"
-                inputVariant="outlined"
-                fullWidth
-                minDate={new Date()}
-              />
-          </MuiPickersUtilsProvider>
-        </Grid>
-        <Grid item xs={2} style={{marginTop:'10px'}}><Button variant="contained">Filter</Button></Grid>     
+
       </Grid>
       <div className={classes.calenderCard}>
+     
         {appointmentDate && appointmentDate.length > 0 ? (
           appointmentDate.map((val) => {
             return (

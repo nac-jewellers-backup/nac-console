@@ -8,6 +8,8 @@ import {
   Button,
   Divider,
   Grid,
+  Select,
+  MenuItem
 } from "@material-ui/core";
 import React from "react";
 import moment from "moment";
@@ -17,6 +19,13 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(2),
+  },
+  datecard: {
+    backgroundColor: "white",
+    padding: "25px",
+    cursor: "pointer",
+    boxShadow: "0px 3px 6px #c1c1c1",
+    position:"relative"
   },
   closeButton: {
     position: "absolute",
@@ -31,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "22px",
     paddingTop: "8px",
     paddingBottom: "8px",
-    borderBottom: "1px solid #c1c1c1",
   },
   available: {
     fontSize: "20px",
@@ -41,6 +49,12 @@ const useStyles = makeStyles((theme) => ({
   time: {
     fontSize: "16px",
   },
+  notchedOutline:{
+   width:"20%"
+  },
+  day:{
+    fontSize:"14px"
+  }
 }));
 
 const SheduleModalShow = (props) => {
@@ -54,45 +68,91 @@ const SheduleModalShow = (props) => {
       fullWidth={true}
     >
       <DialogTitle id="Schedule-Modal">
+      <div style={{display:"flex",justifyContent:"space-between",}}>
         <Typography className={classes.title}>
           {moment(props.startDateTime).format("MMM")} -
           {moment(props.startDateTime).format("DD")} -
           {moment(props.startDateTime).format("YYYY")}
         </Typography>
+          <Select
+                className={classes.notchedOutline}
+                variant="outlined"
+                margin="dense"
+                labelId="demo-controlled-open-select-label"
+                id="demo-controlled-open-select"
+                placeholder="Select Type"
+           >
+         
+          <MenuItem style={{backgroundColor:"white"}}>Visibility</MenuItem>
+          <MenuItem style={{backgroundColor:"white"}}>Stock</MenuItem>
+          <MenuItem style={{backgroundColor:"white"}}>Price</MenuItem>
+        </Select>
+        </div>
+        <br/>
+        <Divider/>
+        
       </DialogTitle>
       <DialogContent>
+        
         {props.timing && props.timing.length > 0 ? (
           <Typography className={classes.available}>
-            Available Timinig :
+            Available Timing :
           </Typography>
         ) : (
           <Typography className={classes.available}>No Data</Typography>
         )}
 
-        {props.timing &&
+       <Grid container spacing={1}>
+          <Grid item xs={7} container spacing={1}>
+          {props.timing &&
           props.timing.length > 0 &&
           props.timing.map((val) => {
-            return (
-              <Grid container style={{ paddingBottom: "8px" }} key={val.id}>
-                <Typography className={classes.time}>
-                  {`Start Time : ${moment(val.startDateTime).format(
-                    "hh:mm a"
-                  )} - End Time : ${moment(val.endDateTime).format("hh:mm a")}`}
-                </Typography>
-                <Button
-                  style={{ marginLeft: "auto" }}
-                  variant="contained"
-                  onClick={() => props.deleteTime(val.id)}
+            return (  
+              <Grid item xs={6}>
+                <div
+                  className={
+                    classes.datecard
+                  }
                 >
-                  Delete Time
-                </Button>
+                  <div  style={{ position: 'absolute',
+                    right: '5px',
+                    top: '5px',}}>
+               <Button  
+                 variant="contained"
+                 size="small"
+                 onClick={() => props.deleteTime(val.id)}
+               >
+                 Delete Time
+               </Button>
+
+               <Button 
+                 color="primary"
+                 variant="contained"      
+                 size="small"
+                 style={{marginLeft:5}}
+               >
+                 Edit Time
+               </Button>
+                  </div>
+                
+
+                <div style={{paddingTop:"20px"}}>
+                <Typography className={classes.day}>
+                  {`Start Time : ${moment(val?.startDateTime).format("hh:mm a")}`}
+                  </Typography>
+                  <Typography className={classes.day}>
+                  {`End Time : ${moment(val?.endDateTime).format("hh:mm a")}`}
+                  </Typography>
+                </div>
+                 
+                </div>       
               </Grid>
+                     
             );
           })}
-        <br />
-        <Divider />
-        <br />
-        {props.showTime && (
+          </Grid>
+          <Grid item xs={5}>
+  
           <>
             {" "}
             <Typography className={classes.available}>Start Time :</Typography>
@@ -122,7 +182,15 @@ const SheduleModalShow = (props) => {
               />
             </MuiPickersUtilsProvider>{" "}
           </>
-        )}
+      
+          </Grid>
+        </Grid>
+
+       
+        <br />
+        <Divider />
+        <br />
+        
       </DialogContent>
       <DialogActions>
         {props.showTime && (

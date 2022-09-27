@@ -2298,7 +2298,6 @@ query MyQuery($id: UUID!) {
 const ALL_APPOINTMENTS_DATE = `
   query MyQuery {
     allAppointmentDates(
-      condition: { isActive: true }
       orderBy: START_DATE_TIME_ASC
     ) {
       nodes {
@@ -2309,10 +2308,10 @@ const ALL_APPOINTMENTS_DATE = `
         isActive
         startDate
         startDateTime
+        endDateTime
         updatedAt
         updatedBy
         appointmentDateTimeSlotsByAppointmentDateId(
-          condition: { isActive: true }
           orderBy: START_DATE_TIME_ASC
         ) {
           nodes {
