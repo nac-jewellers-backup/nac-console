@@ -12,15 +12,15 @@ import {
 import moment from "moment";
 import uuid from "uuid/v1";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useApolloClient } from "react-apollo";
 import { AlertContext } from "../../context";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
 import SheduleModal from "./shedulemodal";
 import SheduleModalShow from "./shedulemodalshow";
-import { ALL_APPOINTMENTS_DATE } from "../../graphql/query";
-
+import { ALL_APPOINTMENTS_DATE,APPOINTMENTS_TYPE,ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS } from "../../graphql/query";
+import { useQuery } from "react-apollo";
 import {
   CREATE_APPOINTMENT_DATE,
   CREATE_APPOINTMENT_TIME,
@@ -39,11 +39,19 @@ export const ManageShedule = (props) => {
   const [type, setType] = React.useState();
   const [date, setDate] = React.useState(new Date());
   const [appointmentDate, setAppointmentDate] = useState([]);
+  const [appointmentTypes, setAppointmentTypes] = useState([]);
+  const [appointmentSlots, setAppointmentSlots] = useState([]);
   const [openAppointmentTime, setOpenAppointmentTime] = useState(false);
   const [showTime, setShowTime] = useState(false);
   const [timeValue, setTimeValue] = useState({
     startTime: new Date(),
     endTime: new Date(),
+    type: 2
+  });
+  const [filterDate, setFilterDate] = useState({
+    startTime: new Date(),
+    endTime: new Date(),
+    date: new Date()
   });
 
   const client = useApolloClient();
@@ -95,9 +103,11 @@ export const ManageShedule = (props) => {
     },
   }));
 
+ 
   // LifeCycles
   useEffect(() => {
     GetAllAppointment();
+    GetAllAppointmentTypes();
   }, []);
 
   // Handle Funcs
@@ -111,6 +121,7 @@ export const ManageShedule = (props) => {
   const handlemodalshow = (id) => {
     setAppointmentDateId(id);
     setOpenAppointmentTime(true);
+    GetAllAppointment_TimeSlots(id)
   };
 
   const handleTimeValue = (value, name) => {
@@ -131,6 +142,40 @@ export const ManageShedule = (props) => {
       .then((res) => res.json())
       .then((res) => {
         setAppointmentDate(res.data.allAppointmentDates.nodes);
+      })
+      .catch(console.error);
+  };
+
+  const GetAllAppointment_TimeSlots = async (id,type) => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: ALL_APPOINTMENTS_TIMESLOT(id ? id : appointmentDateId,type ? type : timeValue.type).loc.source.body,
+      }),
+    };
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((res) => {
+         setAppointmentSlots(res.data.allAppointmentDateTimeSlots.nodes)
+      })
+      .catch(console.error);
+  };
+
+  const GetAllAppointmentTypes = async () => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: APPOINTMENTS_TYPE,
+      }),
+    };
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((res) => {
+          setAppointmentTypes(res.data.allAppointmentTypeMasters.nodes)
       })
       .catch(console.error);
   };
@@ -179,6 +224,7 @@ export const ManageShedule = (props) => {
           updatedAt: new Date(),
           startDateTime: timeValue.startTime,
           endDateTime: timeValue.endTime,
+          appointmentTypeId: timeValue.type,
           appointmentDateId: id,
           startTime: moment(timeValue.startTime).format("HH:mm:ss"),
           endTime: moment(timeValue.endTime).format("HH:mm:ss"),
@@ -186,7 +232,7 @@ export const ManageShedule = (props) => {
       })
       .then((res) => {
         if (res) {
-          GetAllAppointment();
+          GetAllAppointment_TimeSlots();
           onClose();
           snack.setSnack({
             open: true,
@@ -267,7 +313,40 @@ export const ManageShedule = (props) => {
   };
 
 
+  const handleDateChange= async (date) =>{
+    var start = moment(date).startOf('month').format("YYYY-MM-DD");
+    var end = moment(date).endOf("month").format("YYYY-MM-DD");
+    setFilterDate({...filterDate,date:date,startTime:start,endTime:end})    
+  }
+
+  const FilterDate= async () =>{
+  if(filterDate.startTime !== "" && filterDate.endTime !== ""){
+   await client
+      .query({
+        query: FILTER_APPOINTEMENTS,
+        variables:{
+          startDate:filterDate.startTime,
+          endDate:filterDate.endTime 
+        }
+      })
+      .then((res) => {
+        setAppointmentDate(res.data.allAppointmentDates.nodes);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+      
+    }  
+  }
+
+  const FilterTimeSlotes=(type)=>{
+    GetAllAppointment_TimeSlots(appointmentDateId,type)
+  }
+
+
+
   const classes = useStyles();
+
   return (
     <Grid container spacing={3}>
       <Grid
@@ -323,20 +402,29 @@ export const ManageShedule = (props) => {
         direction="row"
         justify="flex-end"
         alignItems="center"
+        justifyContent="center"
       >
         <Grid item xs={5}>
         <Typography className={classes.available}>Month and Year :</Typography>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
-              autoOk
               variant="inline"
               inputVariant="outlined"
-              format="yyyy/MM"
+              format="MM/yyyy"
               margin="normal"
               views={['year', 'month']}
+              value={filterDate.date}
+              onChange={(date) => handleDateChange(date)}
               style={{ marginTop: 0 }}
             />
           </MuiPickersUtilsProvider>
+          
+        </Grid>
+        <Grid item xs={1.5} style={{marginTop:"10px"}}>
+        <Button variant="contained" onClick={FilterDate}>Filter</Button>
+        </Grid>
+        <Grid item xs={1.5} style={{marginTop:"10px"}}>
+        <Button variant="contained" onClick={GetAllAppointment}>Reset</Button>
         </Grid>
 
       </Grid>
@@ -377,16 +465,17 @@ export const ManageShedule = (props) => {
                     date={val.startDateTime}
                     appointmentDateId={appointmentDateId}
                     timing={
-                      val.appointmentDateTimeSlotsByAppointmentDateId.nodes
+                      appointmentSlots ? appointmentSlots : []
                     }
                     close={() => setOpenAppointmentTime(false)}
                     showTime={showTime}
                     timeValue={timeValue}
                     handleTimeValue={handleTimeValue}
-                    handleTimeShow={() => setShowTime(!showTime)}
                     handleSubmitTime={handleSubmitTime}
+                    filterType={FilterTimeSlotes}
                     deleteTime={deleteTime}
                     deleteDate={deleteDate}
+                    appointmentTypes={appointmentTypes}
                   />
                 )}
               </Box>

@@ -167,6 +167,7 @@ let CREATE_APPOINTMENT_TIME = gql`
     $updatedAt: Datetime!
     $startTime: Time
     $endTime: Time
+    $appointmentTypeId : Int!
   ) {
     createAppointmentDateTimeSlot(
       input: {
@@ -180,6 +181,7 @@ let CREATE_APPOINTMENT_TIME = gql`
           appointmentDateId: $appointmentDateId
           startTime: $startTime
           endTime: $endTime
+          appointmentTypeId : $appointmentTypeId
         }
       }
     ) {

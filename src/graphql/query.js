@@ -2311,25 +2311,79 @@ const ALL_APPOINTMENTS_DATE = `
         endDateTime
         updatedAt
         updatedBy
-        appointmentDateTimeSlotsByAppointmentDateId(
-          orderBy: START_DATE_TIME_ASC
-        ) {
-          nodes {
-            appointmentDateId
-            createdAt
-            createdBy
-            endDateTime
-            startDateTime
-            endTime
-            id
-            isActive
-            startTime
+      }
+    }
+  }
+`;
+
+const FILTER_APPOINTEMENTS = gql`
+query($startDate: Date!, $endDate: Date!) {
+  allAppointmentDates(
+    filter: {
+      startDate: {
+        greaterThanOrEqualTo: $startDate
+        lessThanOrEqualTo: $endDate
+      }
+    }
+    orderBy: START_DATE_ASC
+  ) {
+    nodes {
+      createdAt
+      createdBy
+      endDate
+      id
+      isActive
+      startDate
+      startDateTime
+      endDateTime
+      updatedAt
+      updatedBy
+    }
+  }
+}
+`;
+
+const ALL_APPOINTMENTS_TIMESLOT =(appointmentDateId,appointmentTypeId) => gql`
+ query{  
+   allAppointmentDateTimeSlots(
+    condition: {
+      appointmentDateId: "${appointmentDateId}"
+      appointmentTypeId: ${appointmentTypeId}
+    }
+  ) {
+    nodes {
+      id
+      appointmentDateId
+      appointmentTypeId
+      startTime
+      endTime
+      isActive
+    }
+  }
+ }
+`
+
+
+const APPOINTMENTS_TYPE = `
+  query MyQuery {
+    allAppointmentTypeMasters {
+      nodes {
+        id
+        name
+        isActive
+        appointmentsByAppointmentTypeId{
+          edges {
+            node {
+              id
+            }
           }
         }
       }
     }
   }
 `;
+
+
 const SHOW_APPOINMENT_DETAILS = `
 query MyQuery {
   allAppointments(orderBy: CREATED_AT_DESC) {
@@ -2493,4 +2547,6 @@ export {
   ALL_APPOINTMENTS_DATE,
   SHOW_APPOINMENT_DETAILS,
   PRICE_RUN_LOGS,
+  APPOINTMENTS_TYPE,
+  ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS
 };

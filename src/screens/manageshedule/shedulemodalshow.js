@@ -9,12 +9,15 @@ import {
   Divider,
   Grid,
   Select,
-  MenuItem
+  MenuItem,
+  IconButton
 } from "@material-ui/core";
 import React from "react";
 import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
 import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { DeleteOutline } from "@material-ui/icons";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: 0,
@@ -43,8 +46,11 @@ const useStyles = makeStyles((theme) => ({
   },
   available: {
     fontSize: "20px",
-
     paddingBottom: "8px",
+  },
+  availableTitle:{
+    fontSize: "20px",
+    paddingTop: "10px",
   },
   time: {
     fontSize: "16px",
@@ -59,6 +65,8 @@ const useStyles = makeStyles((theme) => ({
 
 const SheduleModalShow = (props) => {
   const classes = useStyles();
+  const {appointmentTypes} = props;
+
 
   return (
     <Dialog
@@ -69,11 +77,11 @@ const SheduleModalShow = (props) => {
     >
       <DialogTitle id="Schedule-Modal">
       <div style={{display:"flex",justifyContent:"space-between",}}>
-        <Typography className={classes.title}>
-          {moment(props.startDateTime).format("MMM")} -
+           <Typography className={classes.availableTitle}>
+            Available Timing - ({moment(props.startDateTime).format("MMM")} -
           {moment(props.startDateTime).format("DD")} -
-          {moment(props.startDateTime).format("YYYY")}
-        </Typography>
+          {moment(props.startDateTime).format("YYYY")})
+          </Typography>
           <Select
                 className={classes.notchedOutline}
                 variant="outlined"
@@ -81,11 +89,13 @@ const SheduleModalShow = (props) => {
                 labelId="demo-controlled-open-select-label"
                 id="demo-controlled-open-select"
                 placeholder="Select Type"
+                onChange={(e) => props.filterType(e.target.value)}
            >
-         
-          <MenuItem style={{backgroundColor:"white"}}>Visibility</MenuItem>
-          <MenuItem style={{backgroundColor:"white"}}>Stock</MenuItem>
-          <MenuItem style={{backgroundColor:"white"}}>Price</MenuItem>
+         {appointmentTypes?.map((_)=>{
+          return(
+            <MenuItem value={_.id}>{_.name}</MenuItem>
+          )
+         })}
         </Select>
         </div>
         <br/>
@@ -96,7 +106,7 @@ const SheduleModalShow = (props) => {
         
         {props.timing && props.timing.length > 0 ? (
           <Typography className={classes.available}>
-            Available Timing :
+           
           </Typography>
         ) : (
           <Typography className={classes.available}>No Data</Typography>
@@ -117,42 +127,40 @@ const SheduleModalShow = (props) => {
                   <div  style={{ position: 'absolute',
                     right: '5px',
                     top: '5px',}}>
-               <Button  
-                 variant="contained"
+                      <IconButton  onClick={() => props.deleteTime(val.id)}>
+                         <DeleteOutline style={{color:"red"}}/>
+                      </IconButton>
+               {/* <Button  
+                 color="primary"
+                 variant="contained"      
                  size="small"
                  onClick={() => props.deleteTime(val.id)}
                >
                  Delete Time
-               </Button>
-
-               <Button 
-                 color="primary"
-                 variant="contained"      
-                 size="small"
-                 style={{marginLeft:5}}
-               >
-                 Edit Time
-               </Button>
+               </Button> */}
                   </div>
                 
 
                 <div style={{paddingTop:"20px"}}>
-                <Typography className={classes.day}>
+                 <Typography className={classes.day}>
                   {`Start Time : ${moment(val?.startDateTime).format("hh:mm a")}`}
                   </Typography>
                   <Typography className={classes.day}>
                   {`End Time : ${moment(val?.endDateTime).format("hh:mm a")}`}
                   </Typography>
+                  
                 </div>
                  
                 </div>       
-              </Grid>
-                     
+              </Grid>              
             );
           })}
           </Grid>
-          <Grid item xs={5}>
-  
+          <Grid item xs={1} style={{display: 'flex',
+              justifyContent: 'center',}}>
+            <Divider variant="vertical"/>
+          </Grid>
+          <Grid item xs={4}>
           <>
             {" "}
             <Typography className={classes.available}>Start Time :</Typography>
@@ -181,6 +189,31 @@ const SheduleModalShow = (props) => {
                 minDate={new Date()}
               />
             </MuiPickersUtilsProvider>{" "}
+            <Typography className={classes.available}>Type :</Typography>
+            <Select
+               className={classes.inputField}
+                variant="outlined"
+                fullWidth
+                margin="dense"
+                labelId="demo-controlled-open-select-label"
+                id="demo-controlled-open-select"
+                placeholder="Select Type"
+                onChange={(e) => props.handleTimeValue(e.target.value, "type")}
+             >
+            {appointmentTypes?.map((_)=>{
+              return(
+                <MenuItem value={_.id}>{_.name}</MenuItem>
+              )
+             })}
+             </Select>
+
+                     <Button
+                      onClick={() => props.handleSubmitTime(props.appointmentDateId)}
+                      color="primary"
+                      variant="contained"
+                     >
+                      Add Time
+                    </Button>
           </>
       
           </Grid>
@@ -193,24 +226,14 @@ const SheduleModalShow = (props) => {
         
       </DialogContent>
       <DialogActions>
-        {props.showTime && (
-          <Button
+  
+          {/* <Button
             onClick={() => props.handleSubmitTime(props.appointmentDateId)}
             color="primary"
             variant="contained"
           >
             Submit Time
-          </Button>
-        )}
-        {!props.showTime && (
-          <Button
-            onClick={props.handleTimeShow}
-            color="primary"
-            variant="contained"
-          >
-            Add Time
-          </Button>
-        )}
+          </Button> */}
         <Button onClick={props.close} variant="contained">
           {" "}
           Close

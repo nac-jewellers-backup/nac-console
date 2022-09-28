@@ -7,6 +7,8 @@ import TableFooter from "@material-ui/core/TableFooter";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
+import { TableContainer ,IconButton} from "@material-ui/core";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import Typography from "@material-ui/core/Typography";
 import React, { useEffect, useState } from "react";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
@@ -21,6 +23,7 @@ const columns = [
   { id: "location", label: "Location" },
   { id: "StartTime", label: "Start Time" },
   { id: "EndTime", label: "End Time" },
+  { id: "actions", label: "" },
 ];
 
 const useStyles2 = makeStyles((theme) => ({
@@ -30,13 +33,13 @@ const useStyles2 = makeStyles((theme) => ({
   },
   table: {
     minWidth: 500,
+    backgroundColor:"white"
   },
   tableWrapper: {
     overflowX: "auto",
   },
   title: {
     color: "black",
-
     fontSize: "16px",
     padding: "20px",
   },
@@ -74,6 +77,20 @@ export const Manageappoinment = (props) => {
       .catch(console.error);
   }, []);
 
+  const ActionIcon = (props) => {
+    return (
+      <>
+        <IconButton
+          onClick={() => {
+            window.open(`orderdetails/${props.id}`);
+          }}
+        >
+          <VisibilityIcon />
+        </IconButton>
+      </>
+    );
+  };
+
   function tConvert(time) {
     // Check correct time format and split into components
     time = time
@@ -90,15 +107,11 @@ export const Manageappoinment = (props) => {
   }
 
   return (
-    <Paper className={classes.root}>
-      <div className={classes.tableWrapper}>
+    <div className={classes.root}>
         <Typography className={classes.title}>Manage Appointment</Typography>
-        <Table
-          className={classes.table}
-          border={1}
-          borderColor={"#ddd"}
+        <TableContainer component={Paper}>
+        <Table      
           size="small"
-          stickyHeader
         >
           <TableHead>
             <TableRow>
@@ -151,6 +164,9 @@ export const Manageappoinment = (props) => {
                             )
                           : ""}
                       </TableCell>
+                      <TableCell align="left">
+                        <ActionIcon id={row.id}/>
+                      </TableCell>
                     </TableRow>
                   ))
               : "No Data"}
@@ -168,7 +184,8 @@ export const Manageappoinment = (props) => {
             </TableRow>
           </TableFooter>
         </Table>
-      </div>
-    </Paper>
+        </TableContainer>
+        
+    </div>
   );
 };
