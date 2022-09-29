@@ -40,7 +40,7 @@ export const AppointmentManagementDetails = withRouter((props) => {
  
   useEffect(() => {
     var com_id = props.location.pathname.split("/")[2];
-
+    console.log(com_id)
   }, []);
 
   if (!order) {
@@ -48,7 +48,7 @@ export const AppointmentManagementDetails = withRouter((props) => {
   }
 
   return (
-    <Page className={classes.root} title="Order Management Details">
+    <Page className={classes.root} title="Appointment Management Details">
       
       <Grid className={classes.container} container spacing={3}>
         <Grid item md={4} xl={3} xs={12}>

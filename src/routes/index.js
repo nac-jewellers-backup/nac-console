@@ -78,6 +78,7 @@ import {
   DailyMetalRate,
   PriceLogs,
   ImageUpload,
+  AppointmentManagementDetails
 } from "../screens";
 import Editcategory from "../screens/CategoryList/components/editpage/editcategory";
 import newmaterial from "../screens/CategoryList/components/newmaterial/newmaterial";
@@ -172,6 +173,11 @@ const MainApp = () => {
           <PrivateRoute
             path={route.orderdetails}
             component={OrderManagementDetails}
+          />
+
+         <PrivateRoute
+            path={route.appointmentdetails}
+            component={AppointmentManagementDetails}
           />
 
           <PrivateRoute
