@@ -7,13 +7,21 @@ import TableFooter from "@material-ui/core/TableFooter";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import { TableContainer ,IconButton} from "@material-ui/core";
+import { TableContainer ,IconButton,Grid,TextField,InputAdornment} from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import SearchIcon from "@material-ui/icons/Search";
+import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import Typography from "@material-ui/core/Typography";
 import React, { useEffect, useState } from "react";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
 import moment from "moment";
 import { SHOW_APPOINMENT_DETAILS } from "../../graphql/query";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+
 const columns = [
   { id: "user_id", label: "Id" },
   { id: "name", label: "Name" },
@@ -82,7 +90,7 @@ export const Manageappoinment = (props) => {
       <>
         <IconButton
           onClick={() => {
-            window.open(`orderdetails/${props.id}`);
+            window.open(`appointmentdetails/${props.id}`);
           }}
         >
           <VisibilityIcon />
@@ -109,6 +117,51 @@ export const Manageappoinment = (props) => {
   return (
     <div className={classes.root}>
         <Typography className={classes.title}>Manage Appointment</Typography>
+        <Grid container item xs={12} sm={12} spacing={2}>
+        <Grid container item xs={3}>
+          <TextField
+            variant="outlined"
+            fullWidth
+            placeholder="Search by name, email, phone"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid container item xs={2}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              autoOk
+              variant="inline"
+              inputVariant="outlined"
+              format="yyyy/MM/dd"
+              margin="normal"
+              label="Start Time"
+              style={{ marginTop: 0 }}
+           
+            />
+          </MuiPickersUtilsProvider>
+        </Grid>
+        <Grid container item xs={2}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              autoOk
+              variant="inline"
+              inputVariant="outlined"
+              format="yyyy/MM/dd"
+              margin="normal"
+              label="End Time"
+              disableFuture={true}
+              style={{ marginTop: 0 }}
+              
+            />
+          </MuiPickersUtilsProvider>
+        </Grid>
+      </Grid>
         <TableContainer component={Paper}>
         <Table      
           size="small"

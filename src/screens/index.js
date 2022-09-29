@@ -44,6 +44,7 @@ export * from "./Masterweights";
 export * from "./Materialmaster";
 export * from "./OrderList";
 export * from "./OrderManagementDetails";
+export * from "./AppointmentManagementDetails";
 export * from "./Priceupdate";
 export * from "./Productlist";
 export * from "./Productupload";

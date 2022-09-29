@@ -8,6 +8,7 @@ const route = {
   productlist: "/productlist",
   orderlist: "/orderlist",
   orderdetails: "/orderdetails/:id",
+  appointmentdetails: "/appointmentdetails/:id",
   userorders: "/orderlist/:userid",
   userwishlist: "/userwishlist/:userid",
   address: "/address/:userid",

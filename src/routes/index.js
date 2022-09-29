@@ -77,7 +77,7 @@ import {
   MasterCountry,
   DailyMetalRate,
   PriceLogs,
-  ImageUpload
+  ImageUpload,
 } from "../screens";
 import Editcategory from "../screens/CategoryList/components/editpage/editcategory";
 import newmaterial from "../screens/CategoryList/components/newmaterial/newmaterial";
