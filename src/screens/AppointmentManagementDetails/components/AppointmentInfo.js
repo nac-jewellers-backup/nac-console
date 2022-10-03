@@ -66,7 +66,7 @@ const AppointmentInfo = (props) => {
            <Grid item xs={3} style={{display:"flex"}}>
              <Typography>Type :</Typography>
              <Typography style={{marginLeft:10}}>
-
+              {order?.allAppointments?.nodes[0]?.appointmentTypeId === 1 ? "Alive" : order?.allAppointments?.nodes[0]?.appointmentTypeId === 2 ? "Lotus" :order?.allAppointments?.nodes[0]?.appointmentTypeId === 3 ? "Piercing" : order?.allAppointments?.nodes[0]?.appointmentTypeId === 4 ? "Stones" : null}
              </Typography>
            </Grid>
            <Grid item xs={3} style={{display:"flex"}}>
@@ -88,13 +88,13 @@ const AppointmentInfo = (props) => {
            <Grid item xs={3} style={{display:"flex"}}>
              <Typography>isOnline :</Typography>
              <div style={{marginTop:"-10px",marginLeft:"10px"}}>
-                <Switch  value={order?.allAppointments?.nodes[0]?.isOnline} checked={order?.allAppointments?.nodes[0]?.isOnline}/>
+                <Switch  value={order?.allAppointments?.nodes[0]?.isOnline} checked={order?.allAppointments?.nodes[0]?.isOnline ? true : false}/>
             </div> 
            </Grid>
            <Grid item xs={3} style={{display:"flex"}}>
              <Typography>is IT required :</Typography>
              <div style={{marginTop:"-10px",marginLeft:"10px"}}>
-                <Switch value={order?.allAppointments?.nodes[0]?.isItRequired} checked={order?.allAppointments?.nodes[0]?.isItRequired}/>
+                <Switch value={order?.allAppointments?.nodes[0]?.isItRequired} checked={order?.allAppointments?.nodes[0]?.isItRequired ? true : false}/>
             </div> 
            </Grid>
            <Grid item xs={3} style={{display:"flex"}}>
@@ -104,7 +104,7 @@ const AppointmentInfo = (props) => {
            <Grid item xs={3} style={{display:"flex"}}>
              <Typography>Are more Members Joining :</Typography>
              <div style={{marginTop:"-10px",marginLeft:"10px"}}> 
-             <Switch value={order?.allAppointments?.nodes[0]?.areMoreMembersJoining} checked={order?.allAppointments?.nodes[0]?.areMoreMembersJoining}/>
+             <Switch value={order?.allAppointments?.nodes[0]?.areMoreMembersJoining} checked={order?.allAppointments?.nodes[0]?.areMoreMembersJoining ? true :false}/>
              </div>
            </Grid>
            <Grid item xs={3} style={{display:"flex"}}>

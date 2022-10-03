@@ -2451,6 +2451,7 @@ query(
       isItRequired
       id
       areMoreMembersJoining
+      appointmentTypeId
     }
   }
 }
