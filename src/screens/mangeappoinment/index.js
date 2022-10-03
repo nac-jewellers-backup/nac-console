@@ -54,6 +54,11 @@ const useStyles2 = makeStyles((theme) => ({
     fontSize: "16px",
     padding: "20px",
   },
+  select:{
+    "& .MuiInputBase-root":{
+      height:"85%"
+    }
+  }
 }));
 
 let filterData = {};
@@ -144,6 +149,13 @@ export const Manageappoinment = (props) => {
     );
   };
 
+  const handleStatusChange =(value)=>{
+    setAppointmentFilter({
+      ...appointmentFilter,
+      status: {equalTo: value}
+    })
+  }
+
   function tConvert(time) {
     // Check correct time format and split into components
     time = time
@@ -216,6 +228,15 @@ export const Manageappoinment = (props) => {
           inputVariant="outlined"
         />
           </MuiPickersUtilsProvider>
+        </Grid>
+        <Grid container item xs={2}>
+        <Select fullWidth variant="outlined" onChange={(value)=>handleStatusChange(value)} className={classes.select}>
+                          <MenuItem value="In-Progress<">In-Progress</MenuItem>
+                          <MenuItem value="Approved">Approved</MenuItem>
+                          <MenuItem value="Completed">Completed</MenuItem>
+                          <MenuItem value="Submitted">Submitted</MenuItem>
+                          <MenuItem value="Cancelled">Cancelled</MenuItem>
+          </Select>
         </Grid>
       </Grid>
         <TableContainer component={Paper}>
