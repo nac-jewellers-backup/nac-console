@@ -7,18 +7,20 @@ import TableFooter from "@material-ui/core/TableFooter";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import { TableContainer ,IconButton,Grid,TextField,InputAdornment} from "@material-ui/core";
+import { TableContainer ,IconButton,Grid,TextField,InputAdornment, Select, MenuItem } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import SearchIcon from "@material-ui/icons/Search";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import Typography from "@material-ui/core/Typography";
 import React, { useEffect, useState } from "react";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
+import { useApolloClient, useQuery } from "react-apollo";
 import moment from "moment";
 import { SHOW_APPOINMENT_DETAILS } from "../../graphql/query";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
+  KeyboardTimePicker
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
@@ -31,6 +33,7 @@ const columns = [
   { id: "location", label: "Location" },
   { id: "StartTime", label: "Start Time" },
   { id: "EndTime", label: "End Time" },
+  { id: "Status", label: "Status" },
   { id: "actions", label: "" },
 ];
 
@@ -53,11 +56,21 @@ const useStyles2 = makeStyles((theme) => ({
   },
 }));
 
+let filterData = {};
+
 export const Manageappoinment = (props) => {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [data, setData] = useState([]);
+  const [startDate, setStartDate] = React.useState(null);
+  const [endDate, setEndDate] = React.useState(null);
+  const [appointmentFilter, setAppointmentFilter] = React.useState({
+    ...filterData,
+    id: { isNull: false },
+  });
+
+  const [orderBy, setOrderBy] = React.useState(["CREATED_AT_DESC"]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -67,23 +80,55 @@ export const Manageappoinment = (props) => {
     setPage(0);
   };
 
-  useEffect(() => {
-    const url = GRAPHQL_DEV_CLIENT;
-    const opts = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: SHOW_APPOINMENT_DETAILS,
-      }),
-    };
-    fetch(url, opts)
-      .then((res) => res.json())
-      .then((res) => {
-      
-        setData(res.data.allAppointments.nodes);
-      })
-      .catch(console.error);
-  }, []);
+  const { loading, data, error, networkStatus } = useQuery(SHOW_APPOINMENT_DETAILS, {
+    variables: {
+      limit: rowsPerPage,
+      offset: page * rowsPerPage,
+      appointment_filter: { ...appointmentFilter },
+      order_by: orderBy,
+    },
+  });
+
+  let rowData = data?.allAppointments?.nodes;
+
+  // useEffect(() => {
+  //   const url = GRAPHQL_DEV_CLIENT;
+  //   const opts = {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({
+  //       query: SHOW_APPOINMENT_DETAILS,
+  //     }),
+  //   };
+  //   fetch(url, opts)
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       setData(res.data.allAppointments.nodes);
+  //     })
+  //     .catch(console.error);
+  // }, []);
+
+
+
+  const handleDateChange = (date, value) => {
+    if (value === "start") {
+      setStartDate(date);
+    }
+    if (value === "end") {
+      if (date > startDate && startDate) {
+        setEndDate(date);
+        setAppointmentFilter({
+          ...appointmentFilter,
+          appointmentDateTimeSlotBySlotId: {
+            appointmentDateByAppointmentDateId: {
+              startDate: { equalTo: moment(startDate).format("YYYY-MM-DD")},
+              endDate: { equalTo: moment(date).format("YYYY-MM-DD"),}
+            }
+          },   
+        });
+      } else alert("the To date must be higher than from");
+    }
+  };
 
   const ActionIcon = (props) => {
     return (
@@ -130,41 +175,51 @@ export const Manageappoinment = (props) => {
                 </InputAdornment>
               ),
             }}
+            onChange={(event) => {
+              setAppointmentFilter({
+                  ...appointmentFilter,
+                  or: [ {mobile: { includesInsensitive: event.target.value }} , {customerName: { includesInsensitive: event.target.value }}, {email: { includesInsensitive: event.target.value } }]
+              });
+            }}
           />
         </Grid>
         <Grid container item xs={2}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              autoOk
-              variant="inline"
-              inputVariant="outlined"
-              format="yyyy/MM/dd"
-              margin="normal"
-              label="Start Time"
-              style={{ marginTop: 0 }}
-           
-            />
+          <KeyboardDatePicker
+          margin="normal"
+          label="Start Date"
+          value={startDate}
+          onChange={(date) => handleDateChange(date, "start")}
+          style={{ marginTop: 0 }}
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+          autoOk
+          variant="inline"
+          inputVariant="outlined"
+        />
           </MuiPickersUtilsProvider>
         </Grid>
         <Grid container item xs={2}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              autoOk
-              variant="inline"
-              inputVariant="outlined"
-              format="yyyy/MM/dd"
-              margin="normal"
-              label="End Time"
-              disableFuture={true}
-              style={{ marginTop: 0 }}
-              
-            />
+          <KeyboardDatePicker
+          margin="normal"
+          label="End Date"
+          value={endDate}
+          onChange={(date) => handleDateChange(date, "end")}
+          style={{ marginTop: 0 }}
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+          autoOk
+          variant="inline"
+          inputVariant="outlined"
+        />
           </MuiPickersUtilsProvider>
         </Grid>
       </Grid>
         <TableContainer component={Paper}>
         <Table      
-          size="small"
         >
           <TableHead>
             <TableRow>
@@ -181,10 +236,9 @@ export const Manageappoinment = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data && data.length > 0
-              ? data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => (
+            {rowData &&
+                rowData.length > 0 ?
+                rowData.map((row, index) => (
                     <TableRow key={row.id}>
                       <TableCell align="left">{row?.id ?? ""}</TableCell>
                       <TableCell align="left">
@@ -217,6 +271,15 @@ export const Manageappoinment = (props) => {
                             )
                           : ""}
                       </TableCell>
+                      <TableCell>
+                        <Select fullWidth>
+                          <MenuItem>In-Progress</MenuItem>
+                          <MenuItem>Approved</MenuItem>
+                          <MenuItem>Completed</MenuItem>
+                          <MenuItem>Submitted</MenuItem>
+                          <MenuItem>Cancelled</MenuItem>
+                        </Select>
+                      </TableCell>
                       <TableCell align="left">
                         <ActionIcon id={row.id}/>
                       </TableCell>
@@ -228,11 +291,12 @@ export const Manageappoinment = (props) => {
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 15, 20, 25, 50, 100]}
-                count={data.length}
+                count={data?.allAppointments?.totalCount}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
+                onPageChange={() => {}}
               />
             </TableRow>
           </TableFooter>

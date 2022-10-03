@@ -10,14 +10,19 @@ import {
   TableCell,
   Grid,
   TableHead,
+  Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+import { useApolloClient, useQuery } from "react-apollo";
+import AppointmentInfo from "./components/AppointmentInfo";
+import AppointmentExtra from "./components/AppointmentExtra";
 import moment from "moment";
 import Page from "../../components/Page/Page";
 import { withRouter } from "react-router-dom";
 import { NetworkContext } from "../../context/NetworkContext";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
-import { GETORDERCOMMUNICATIONLOGS } from "../../graphql/query";
+import { GETORDERCOMMUNICATIONLOGS,SHOW_ALL_PPOINMENT_DETAILS } from "../../graphql/query";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -37,10 +42,40 @@ export const AppointmentManagementDetails = withRouter((props) => {
 
   const { sendNetworkRequest } = React.useContext(NetworkContext);
 
+  const getOrderCommunicationLogs = async (order_id) => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: GETORDERCOMMUNICATIONLOGS,
+
+        variables: {
+          id: order_id,
+        },
+      }),
+    };
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((fatchvalue) => {
+       
+        setCommunicationLogs(
+          fatchvalue?.data?.orderById?.communicationLogsByOrderId?.nodes ?? []
+        );
+      })
+      .catch(console.error);
+  };
+
+  const { loading, data, error, networkStatus } = useQuery(SHOW_ALL_PPOINMENT_DETAILS, {
+    variables: {
+      id: parseInt(order)
+    },
+  });
  
   useEffect(() => {
     var com_id = props.location.pathname.split("/")[2];
-    console.log(com_id)
+    getOrderCommunicationLogs(com_id);
+    setOrder(com_id)
   }, []);
 
   if (!order) {
@@ -49,14 +84,36 @@ export const AppointmentManagementDetails = withRouter((props) => {
 
   return (
     <Page className={classes.root} title="Appointment Management Details">
-      
-      <Grid className={classes.container} container spacing={3}>
-        <Grid item md={4} xl={3} xs={12}>
-          
+       <Grid
+        alignItems="flex-end"
+        container
+        justify="space-between"
+        spacing={3}
+      >
+        <Grid item>
+          <Typography
+            component="h2"
+            gutterBottom
+            variant="overline"
+          >
+            Appointments
+          </Typography>
+          <Typography
+            component="h1"
+            variant="h3"
+          >
+            Appointment #{order}
+          </Typography>
         </Grid>
-        <Grid item md={8} xl={9} xs={12}>
-         
+      </Grid>
+      <Grid className={classes.container} container spacing={3}>
           <Grid container xs={12} style={{ marginTop: "10px" }}>
+            <Grid item md={12} xl={12} xs={12} style={{ padding: "14px" }}>
+                   <AppointmentInfo order={data}/>
+            </Grid>
+            <Grid item md={12} xl={12} xs={12} style={{ padding: "14px" }}>
+                 <AppointmentExtra/>
+            </Grid>
             <Grid item md={6} xl={6} xs={12} style={{ padding: "14px" }}>
               <Card>
                 <CardHeader title="Email Info" />
@@ -72,7 +129,21 @@ export const AppointmentManagementDetails = withRouter((props) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                     
+                      {communicationLogs.map(
+                        (val, index) =>
+                          val.type === "email" && (
+                            <TableRow key={index}>
+                              <TableCell>{val.senderResponseId}</TableCell>
+                              <TableCell>{val.type}</TableCell>
+                              <TableCell>{val.messageType}</TableCell>{" "}
+                              <TableCell>
+                                {moment(val.createdAt).format(
+                                  "DD/MM/YYYY HH:mm:ss"
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          )
+                      )}
                     </TableBody>
                   </Table>
                 </CardContent>
@@ -93,14 +164,28 @@ export const AppointmentManagementDetails = withRouter((props) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      
+                      {communicationLogs.map(
+                        (val, index) =>
+                          val.type === "sms" && (
+                            <TableRow key={index}>
+                              <TableCell>{val.senderResponseId}</TableCell>
+                              <TableCell>{val.type}</TableCell>
+                              <TableCell>{val.messageType}</TableCell>{" "}
+                              <TableCell>
+                                {moment(val.createdAt).format(
+                                  "DD/MM/YYYY HH:mm:ss"
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          )
+                      )}
                     </TableBody>
                   </Table>
                 </CardContent>
               </Card>
             </Grid>
           </Grid>
-        </Grid>
+  
       </Grid>
     </Page>
   );

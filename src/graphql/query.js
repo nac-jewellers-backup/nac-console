@@ -2384,16 +2384,30 @@ const APPOINTMENTS_TYPE = `
 `;
 
 
-const SHOW_APPOINMENT_DETAILS = `
-query MyQuery {
-  allAppointments(orderBy: CREATED_AT_DESC) {
+const SHOW_APPOINMENT_DETAILS = gql`
+query(
+  $limit: Int
+  $offset: Int
+  $appointment_filter: AppointmentFilter!
+  $order_by: [AppointmentsOrderBy!]
+){
+  allAppointments(
+    first: $limit
+    offset: $offset
+    filter: $appointment_filter
+    orderBy: $order_by
+    ) {
     nodes {
       id
       mobile
       mobileCountryCode
       customerName
       email
-      appointmentDateTimeSlotBySlotId {
+      isActive
+      type: appointmentTypeMasterByAppointmentTypeId {
+        name
+      }
+      appointmentDateTimeSlotBySlotId{
         startTime
         startDateTime
         endDateTime
@@ -2406,6 +2420,37 @@ query MyQuery {
         name
       }
       locationId
+    }
+    totalCount
+  }
+}
+
+`;
+
+const SHOW_ALL_PPOINMENT_DETAILS = gql`
+query(
+  $id: Int
+){
+  allAppointments(filter: {id: {equalTo: $id}}) {
+    nodes {
+      isVerified
+      isActive
+      email
+      customerName
+      status
+      locationId
+      storeLocationByLocationId {
+        address
+      }
+      specialRequests
+      productCategory
+      meetingLink
+      metalType
+      mobile
+      isOnline
+      isItRequired
+      id
+      areMoreMembersJoining
     }
   }
 }
@@ -2548,5 +2593,6 @@ export {
   SHOW_APPOINMENT_DETAILS,
   PRICE_RUN_LOGS,
   APPOINTMENTS_TYPE,
-  ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS
+  ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS,
+  SHOW_ALL_PPOINMENT_DETAILS
 };
