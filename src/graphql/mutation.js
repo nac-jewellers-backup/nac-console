@@ -151,7 +151,6 @@ let CREATE_APPOINTMENT_DATE = gql`
         isUnavailable
         nodeId
         updatedAt
-        userId
       }
     }
   }
