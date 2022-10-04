@@ -268,7 +268,7 @@ export const ManageShedule = (props) => {
       })
       .then((res) => {
         if (res) {
-          GetAllAppointment();
+          GetAllAppointment_TimeSlots(appointmentDateId,timeValue.type);
           onClose();
           snack.setSnack({
             open: true,
@@ -298,8 +298,7 @@ export const ManageShedule = (props) => {
       })
       .then((res) => {
         if (res) {
-          GetAllAppointment();
-          onClose();
+          GetAllAppointment_TimeSlots(appointmentDateId,timeValue.type);
           snack.setSnack({
             open: true,
             msg: "Deleted Successfully!",
