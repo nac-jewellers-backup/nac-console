@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
 import { useApolloClient, useQuery } from "react-apollo";
 import moment from "moment";
-import { SHOW_APPOINMENT_DETAILS } from "../../graphql/query";
+import { SHOW_APPOINMENT_DETAILS,MUTATE_STATUS } from "../../graphql/query";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -73,7 +73,7 @@ export const Manageappoinment = (props) => {
     ...filterData,
     id: { isNull: false },
   });
-
+  const [selectedStatus, setSelectedStatus] = React.useState("");
   const [orderBy, setOrderBy] = React.useState(["CREATED_AT_DESC"]);
 
   const handleChangePage = (event, newPage) => {
@@ -96,24 +96,7 @@ export const Manageappoinment = (props) => {
 
   let rowData = data?.allAppointments?.nodes;
 
-  // useEffect(() => {
-  //   const url = GRAPHQL_DEV_CLIENT;
-  //   const opts = {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({
-  //       query: SHOW_APPOINMENT_DETAILS,
-  //     }),
-  //   };
-  //   fetch(url, opts)
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       setData(res.data.allAppointments.nodes);
-  //     })
-  //     .catch(console.error);
-  // }, []);
-
-
+ 
 
   const handleDateChange = (date, value) => {
     if (value === "start") {
@@ -149,12 +132,24 @@ export const Manageappoinment = (props) => {
     );
   };
 
-  const handleStatusChange =(value)=>{
-    setAppointmentFilter({
-      ...appointmentFilter,
-      status: {equalTo: value}
-    })
-  }
+  const handleSelect = async (value,id) => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: MUTATE_STATUS,
+        variables: { id: id,status:value },
+      }),
+    };
+
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((fatchvalue) => {
+        window.location.reload();
+      })
+      .catch(console.error);
+  };
 
   function tConvert(time) {
     // Check correct time format and split into components
@@ -230,13 +225,41 @@ export const Manageappoinment = (props) => {
           </MuiPickersUtilsProvider>
         </Grid>
         <Grid container item xs={2}>
-        <Select fullWidth variant="outlined" onChange={(value)=>handleStatusChange(value)} className={classes.select}>
-                          <MenuItem value="In-Progress<">In-Progress</MenuItem>
+        <TextField 
+        fullWidth
+        variant="outlined"
+        select
+        label="Status"
+        value={selectedStatus}
+        onChange={(event) => {
+          setSelectedStatus(event.target.value);
+          setAppointmentFilter({
+            ...appointmentFilter,
+            status: {equalTo: event.target.value}
+          })
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="start" style={{ cursor: "pointer" }}>
+              {selectedStatus !== "" && (
+                <CancelOutlinedIcon
+                  onClick={(event) => {
+                    setSelectedStatus("");
+                    delete appointmentFilter.status;
+                    setAppointmentFilter({ ...appointmentFilter });
+                  }}
+                />
+              )}
+            </InputAdornment>
+          ),
+        }}
+        >
+                          <MenuItem value="In-Progress">In-Progress</MenuItem>
                           <MenuItem value="Approved">Approved</MenuItem>
                           <MenuItem value="Completed">Completed</MenuItem>
                           <MenuItem value="Submitted">Submitted</MenuItem>
                           <MenuItem value="Cancelled">Cancelled</MenuItem>
-          </Select>
+          </TextField>
         </Grid>
       </Grid>
         <TableContainer component={Paper}>
@@ -292,14 +315,8 @@ export const Manageappoinment = (props) => {
                             )
                           : ""}
                       </TableCell>
-                      <TableCell>
-                        <Select fullWidth>
-                          <MenuItem>In-Progress</MenuItem>
-                          <MenuItem>Approved</MenuItem>
-                          <MenuItem>Completed</MenuItem>
-                          <MenuItem>Submitted</MenuItem>
-                          <MenuItem>Cancelled</MenuItem>
-                        </Select>
+                      <TableCell align="left">
+                        {row?.status ?? ""}
                       </TableCell>
                       <TableCell align="left">
                         <ActionIcon id={row.id}/>

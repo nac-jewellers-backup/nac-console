@@ -112,7 +112,7 @@ export const AppointmentManagementDetails = withRouter((props) => {
                    <AppointmentInfo order={data}/>
             </Grid>
             <Grid item md={12} xl={12} xs={12} style={{ padding: "14px" }}>
-                 <AppointmentExtra/>
+                 <AppointmentExtra order={data} id={order}/>
             </Grid>
             <Grid item md={6} xl={6} xs={12} style={{ padding: "14px" }}>
               <Card>

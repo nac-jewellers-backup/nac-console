@@ -46,7 +46,7 @@ export const ManageShedule = (props) => {
   const [timeValue, setTimeValue] = useState({
     startTime: new Date(),
     endTime: new Date(),
-    type: 2
+    type: 1
   });
   const [filterDate, setFilterDate] = useState({
     startTime: new Date(),
@@ -61,7 +61,11 @@ export const ManageShedule = (props) => {
       backgroundColor: "white",
       padding: "12px",
       cursor: "pointer",
-      borderTop: "4px solid #3F51B5",
+      border: "1px solid black",
+      boxShadow: "0px 3px 6px #c1c1c1",
+      width:"140px",
+      height:"130px",
+      margin:5,
       "&:hover": {
         borderTop: "5px solid #3F51B5",
         boxShadow: "0px 3px 6px #c1c1c1",
@@ -118,10 +122,8 @@ export const ManageShedule = (props) => {
     setOpen(false);
     setType(null);
   };
-  const handlemodalshow = (id) => {
-    setAppointmentDateId(id);
-    setOpenAppointmentTime(true);
-    GetAllAppointment_TimeSlots(id)
+  const handlemodalshow = (id) => {  
+    GetAllAppointment_TimeSlots(id,1)
   };
 
   const handleTimeValue = (value, name) => {
@@ -152,13 +154,15 @@ export const ManageShedule = (props) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: ALL_APPOINTMENTS_TIMESLOT(id ? id : appointmentDateId,type ? type : timeValue.type).loc.source.body,
+        query: ALL_APPOINTMENTS_TIMESLOT(id ? id : appointmentDateId,type).loc.source.body,
       }),
     };
     await fetch(url, opts)
       .then((res) => res.json())
       .then((res) => {
          setAppointmentSlots(res.data.allAppointmentDateTimeSlots.nodes)
+         setOpenAppointmentTime(true);
+         setAppointmentDateId(id);
       })
       .catch(console.error);
   };
@@ -214,16 +218,17 @@ export const ManageShedule = (props) => {
       });
   };
 
-  const handleSubmitTime = async (id) => {
-    await client
+  const handleSubmitTime = async (id,date,endDate) => {
+    if(timeValue.type !== ''){
+      await client
       .mutate({
         mutation: CREATE_APPOINTMENT_TIME,
         variables: {
           id: uuid(),
           createdAt: new Date(),
           updatedAt: new Date(),
-          startDateTime: timeValue.startTime,
-          endDateTime: timeValue.endTime,
+          startDateTime: new Date(date),
+          endDateTime: new Date(endDate) ,
           appointmentTypeId: timeValue.type,
           appointmentDateId: id,
           startTime: moment(timeValue.startTime).format("HH:mm:ss"),
@@ -232,8 +237,7 @@ export const ManageShedule = (props) => {
       })
       .then((res) => {
         if (res) {
-          GetAllAppointment_TimeSlots();
-          onClose();
+          GetAllAppointment_TimeSlots(appointmentDateId,timeValue.type);
           snack.setSnack({
             open: true,
             msg: "Successfully Updated!",
@@ -251,6 +255,7 @@ export const ManageShedule = (props) => {
       });
 
     setShowTime(!showTime);
+    }   
   };
   
   const deleteTime = async (id) => {
@@ -341,9 +346,8 @@ export const ManageShedule = (props) => {
 
   const FilterTimeSlotes=(type)=>{
     GetAllAppointment_TimeSlots(appointmentDateId,type)
+    setTimeValue({...timeValue,type:type})
   }
-
-
 
   const classes = useStyles();
 
@@ -463,6 +467,7 @@ export const ManageShedule = (props) => {
                   <SheduleModalShow
                     open={openAppointmentTime}
                     date={val.startDateTime}
+                    endDate={val.endDateTime}
                     appointmentDateId={appointmentDateId}
                     timing={
                       appointmentSlots ? appointmentSlots : []

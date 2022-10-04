@@ -67,6 +67,15 @@ const SheduleModalShow = (props) => {
   const classes = useStyles();
   const {appointmentTypes} = props;
 
+  const getTime=(time)=>{
+    let x = time;
+    const [ hour,minute,second] = x.split(":");
+    let d = new Date();
+    d.setHours(hour);
+    d.setMinutes(minute);
+    d.setSeconds(second)
+    return moment(d).format('hh:mm a');
+  }
 
   return (
     <Dialog
@@ -78,15 +87,16 @@ const SheduleModalShow = (props) => {
       <DialogTitle id="Schedule-Modal">
       <div style={{display:"flex",justifyContent:"space-between",}}>
            <Typography className={classes.availableTitle}>
-            Available Timing - ({moment(props.startDateTime).format("MMM")} -
-          {moment(props.startDateTime).format("DD")} -
-          {moment(props.startDateTime).format("YYYY")})
+            Available Timing - ({moment(props.date).format("MMM")} -
+          {moment(props.date).format("DD")} -
+          {moment(props.date).format("YYYY")})
           </Typography>
           <Select
                 className={classes.notchedOutline}
                 variant="outlined"
                 margin="dense"
                 labelId="demo-controlled-open-select-label"
+                defaultValue={1}
                 id="demo-controlled-open-select"
                 placeholder="Select Type"
                 onChange={(e) => props.filterType(e.target.value)}
@@ -130,23 +140,16 @@ const SheduleModalShow = (props) => {
                       <IconButton  onClick={() => props.deleteTime(val.id)}>
                          <DeleteOutline style={{color:"red"}}/>
                       </IconButton>
-               {/* <Button  
-                 color="primary"
-                 variant="contained"      
-                 size="small"
-                 onClick={() => props.deleteTime(val.id)}
-               >
-                 Delete Time
-               </Button> */}
                   </div>
                 
 
                 <div style={{paddingTop:"20px"}}>
+                  
                  <Typography className={classes.day}>
-                  {`Start Time : ${moment(val?.startDateTime).format("hh:mm a")}`}
+                  {`Start Time : ${getTime(val?.startTime)}`}
                   </Typography>
                   <Typography className={classes.day}>
-                  {`End Time : ${moment(val?.endDateTime).format("hh:mm a")}`}
+                  {`End Time : ${getTime(val?.endTime)}`}
                   </Typography>
                   
                 </div>
@@ -189,7 +192,7 @@ const SheduleModalShow = (props) => {
                 minDate={new Date()}
               />
             </MuiPickersUtilsProvider>{" "}
-            <Typography className={classes.available}>Type :</Typography>
+            {/* <Typography className={classes.available}>Type :</Typography>
             <Select
                className={classes.inputField}
                 variant="outlined"
@@ -205,10 +208,10 @@ const SheduleModalShow = (props) => {
                 <MenuItem value={_.id}>{_.name}</MenuItem>
               )
              })}
-             </Select>
+             </Select> */}
 
                      <Button
-                      onClick={() => props.handleSubmitTime(props.appointmentDateId)}
+                      onClick={() => props.handleSubmitTime(props.appointmentDateId,props.date,props.endDate)}
                       color="primary"
                       variant="contained"
                      >

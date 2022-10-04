@@ -2267,6 +2267,16 @@ const DELETENEWARRIVALPRODUCT = `mutation MyMutation($ProductId: String!) {
 
 `;
 
+const MUTATE_STATUS = `
+mutation($id: Int!, $status: String) {
+  updateAppointmentById(
+    input: { id: $id, appointmentPatch: { status: $status } }
+  ) {
+    clientMutationId
+  }
+}
+`
+
 const GETORDERCOMMUNICATIONLOGS = `
 query MyQuery($id: UUID!) {
   orderById(id: $id) {
@@ -2404,6 +2414,7 @@ query(
       customerName
       email
       isActive
+      status
       type: appointmentTypeMasterByAppointmentTypeId {
         name
       }
@@ -2595,5 +2606,6 @@ export {
   PRICE_RUN_LOGS,
   APPOINTMENTS_TYPE,
   ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS,
-  SHOW_ALL_PPOINMENT_DETAILS
+  SHOW_ALL_PPOINMENT_DETAILS,
+  MUTATE_STATUS
 };
