@@ -20,7 +20,6 @@ import { GRAPHQL_DEV_CLIENT } from "../../config";
 import SheduleModal from "./shedulemodal";
 import SheduleModalShow from "./shedulemodalshow";
 import { ALL_APPOINTMENTS_DATE,APPOINTMENTS_TYPE,ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS } from "../../graphql/query";
-import { useQuery } from "react-apollo";
 import {
   CREATE_APPOINTMENT_DATE,
   CREATE_APPOINTMENT_TIME,
@@ -29,6 +28,8 @@ import {
 } from "../../graphql/mutation";
 import { TimePicker, MuiPickersUtilsProvider,DatePicker,KeyboardDatePicker} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import axios from "axios";
+import { API_URL } from "../../config";
 // import timeGridPlugin from "@fullcalendar/timegrid";
 
 
@@ -343,6 +344,31 @@ export const ManageShedule = (props) => {
     }  
   }
 
+  const handleUpload = (file) => {
+    var bodyFormData = new FormData();
+    bodyFormData.set("file", file);
+    console.log(file);
+    axios
+      .post(API_URL + "/appointment/upload_schedule", bodyFormData)
+      .then((res) => {
+        if (res) {
+          snack.setSnack({
+            open: true,
+            msg: res.data.message || "Successfully uploaded!",
+          });
+          GetAllAppointment();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        snack.setSnack({
+          open: true,
+          severity: "error",
+          msg: "Some error occured!",
+        });
+      });
+  };
+
   const FilterTimeSlotes=(type)=>{
     GetAllAppointment_TimeSlots(appointmentDateId,type)
     setTimeValue({...timeValue,type:type})
@@ -366,12 +392,12 @@ export const ManageShedule = (props) => {
           className={classes.input}
           id="icon-button-file"
           type="file"
-          // onChange={(event) => {
-          //   const files = event.target.files;
-          //   if (files) {
-          //     handleUpload(files[0]);
-          //   }
-          // }}
+          onChange={(event) => {
+            const files = event.target.files;
+            if (files) {
+              handleUpload(files[0]);
+            }
+          }}
         />
         <label htmlFor="icon-button-file">
           <IconButton
