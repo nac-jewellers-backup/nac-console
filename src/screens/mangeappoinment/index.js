@@ -31,7 +31,7 @@ const columns = [
   { id: "email", label: "Email" },
   { id: "mobile", label: "Mobile" },
   { id: "date", label: "Date" },
-  { id: "location", label: "Location" },
+  // { id: "location", label: "Location" },
   { id: "StartTime", label: "Start Time" },
   { id: "EndTime", label: "End Time" },
   { id: "Status", label: "Status" },
@@ -306,9 +306,9 @@ export const Manageappoinment = (props) => {
                             ).format("Do MMM YYYY")
                           : ""}
                       </TableCell>
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         {row?.storeLocationByLocationId?.name ?? ""}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="left">
                         {row?.appointmentDateTimeSlotBySlotId?.startTime
                           ? tConvert(
@@ -331,7 +331,7 @@ export const Manageappoinment = (props) => {
                       </TableCell>
                     </TableRow>
                   ))
-              : "No Data"}
+              : <p style={{position:'absolute',right:"50%"}}>{"No Data"}</p>}
           </TableBody>
           <TableFooter>
             <TableRow>

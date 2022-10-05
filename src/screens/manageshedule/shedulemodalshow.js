@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
   datecard: {
     backgroundColor: "white",
-    padding: "25px",
+    padding: "15px",
     cursor: "pointer",
     boxShadow: "0px 3px 6px #c1c1c1",
     position:"relative"
@@ -145,7 +145,7 @@ const SheduleModalShow = (props) => {
                 >
                   <div  style={{ position: 'absolute',
                     right: '5px',
-                    top: '5px',}}>
+                    top: '30px',}}>
                       <IconButton  onClick={() => props.deleteTime(val.id)}>
                          <DeleteOutline style={{color:"red"}}/>
                       </IconButton>

@@ -119,7 +119,6 @@ export const ManageShedule = (props) => {
  
   // LifeCycles
   useEffect(() => {
-    GetAllAppointment();
     GetAllAppointmentTypes();
     FilterDates(filterDate.startTime,filterDate.endTime)
   }, []);
@@ -258,8 +257,8 @@ export const ManageShedule = (props) => {
     await client.query({
       query : CHECK_TIMESLOT,
       variables:{
-        startTime: moment(timeValue.startTime).format("HH:mm:ss"),
-        endTime: moment(timeValue.endTime).format("HH:mm:ss"),
+        startTime: moment(timeValue.startTime).format("HH:mm"),
+        endTime: moment(timeValue.endTime).format("HH:mm"),
       },
       fetchPolicy:"no-cache"
     }).then((res)=>{
@@ -267,7 +266,7 @@ export const ManageShedule = (props) => {
         snack.setSnack({
           open: true,
           severity: 'warning',
-          msg: "Time already available!",
+          msg: "TimeSlot already available!",
         });   
       }
       else{
