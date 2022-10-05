@@ -49,18 +49,18 @@ const AppointmentInfo = (props) => {
       <CardHeader title="Appointment Info" />
       <Divider />
       <CardContent className={classes.content}>
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
            <Grid item xs={4} >
              <Typography>Name :</Typography>
-             <TextField variant="outlined" disabled value={order?.allAppointments?.nodes[0]?.customerName} size='small'></TextField>
+             <TextField variant="outlined" disabled value={order?.allAppointments?.nodes[0]?.customerName} size='small' style={{width:"80%"}}></TextField>
            </Grid>
            <Grid item xs={4}>
              <Typography>Email :</Typography>
-             <TextField variant="outlined" disabled value={order?.allAppointments?.nodes[0]?.email} size='small'></TextField>
+             <TextField variant="outlined" disabled value={order?.allAppointments?.nodes[0]?.email} size='small' style={{width:"80%"}}></TextField>
            </Grid>
            <Grid item xs={4}>
              <Typography>Mobile :</Typography>
-             <TextField variant="outlined" disabled value={order?.allAppointments?.nodes[0]?.mobile} size='small'></TextField>
+             <TextField variant="outlined" disabled value={order?.allAppointments?.nodes[0]?.mobile} size='small' style={{width:"80%"}}></TextField>
            </Grid>
            <Grid item xs={4}>
              <Typography>Type :</Typography>
@@ -96,7 +96,7 @@ const AppointmentInfo = (props) => {
            </Grid>
            <Grid item xs={4}>
              <Typography>Special Requests :</Typography>
-             <TextField variant="outlined" disabled value={order?.allAppointments?.nodes[0]?.specialRequests} size='small'></TextField>
+             <TextField variant="outlined" disabled value={order?.allAppointments?.nodes[0]?.specialRequests} size='small' style={{width:"80%"}}></TextField>
            </Grid>
            <Grid item xs={4} style={{display:"flex"}}>
              <Typography>Are more Members Joining :</Typography>
@@ -106,7 +106,7 @@ const AppointmentInfo = (props) => {
            </Grid>
            <Grid item xs={4}>
              <Typography>Location :</Typography>
-             <TextField variant="outlined" disabled value={order?.allAppointments?.nodes[0]?.storeLocationByLocationId?.address}  multiline></TextField>
+             <TextField variant="outlined" disabled value={order?.allAppointments?.nodes[0]?.storeLocationByLocationId?.address}  multiline style={{width:"80%"}}></TextField>
            </Grid>
         </Grid>
       </CardContent>    

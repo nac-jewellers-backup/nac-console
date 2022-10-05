@@ -10,7 +10,9 @@ import {
   TableCell,
   Grid,
   TableHead,
-  Typography
+  Typography,
+  Backdrop,
+  CircularProgress
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { useApolloClient, useQuery } from "react-apollo";
@@ -21,7 +23,8 @@ import Page from "../../components/Page/Page";
 import { withRouter } from "react-router-dom";
 import { NetworkContext } from "../../context/NetworkContext";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
-import { GETORDERCOMMUNICATIONLOGS,SHOW_ALL_PPOINMENT_DETAILS } from "../../graphql/query";
+import { NetworkStatus } from "apollo-client";
+import { GETORDERCOMMUNICATIONLOGS,SHOW_ALL_PPOINMENT_DETAILS,GETAPPLICATIONCOMMUNICATIONLOGS } from "../../graphql/query";
 
 
 
@@ -31,6 +34,10 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     marginTop: theme.spacing(3),
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
 }));
 
@@ -48,28 +55,28 @@ export const AppointmentManagementDetails = withRouter((props) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: GETORDERCOMMUNICATIONLOGS,
-
+        query: GETAPPLICATIONCOMMUNICATIONLOGS,
         variables: {
-          id: order_id,
+          id: parseInt(order_id),
         },
       }),
     };
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
-       
         setCommunicationLogs(
-          fatchvalue?.data?.orderById?.communicationLogsByOrderId?.nodes ?? []
+          fatchvalue?.data?.appointmentById?.appointmentCommunicationLogsByAppointmentId?.nodes ?? []
         );
       })
       .catch(console.error);
   };
 
-  const { loading, data, error, networkStatus } = useQuery(SHOW_ALL_PPOINMENT_DETAILS, {
+  const { loading, data, error, networkStatus,refetch } = useQuery(SHOW_ALL_PPOINMENT_DETAILS, {
     variables: {
       id: parseInt(order)
     },
+    notifyOnNetworkStatusChange:true,
+    fetchPolicy:"network-only"
   });
  
   useEffect(() => {
@@ -82,8 +89,17 @@ export const AppointmentManagementDetails = withRouter((props) => {
     return null;
   }
 
+  const handleStatusChange=()=>{
+    refetch()
+  }
+
+
   return (
     <Page className={classes.root} title="Appointment Management Details">
+
+       <Backdrop className={classes.backdrop} open={loading || NetworkStatus.refetch === networkStatus}>
+                  <CircularProgress color="inherit"/>
+                </Backdrop>
        <Grid
         alignItems="flex-end"
         container
@@ -112,7 +128,7 @@ export const AppointmentManagementDetails = withRouter((props) => {
                    <AppointmentInfo order={data}/>
             </Grid>
             <Grid item md={12} xl={12} xs={12} style={{ padding: "14px" }}>
-                 <AppointmentExtra order={data} id={order}/>
+                 <AppointmentExtra order={data} id={order} refetch={refetch}/>
             </Grid>
             <Grid item md={6} xl={6} xs={12} style={{ padding: "14px" }}>
               <Card>
@@ -131,11 +147,11 @@ export const AppointmentManagementDetails = withRouter((props) => {
                     <TableBody>
                       {communicationLogs.map(
                         (val, index) =>
-                          val.type === "email" && (
+                          val.communicationType === "email" && (
                             <TableRow key={index}>
                               <TableCell>{val.senderResponseId}</TableCell>
-                              <TableCell>{val.type}</TableCell>
-                              <TableCell>{val.messageType}</TableCell>{" "}
+                              <TableCell>{val.communicationType}</TableCell>
+                              <TableCell>{val.type}</TableCell>{" "}
                               <TableCell>
                                 {moment(val.createdAt).format(
                                   "DD/MM/YYYY HH:mm:ss"
@@ -166,11 +182,11 @@ export const AppointmentManagementDetails = withRouter((props) => {
                     <TableBody>
                       {communicationLogs.map(
                         (val, index) =>
-                          val.type === "sms" && (
+                          val.communicationType === "sms" && (
                             <TableRow key={index}>
                               <TableCell>{val.senderResponseId}</TableCell>
-                              <TableCell>{val.type}</TableCell>
-                              <TableCell>{val.messageType}</TableCell>{" "}
+                              <TableCell>{val.communicationType}</TableCell>
+                              <TableCell>{val.type}</TableCell>{" "}
                               <TableCell>
                                 {moment(val.createdAt).format(
                                   "DD/MM/YYYY HH:mm:ss"

@@ -2305,6 +2305,30 @@ query MyQuery($id: UUID!) {
 
 `;
 
+const GETAPPLICATIONCOMMUNICATIONLOGS = `
+query MyQuery($id: Int!) {
+  appointmentById(id: $id) {
+    storeLocationByLocationId {
+      id
+      address
+      name
+    }
+    appointmentCommunicationLogsByAppointmentId {
+      nodes {
+        id
+        appointmentId
+        communicationType
+        createdAt
+        senderResponseId
+        type
+        updatedAt
+      }
+    }
+  }
+}
+
+`;
+
 const ALL_APPOINTMENTS_DATE = `
   query MyQuery {
     allAppointmentDates(
@@ -2325,6 +2349,31 @@ const ALL_APPOINTMENTS_DATE = `
     }
   }
 `;
+
+const CHECK_APPOINTMENT = `
+query($startDate: Date!,$endDate: Date!){
+  allAppointmentDates(
+    condition: {
+      startDate: $startDate,
+      endDate: $endDate
+    }
+  ) {
+    nodes {
+      createdAt
+      createdBy
+      endDate
+      id
+      isActive
+      startDate
+      startDateTime
+      endDateTime
+      updatedAt
+      updatedBy
+    }
+  }
+}
+
+`
 
 const FILTER_APPOINTEMENTS = gql`
 query($startDate: Date!, $endDate: Date!) {
@@ -2371,6 +2420,21 @@ const ALL_APPOINTMENTS_TIMESLOT =(appointmentDateId,appointmentTypeId) => gql`
     }
   }
  }
+`
+
+const CHECK_TIMESLOT=gql`
+query($startTime: Time,$endTime: Time){
+  allAppointmentDateTimeSlots(condition: {endTime: $endTime, startTime: $startTime}) {
+    nodes {
+      id
+      appointmentDateId
+      appointmentTypeId
+      startTime
+      endTime
+      isActive
+    }
+  }
+}
 `
 
 
@@ -2607,5 +2671,8 @@ export {
   APPOINTMENTS_TYPE,
   ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS,
   SHOW_ALL_PPOINMENT_DETAILS,
-  MUTATE_STATUS
+  MUTATE_STATUS,
+  GETAPPLICATIONCOMMUNICATIONLOGS,
+  CHECK_APPOINTMENT,
+  CHECK_TIMESLOT
 };

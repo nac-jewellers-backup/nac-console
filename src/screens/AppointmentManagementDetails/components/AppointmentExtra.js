@@ -46,12 +46,14 @@ const AppointmentExtra= (props) => {
   const client = useApolloClient();
   const classes = useStyles();
   const [selected,setSelected] = React.useState('')
-  const [link,setLink] = React.useState('');
+  const [link,setLink] = React.useState('')
+  const [meetingLink,setmeetingLink] = React.useState('');
   const snack = React.useContext(AlertContext);
 
   React.useEffect(()=>{
    setSelected(order?.allAppointments?.nodes[0]?.status)
-  },[order?.allAppointments?.nodes[0]?.status])
+   setmeetingLink(order?.allAppointments?.nodes[0]?.meetingLink)
+  },[order])
 
   const handleSelect = async (value) => {
     setSelected(value)
@@ -68,7 +70,7 @@ const AppointmentExtra= (props) => {
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
-        window.location.reload();
+        props.refetch()
       })
       .catch(console.error);
   };
@@ -112,7 +114,7 @@ const AppointmentExtra= (props) => {
         <Grid container spacing={1}>
            <Grid item xs={6} >
              <Typography>MeetingLink :</Typography>   
-             <TextField fullWidth variant="outlined" onChange={(event)=>handleLinkchange(event.target.value)}/>       
+             <TextField fullWidth variant="outlined" onChange={(event)=>handleLinkchange(event.target.value)} value={meetingLink}/>       
            </Grid>
            <Grid item xs={6} >
              <Typography>Status :</Typography>
@@ -133,7 +135,7 @@ const AppointmentExtra= (props) => {
         </Grid>
       </CardContent>   
       <CardActions>
-        <Button variant="contained" color="primary" onClick={sendEmail}>Save Link</Button>
+        <Button variant="contained" color="primary" onClick={sendEmail}>Send Invite</Button>
       </CardActions> 
     </Card>
   );

@@ -7,7 +7,9 @@ import {
   Typography,
   Select,
   MenuItem,
-  Button
+  Button,
+  Backdrop,
+  CircularProgress
 } from "@material-ui/core";
 import moment from "moment";
 import uuid from "uuid/v1";
@@ -19,7 +21,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
 import SheduleModal from "./shedulemodal";
 import SheduleModalShow from "./shedulemodalshow";
-import { ALL_APPOINTMENTS_DATE,APPOINTMENTS_TYPE,ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS } from "../../graphql/query";
+import { ALL_APPOINTMENTS_DATE,APPOINTMENTS_TYPE,ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS ,CHECK_APPOINTMENT,CHECK_TIMESLOT} from "../../graphql/query";
 import {
   CREATE_APPOINTMENT_DATE,
   CREATE_APPOINTMENT_TIME,
@@ -38,6 +40,8 @@ export const ManageShedule = (props) => {
   const [open, setOpen] = React.useState(false);
   const [appointmentDateId, setAppointmentDateId] = React.useState(null);
   const [type, setType] = React.useState();
+  const [loading, setLoading] = React.useState(false);
+  const [modalloading, setModalLoading] = React.useState(false);
   const [date, setDate] = React.useState(new Date());
   const [appointmentDate, setAppointmentDate] = useState([]);
   const [appointmentTypes, setAppointmentTypes] = useState([]);
@@ -50,8 +54,8 @@ export const ManageShedule = (props) => {
     type: 1
   });
   const [filterDate, setFilterDate] = useState({
-    startTime: new Date(),
-    endTime: new Date(),
+    startTime: moment(new Date()).startOf('month').format("YYYY-MM-DD"),
+    endTime: moment(new Date()).endOf('month').format("YYYY-MM-DD"),
     date: new Date()
   });
 
@@ -74,6 +78,10 @@ export const ManageShedule = (props) => {
     },
     input: {
       display: "none",
+    },
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
     },
     calenderCard:{
       display:"flex",flexWrap:"wrap",marginLeft:"14px"
@@ -113,6 +121,7 @@ export const ManageShedule = (props) => {
   useEffect(() => {
     GetAllAppointment();
     GetAllAppointmentTypes();
+    FilterDates(filterDate.startTime,filterDate.endTime)
   }, []);
 
   // Handle Funcs
@@ -133,6 +142,7 @@ export const ManageShedule = (props) => {
 
   // Query Func
   const GetAllAppointment = async () => {
+    setLoading(true)
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
@@ -145,18 +155,47 @@ export const ManageShedule = (props) => {
       .then((res) => res.json())
       .then((res) => {
         setAppointmentDate(res.data.allAppointmentDates.nodes);
+        setLoading(false)
+      })
+      .catch(console.error);
+  };
+
+  const CheckAppointment = async () => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: CHECK_APPOINTMENT,
+        variables:{ startDate: moment(date).format('YYYY-MM-DD'), endDate: moment(date).format('YYYY-MM-DD')}
+      }),
+    };
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then(async(res) => {
+        if(res?.data?.allAppointmentDates?.nodes.length > 0){
+          snack.setSnack({
+            open: true,
+            severity: 'warning',
+            msg: "Date already available!",
+          });   
+        }
+        else{
+         await handleSave();
+        }
       })
       .catch(console.error);
   };
 
   const GetAllAppointment_TimeSlots = async (id,type) => {
+    setModalLoading(true)
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: ALL_APPOINTMENTS_TIMESLOT(id ? id : appointmentDateId,type).loc.source.body,
-      }),
+      })
     };
     await fetch(url, opts)
       .then((res) => res.json())
@@ -164,6 +203,7 @@ export const ManageShedule = (props) => {
          setAppointmentSlots(res.data.allAppointmentDateTimeSlots.nodes)
          setOpenAppointmentTime(true);
          setAppointmentDateId(id);
+         setModalLoading(false)
       })
       .catch(console.error);
   };
@@ -185,7 +225,8 @@ export const ManageShedule = (props) => {
       .catch(console.error);
   };
 
-  const handleSave = async () => {
+  const handleSave = async () => {  
+    setLoading(true)
     await client
       .mutate({
         mutation: CREATE_APPOINTMENT_DATE,
@@ -198,15 +239,9 @@ export const ManageShedule = (props) => {
           isActive: true,
         },
       })
-      .then((res) => {
-        if (res) {
-          GetAllAppointment();
+      .then((res) => {         
+          FilterDates(filterDate.startTime,filterDate.endTime);
           onClose();
-          snack.setSnack({
-            open: true,
-            msg: "Successfully Updated!",
-          });
-        }
       })
       .catch((err) => {
         console.log(err);
@@ -219,8 +254,34 @@ export const ManageShedule = (props) => {
       });
   };
 
+  const CheckTimeslot = async (id,date,endDate)=>{
+    await client.query({
+      query : CHECK_TIMESLOT,
+      variables:{
+        startTime: moment(timeValue.startTime).format("HH:mm:ss"),
+        endTime: moment(timeValue.endTime).format("HH:mm:ss"),
+      },
+      fetchPolicy:"no-cache"
+    }).then((res)=>{
+      if(res?.data?.allAppointmentDateTimeSlots?.nodes.length > 0){
+        snack.setSnack({
+          open: true,
+          severity: 'warning',
+          msg: "Time already available!",
+        });   
+      }
+      else{
+        handleSubmitTime(id,date,endDate);
+      }
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+
   const handleSubmitTime = async (id,date,endDate) => {
     if(timeValue.type !== ''){
+      setModalLoading(true)
       await client
       .mutate({
         mutation: CREATE_APPOINTMENT_TIME,
@@ -235,6 +296,7 @@ export const ManageShedule = (props) => {
           startTime: moment(timeValue.startTime).format("HH:mm:ss"),
           endTime: moment(timeValue.endTime).format("HH:mm:ss"),
         },
+        fetchPolicy:"no-cache"
       })
       .then((res) => {
         if (res) {
@@ -243,6 +305,7 @@ export const ManageShedule = (props) => {
             open: true,
             msg: "Successfully Updated!",
           });
+          setModalLoading(false)
         }
       })
       .catch((err) => {
@@ -260,6 +323,7 @@ export const ManageShedule = (props) => {
   };
   
   const deleteTime = async (id) => {
+    setModalLoading(true)
     await client
       .mutate({
         mutation: DELETE_APPOINTMENT_TIME,
@@ -271,6 +335,7 @@ export const ManageShedule = (props) => {
         if (res) {
           GetAllAppointment_TimeSlots(appointmentDateId,timeValue.type);
           onClose();
+          setModalLoading(false)
           snack.setSnack({
             open: true,
             msg: "Deleted Successfully!",
@@ -299,7 +364,7 @@ export const ManageShedule = (props) => {
       })
       .then((res) => {
         if (res) {
-          GetAllAppointment_TimeSlots(appointmentDateId,timeValue.type);
+          FilterDates(filterDate.startTime,filterDate.endTime)
           snack.setSnack({
             open: true,
             msg: "Deleted Successfully!",
@@ -317,31 +382,31 @@ export const ManageShedule = (props) => {
       });
   };
 
-
   const handleDateChange= async (date) =>{
     var start = moment(date).startOf('month').format("YYYY-MM-DD");
     var end = moment(date).endOf("month").format("YYYY-MM-DD");
-    setFilterDate({...filterDate,date:date,startTime:start,endTime:end})    
+    setFilterDate({...filterDate,date:date,startTime:start,endTime:end}) 
+    FilterDates(start,end)   
   }
 
-  const FilterDate= async () =>{
-  if(filterDate.startTime !== "" && filterDate.endTime !== ""){
-   await client
-      .query({
-        query: FILTER_APPOINTEMENTS,
-        variables:{
-          startDate:filterDate.startTime,
-          endDate:filterDate.endTime 
-        }
-      })
-      .then((res) => {
-        setAppointmentDate(res.data.allAppointmentDates.nodes);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-      
-    }  
+  const FilterDates = async (start,end) =>{
+    setLoading(true)
+    await client
+    .query({
+      query: FILTER_APPOINTEMENTS,
+      variables:{
+        startDate:start,
+        endDate:end 
+      },
+      fetchPolicy:'no-cache'
+    })
+    .then((res) => {
+      setAppointmentDate(res.data.allAppointmentDates.nodes);
+      setLoading(false)  
+    })
+    .catch((err) => {
+      console.error(err);
+    });
   }
 
   const handleUpload = (file) => {
@@ -356,7 +421,7 @@ export const ManageShedule = (props) => {
             open: true,
             msg: res.data.message || "Successfully uploaded!",
           });
-          GetAllAppointment();
+          FilterDates(filterDate.startTime,filterDate.endTime)
         }
       })
       .catch((err) => {
@@ -374,10 +439,14 @@ export const ManageShedule = (props) => {
     setTimeValue({...timeValue,type:type})
   }
 
+
   const classes = useStyles();
 
   return (
     <Grid container spacing={3}>
+      <Backdrop className={classes.backdrop} open={loading}>
+                  <CircularProgress color="inherit"/>
+                </Backdrop>
       <Grid
         container
         item
@@ -449,12 +518,6 @@ export const ManageShedule = (props) => {
           </MuiPickersUtilsProvider>
           
         </Grid>
-        <Grid item xs={1.5} style={{marginTop:"10px"}}>
-        <Button variant="contained" onClick={FilterDate}>Filter</Button>
-        </Grid>
-        <Grid item xs={1.5} style={{marginTop:"10px"}}>
-        <Button variant="contained" onClick={GetAllAppointment}>Reset</Button>
-        </Grid>
 
       </Grid>
       <div className={classes.calenderCard}>
@@ -501,11 +564,12 @@ export const ManageShedule = (props) => {
                     showTime={showTime}
                     timeValue={timeValue}
                     handleTimeValue={handleTimeValue}
-                    handleSubmitTime={handleSubmitTime}
+                    handleSubmitTime={CheckTimeslot}
                     filterType={FilterTimeSlotes}
                     deleteTime={deleteTime}
                     deleteDate={deleteDate}
                     appointmentTypes={appointmentTypes}
+                    loading={modalloading}
                   />
                 )}
               </Box>
@@ -520,7 +584,7 @@ export const ManageShedule = (props) => {
         type={type}
         date={date}
         editItem={editItem}
-        handleSave={handleSave}
+        handleSave={CheckAppointment}
         onClose={onClose}
       />
     </Grid>

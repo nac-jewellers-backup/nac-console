@@ -7,7 +7,7 @@ import TableFooter from "@material-ui/core/TableFooter";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import { TableContainer ,IconButton,Grid,TextField,InputAdornment, Select, MenuItem } from "@material-ui/core";
+import { TableContainer ,IconButton,Grid,TextField,InputAdornment, Select, MenuItem,LinearProgress,Backdrop,CircularProgress } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import SearchIcon from "@material-ui/icons/Search";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
@@ -23,6 +23,7 @@ import {
   KeyboardTimePicker
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import { NetworkStatus } from "apollo-client";
 
 const columns = [
   { id: "user_id", label: "Id" },
@@ -58,7 +59,11 @@ const useStyles2 = makeStyles((theme) => ({
     "& .MuiInputBase-root":{
       height:"85%"
     }
-  }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
 
 let filterData = {};
@@ -96,8 +101,6 @@ export const Manageappoinment = (props) => {
 
   let rowData = data?.allAppointments?.nodes;
 
- 
-
   const handleDateChange = (date, value) => {
     if (value === "start") {
       setStartDate(date);
@@ -109,8 +112,8 @@ export const Manageappoinment = (props) => {
           ...appointmentFilter,
           appointmentDateTimeSlotBySlotId: {
             appointmentDateByAppointmentDateId: {
-              startDate: { equalTo: moment(startDate).format("YYYY-MM-DD")},
-              endDate: { equalTo: moment(date).format("YYYY-MM-DD"),}
+              startDate: { greaterThanOrEqualTo: moment(startDate).format("YYYY-MM-DD"),lessThanOrEqualTo: moment(date).format("YYYY-MM-DD")},
+              endDate: { greaterThanOrEqualTo: moment(startDate).format("YYYY-MM-DD"), lessThanOrEqualTo: moment(date).format("YYYY-MM-DD")}
             }
           },   
         });
@@ -168,6 +171,11 @@ export const Manageappoinment = (props) => {
 
   return (
     <div className={classes.root}>
+      
+                <Backdrop className={classes.backdrop} open={loading}>
+                  <CircularProgress color="inherit"/>
+                </Backdrop>
+             
         <Typography className={classes.title}>Manage Appointment</Typography>
         <Grid container item xs={12} sm={12} spacing={2}>
         <Grid container item xs={3}>

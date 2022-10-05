@@ -10,7 +10,9 @@ import {
   Grid,
   Select,
   MenuItem,
-  IconButton
+  IconButton,
+  Backdrop,
+  CircularProgress
 } from "@material-ui/core";
 import React from "react";
 import moment from "moment";
@@ -60,7 +62,11 @@ const useStyles = makeStyles((theme) => ({
   },
   day:{
     fontSize:"14px"
-  }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
 
 const SheduleModalShow = (props) => {
@@ -84,6 +90,9 @@ const SheduleModalShow = (props) => {
       maxWidth="md"
       fullWidth={true}
     >
+       <Backdrop className={classes.backdrop} open={props.loading}>
+                  <CircularProgress color="inherit"/>
+                </Backdrop>
       <DialogTitle id="Schedule-Modal">
       <div style={{display:"flex",justifyContent:"space-between",}}>
            <Typography className={classes.availableTitle}>
@@ -241,12 +250,13 @@ const SheduleModalShow = (props) => {
           {" "}
           Close
         </Button>
-        {/* <Button
+        <Button
           variant="contained"
+          color="primary"
           onClick={() => props.deleteDate(props.appointmentDateId)}
         >
           Delete Date
-        </Button> */}
+        </Button>
       </DialogActions>
     </Dialog>
   );
