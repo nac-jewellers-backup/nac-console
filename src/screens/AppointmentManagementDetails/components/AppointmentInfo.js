@@ -54,34 +54,34 @@ const AppointmentInfo = (props) => {
         <Grid container spacing={2}>
            <Grid item xs={4} >
              <Typography>Name :</Typography>
-             <p>{order?.allAppointments?.nodes[0]?.customerName}</p>
+             <p>{order?.allAppointments?.nodes[0]?.customerName ?? 'no data'}</p>
            </Grid>
            <Grid item xs={4}>
              <Typography>Email :</Typography>
-             <p>{order?.allAppointments?.nodes[0]?.email}</p>
+             <p>{order?.allAppointments?.nodes[0]?.email ?? 'no data'}</p>
            </Grid>
            <Grid item xs={4}>
              <Typography>Mobile :</Typography>
-             <p>{order?.allAppointments?.nodes[0]?.mobile}</p>
+             <p>{order?.allAppointments?.nodes[0]?.mobile ?? 'no data'}</p>
            </Grid>
            <Grid item xs={4}>
              <Typography>Type :</Typography>
-             <p>{order?.allAppointments?.nodes[0]?.appointmentTypeId === 1 ? "Alive" : order?.allAppointments?.nodes[0]?.appointmentTypeId === 2 ? "Lotus" :order?.allAppointments?.nodes[0]?.appointmentTypeId === 3 ? "Piercing" : order?.allAppointments?.nodes[0]?.appointmentTypeId === 4 ? "Stones" : null}</p>
+             <p>{order?.allAppointments?.nodes[0]?.appointmentTypeId === 1 ? "Alive" : order?.allAppointments?.nodes[0]?.appointmentTypeId === 2 ? "Lotus" :order?.allAppointments?.nodes[0]?.appointmentTypeId === 3 ? "Piercing" : order?.allAppointments?.nodes[0]?.appointmentTypeId === 4 ? "Stones" : 'no data'}</p>
            </Grid>
            <Grid item xs={4}>
              <Typography>Category :</Typography>
              <div style={{marginTop:"5px"}}>
-             {order?.allAppointments?.nodes[0]?.productCategory?.map((val)=>(
+              {order?.allAppointments?.nodes[0]?.productCategory.length > 0  ? order?.allAppointments?.nodes[0]?.productCategory?.map((val)=>(
                 <Chip label={val} color="primary" style={{marginLeft:'3px',textTransform:'capitalize'}}/>
-              ))}
+              )) : 'no data'}
              </div>              
            </Grid>
            <Grid item xs={4}>
              <Typography>Metal Type :</Typography>
              <div style={{marginTop:"5px"}}>
-             {order?.allAppointments?.nodes[0]?.metalType?.map((val)=>(
+             {order?.allAppointments?.nodes[0]?.metalType.length > 0 ? order?.allAppointments?.nodes[0]?.metalType?.map((val)=>(
                 <Chip label={val} color="primary" style={{marginLeft:'3px',textTransform:'capitalize'}}/>
-              ))}
+              )) : 'no data'}
              </div>     
            </Grid>
            <Grid item xs={4} >
@@ -107,7 +107,7 @@ const AppointmentInfo = (props) => {
            </Grid>
            <Grid item xs={4}>
              <Typography>Special Requests :</Typography>
-             <p style={{width:"80%",overflowWrap:'break-word'}}>{order?.allAppointments?.nodes[0]?.specialRequests}</p>
+             <p style={{width:"80%",overflowWrap:'break-word'}}>{order?.allAppointments?.nodes[0]?.specialRequests ?? 'no data'}</p>
            </Grid>
         </Grid>
       </CardContent>    

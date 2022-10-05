@@ -149,9 +149,9 @@ export const AppointmentManagementDetails = withRouter((props) => {
                         (val, index) =>
                           val.communicationType === "email" && (
                             <TableRow key={index}>
-                              <TableCell>{val.senderResponseId}</TableCell>
-                              <TableCell>{val.communicationType}</TableCell>
-                              <TableCell>{val.type}</TableCell>{" "}
+                              <TableCell>{val.senderResponseId ?? "-"}</TableCell>
+                              <TableCell>{val.communicationType ?? "-"}</TableCell>
+                              <TableCell>{val.type ?? "-"}</TableCell>{" "}
                               <TableCell>
                                 {moment(val.createdAt).format(
                                   "DD/MM/YYYY HH:mm:ss"
@@ -184,9 +184,9 @@ export const AppointmentManagementDetails = withRouter((props) => {
                         (val, index) =>
                           val.communicationType === "sms" && (
                             <TableRow key={index}>
-                              <TableCell>{val.senderResponseId}</TableCell>
-                              <TableCell>{val.communicationType}</TableCell>
-                              <TableCell>{val.type}</TableCell>{" "}
+                              <TableCell>{val.senderResponseId ?? "-"}</TableCell>
+                              <TableCell>{val.communicationType ?? "-"}</TableCell>
+                              <TableCell>{val.type ?? "-"}</TableCell>{" "}
                               <TableCell>
                                 {moment(val.createdAt).format(
                                   "DD/MM/YYYY HH:mm:ss"
