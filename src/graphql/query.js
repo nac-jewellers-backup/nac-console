@@ -2526,7 +2526,9 @@ query(
       isItRequired
       id
       areMoreMembersJoining
-      appointmentTypeId
+      appointmentDateTimeSlotBySlotId {
+        appointmentTypeId
+      }
     }
   }
 }
