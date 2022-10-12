@@ -71,7 +71,7 @@ const AppointmentInfo = (props) => {
            <Grid item xs={4}>
              <Typography>Category :</Typography>
              <div style={{marginTop:"5px"}}>
-              {order?.allAppointments?.nodes[0]?.productCategory.length > 0  ? order?.allAppointments?.nodes[0]?.productCategory?.map((val)=>(
+              {order?.allAppointments?.nodes[0]?.productCategory?.length > 0  ? order?.allAppointments?.nodes[0]?.productCategory?.map((val)=>(
                 <Chip label={val} color="primary" style={{marginLeft:'3px',textTransform:'capitalize'}}/>
               )) : 'no data'}
              </div>              
@@ -79,7 +79,7 @@ const AppointmentInfo = (props) => {
            <Grid item xs={4}>
              <Typography>Metal Type :</Typography>
              <div style={{marginTop:"5px"}}>
-             {order?.allAppointments?.nodes[0]?.metalType.length > 0 ? order?.allAppointments?.nodes[0]?.metalType?.map((val)=>(
+             {order?.allAppointments?.nodes[0]?.metalType?.length > 0 ? order?.allAppointments?.nodes[0]?.metalType?.map((val)=>(
                 <Chip label={val} color="primary" style={{marginLeft:'3px',textTransform:'capitalize'}}/>
               )) : 'no data'}
              </div>     
