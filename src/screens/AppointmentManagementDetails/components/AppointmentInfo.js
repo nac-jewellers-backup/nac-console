@@ -66,7 +66,7 @@ const AppointmentInfo = (props) => {
            </Grid>
            <Grid item xs={4}>
              <Typography>Type :</Typography>
-             <p>{order?.allAppointments?.nodes[0]?.appointmentDateTimeSlotBySlotId?.appointmentTypeId === 1 ? "Alive" : order?.allAppointments?.nodes[0]?.appointmentTypeId === 2 ? "Lotus" :order?.allAppointments?.nodes[0]?.appointmentTypeId === 3 ? "Piercing" : order?.allAppointments?.nodes[0]?.appointmentTypeId === 4 ? "Stones" : 'no data'}</p>
+             <p>{order?.allAppointments?.nodes[0]?.appointmentDateTimeSlotBySlotId?.appointmentTypeId === 1 ? "Alive" : order?.allAppointments?.nodes[0]?.appointmentTypeId === 2 ? "Lotus" :order?.allAppointments?.nodes[0]?.appointmentTypeId === 3 ? "Piercing" : order?.allAppointments?.nodes[0]?.appointmentTypeId === 4 ? "Stones" : order?.allAppointments?.nodes[0]?.appointmentDateTimeSlotBySlotId?.appointmentTypeId === 5 ? "Enquiry" :"no Data" }</p>
            </Grid>
            <Grid item xs={4}>
              <Typography>Category :</Typography>

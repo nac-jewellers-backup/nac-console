@@ -114,7 +114,7 @@ const AppointmentExtra= (props) => {
         <Grid container spacing={1}>
            <Grid item xs={6} >
              <Typography>MeetingLink :</Typography>   
-             <TextField fullWidth variant="outlined" onChange={(event)=>handleLinkchange(event.target.value)} value={meetingLink}/>       
+             <TextField fullWidth variant="outlined" onChange={(event)=>handleLinkchange(event.target.value)} value={meetingLink} disabled={order?.allAppointments?.nodes[0]?.appointmentDateTimeSlotBySlotId?.appointmentTypeId === 5}/>       
            </Grid>
            <Grid item xs={6} >
              <Typography>Status :</Typography>
