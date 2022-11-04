@@ -78,6 +78,23 @@ const CmsHome = (props) => {
           </Card>
         </Link>
       </Grid>
+
+      {/* cms page */}
+      <Grid item xs={6} sm={4} lg={3}>
+        <Link underline="none" component={RouterLink} to="/cmsComponent">
+          <Card fullwidth className="card2">
+            <CardContent>
+              <Typography
+                style={{ textAlign: "center", marginTop: 8 }}
+                component="h6"
+                variant="h5"
+              >
+                Store
+              </Typography>
+            </CardContent>
+          </Card>
+        </Link>
+      </Grid>
     </Grid>
   );
 };

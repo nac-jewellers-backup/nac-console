@@ -97,6 +97,8 @@ const route = {
   abandoned_cart: "/cart-details",
   pricelogs: "/price-logs",
   imageUpload:"/imageUpload",
+
+  cmsComponents:"/cmsComponent"
 };
 
 export default route;
