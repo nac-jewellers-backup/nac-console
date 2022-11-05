@@ -34,6 +34,7 @@ const columns = [
   // { id: "location", label: "Location" },
   { id: "StartTime", label: "Start Time" },
   { id: "EndTime", label: "End Time" },
+  { id: "Type", label: "Type" },
   { id: "Status", label: "Status" },
   { id: "actions", label: "" },
 ];
@@ -322,6 +323,9 @@ export const Manageappoinment = (props) => {
                               row?.appointmentDateTimeSlotBySlotId?.endTime
                             )
                           : ""}
+                      </TableCell>
+                      <TableCell align="left">
+                        {row?.type?.name ?? ""}
                       </TableCell>
                       <TableCell align="left">
                         {row?.status ?? ""}
