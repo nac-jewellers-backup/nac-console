@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
 import { useApolloClient, useQuery } from "react-apollo";
 import moment from "moment";
-import { SHOW_APPOINMENT_DETAILS,MUTATE_STATUS } from "../../graphql/query";
+import { SHOW_APPOINMENT_DETAILS,MUTATE_STATUS,APPOINTMENTS_TYPE } from "../../graphql/query";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -79,7 +79,9 @@ export const Manageappoinment = (props) => {
     ...filterData,
     id: { isNull: false },
   });
+  const [appointmentTypes, setAppointmentTypes] = useState([]);
   const [selectedStatus, setSelectedStatus] = React.useState("");
+  const [selectedType, setSelectedType] = React.useState("");
   const [orderBy, setOrderBy] = React.useState(["CREATED_AT_DESC"]);
 
   const handleChangePage = (event, newPage) => {
@@ -99,6 +101,27 @@ export const Manageappoinment = (props) => {
       order_by: orderBy,
     },
   });
+
+  React.useEffect(()=>{
+    GetAllAppointmentTypes();
+  },[])
+
+  const GetAllAppointmentTypes = async () => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: APPOINTMENTS_TYPE,
+      }),
+    };
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((res) => {
+          setAppointmentTypes(res.data.allAppointmentTypeMasters.nodes)
+      })
+      .catch(console.error);
+  };
 
   let rowData = data?.allAppointments?.nodes;
 
@@ -268,6 +291,43 @@ export const Manageappoinment = (props) => {
                           <MenuItem value="Completed">Completed</MenuItem>
                           <MenuItem value="Submitted">Submitted</MenuItem>
                           <MenuItem value="Cancelled">Cancelled</MenuItem>
+          </TextField>
+        </Grid>
+        <Grid container item xs={2}>
+        <TextField 
+        fullWidth
+        variant="outlined"
+        select
+        label="Type"
+        value={selectedType}
+        onChange={(event) => {
+          setSelectedType(event.target.value);
+          setAppointmentFilter({
+            ...appointmentFilter,
+            appointmentTypeId: {equalTo: event.target.value}
+          })
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="start" style={{ cursor: "pointer" }}>
+              {selectedType !== "" && (
+                <CancelOutlinedIcon
+                  onClick={(event) => {
+                    setSelectedType("");
+                    delete appointmentFilter.appointmentTypeId;
+                    setAppointmentFilter({ ...appointmentFilter });
+                  }}
+                />
+              )}
+            </InputAdornment>
+          ),
+        }}
+        >
+                            {appointmentTypes?.map((_)=>{
+          return(
+            <MenuItem value={_.id}>{_.name}</MenuItem>
+          )
+         })}
           </TextField>
         </Grid>
       </Grid>
