@@ -1,9 +1,23 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Paper, TextField, Typography } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import React from "react";
 import { TableComp } from "../../../components";
 import { useStyles } from "./styles";
 import TableHeaderComp from "./TableHeadComp";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { UploadImage } from "../../../utils/imageUpload";
+import { AlertContext } from "../../../context";
+import { useContext } from "react";
+import { useEffect } from "react";
 
 const header = [
   "Position",
@@ -22,12 +36,14 @@ const tableData = [
 
 const BannerCMS = (props) => {
   const classes = useStyles();
+  const alert = useContext(AlertContext);
   const [open, setOpen] = React.useState(false);
   const [state, setState] = React.useState({
     position: "",
-    link: "",
+    urlParam: "",
     mobile: "",
     web: "",
+    url: null
   });
   const [disableButton, setDisable] = React.useState({
     web: false,
@@ -49,23 +65,69 @@ const BannerCMS = (props) => {
     });
   };
 
-  
+  const onsubmitvalue = async () => {
+    let getData = [];
+    getData = {
+      component: props?.data?.component,
+      props: {
+        banners: [...props?.data?.props?.banners, state]
+      }
+    }
+    setOpen(false)
+    props.handleSubmit(getData,"BannerComponent","banners")
+  };
 
-  const onsubmitvalue = async () => {};
-  const handleChange = (file, name) => {};
+  const handleChange = (file, name) => {
+    UploadImage(file)
+      .then((res) => {
+        if (res?.data?.web) {
+          setState({
+            ...state,
+            [name]: res?.data?.web,
+          });
+          setDisable({ ...disableButton, [name]: true });
+
+          alert.setSnack({
+            open: true,
+            severity: "success",
+            msg: "Image Uploaded Successfully",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleDelete = (e, rowData, rowIndex) => {
+    let getData = [];
+    const banners = props?.data?.props?.banners
+    banners.splice(rowIndex,1);
+    
+    getData = {
+      component: props?.data?.component,
+      props: {
+        banners: banners
+      }
+    }
+    console.log("spliceBanners",getData)
+    props.handleSubmit(getData,"BannerComponent","banners")
+  }
   return (
     <Paper className={classes.root}>
-      <TableHeaderComp name={"Banner Component"} handleAddNew={handleClickOpen} />
+      <TableHeaderComp
+        name={"Banner Component"}
+        handleAddNew={handleClickOpen}
+      />
       <TableComp
         header={header}
         tableData={tableData}
-        data={props?.data?.banners}
+        data={props?.data?.props?.banners}
+        handleDelete={handleDelete}
       />
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle id="form-dialog-title">
-          Add New Banner Item 
-        </DialogTitle>
+        <DialogTitle id="form-dialog-title">Add New Banner Item</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -80,13 +142,13 @@ const BannerCMS = (props) => {
           />
           <TextField
             margin="dense"
-            id="link"
+            id="urlParam"
             label="Banner's Redirect Link (Routes Only)"
             variant="outlined"
             fullWidth
             onChange={onChangeData}
-            value={state.link}
-            name="link"
+            value={state.urlParam}
+            name="urlParam"
           />
           <Grid
             container
@@ -137,7 +199,7 @@ const BannerCMS = (props) => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onsubmitvalue}>Submit</Button>
+          <Button onClick={onsubmitvalue}>Add</Button>
           <Button onClick={handleClose}>Cancel</Button>
         </DialogActions>
       </Dialog>

@@ -42,15 +42,6 @@ const getComponent = (data) => {
         />
       );
     }
-    case "MBL_IMAGE": {
-      return (
-        <img
-          alt="nacimages"
-          src={data.rowData}
-          style={{ width: "150px", height: "auto" }}
-        />
-      );
-    }
     case "WEB_IMAGE": {
       return (
         <img
@@ -69,10 +60,13 @@ const getComponent = (data) => {
             gap: 6,
           }}
         >
-          <EditIcon />
-          <DeleteIcon style={{color:"red"}} />
+          <EditIcon onClick={data?.handleEdit} />
+          <DeleteIcon onClick={data?.handleDelete} style={{color:"red",cursor:"pointer"}} />
         </div>
       );
+    }
+    case "EDIT": {
+      return (<EditIcon onClick={data?.handleEdit} />)
     }
   }
 };
@@ -82,6 +76,8 @@ const TableBodyRow = ({
   rowData = {},
   rowIndex = null,
   handleViewStores = () => null,
+  handleDelete = () => null,
+  handleEdit = () => null
 }) => {
   return (
     <TableRow>
@@ -93,6 +89,12 @@ const TableBodyRow = ({
             rowIndex: rowIndex,
             handleViewStores: (e) => {
               handleViewStores(e, rowData, rowIndex);
+            },
+            handleDelete: (e) => {
+              handleDelete(e, rowData, rowIndex);
+            },
+            handleEdit: (e) => {
+              handleEdit(e, rowData, rowIndex);
             },
             customWidth: val?.width,
           })}

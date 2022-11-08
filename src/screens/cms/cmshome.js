@@ -5,8 +5,19 @@ import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const CmsHome = (props) => {
+  let history = useHistory();
+  const handleClick = (name) => {
+    debugger;
+    history.push({
+      pathname:'/cmsComponent',
+      state:{
+        name:name
+      }
+    })
+  }
   return (
     <Grid container spacing={3}>
       {/* <AddContact contactlist={[]}/> */}
@@ -81,8 +92,9 @@ const CmsHome = (props) => {
 
       {/* cms page */}
       <Grid item xs={6} sm={4} lg={3}>
-        <Link underline="none" component={RouterLink} to="/cmsComponent">
-          <Card fullwidth className="card2">
+        {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
+        <div onClick={() => handleClick("store")}>
+          <Card fullwidth className="card2" >
             <CardContent>
               <Typography
                 style={{ textAlign: "center", marginTop: 8 }}
@@ -93,7 +105,25 @@ const CmsHome = (props) => {
               </Typography>
             </CardContent>
           </Card>
-        </Link>
+          </div>
+        {/* </Link> */}
+      </Grid>
+      <Grid item xs={6} sm={4} lg={3}>
+        {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
+        <div onClick={() => handleClick("akshayaTritiya")}>
+          <Card fullwidth className="card2" >
+            <CardContent>
+              <Typography
+                style={{ textAlign: "center", marginTop: 8 }}
+                component="h6"
+                variant="h5"
+              >
+                Akshaya Tritiya
+              </Typography>
+            </CardContent>
+          </Card>
+          </div>
+        {/* </Link> */}
       </Grid>
     </Grid>
   );
