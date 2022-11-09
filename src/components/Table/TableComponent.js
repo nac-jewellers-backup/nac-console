@@ -21,7 +21,6 @@ const TableComp = (
     handleEdit = () => null
   },
 ) => {
-  console.log("header", header);
   const classes = useStyles();
   return (
     <div className={classes.tableWrapper}>

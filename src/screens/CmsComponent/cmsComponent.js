@@ -7,7 +7,6 @@ import { CDNPAGES, CMS_UPDATE } from "../../graphql/cmsQuery";
 import StoreLocatorCMS from "./components/storeLocatorCMS";
 import { useLocation } from "react-router-dom";
 import { AlertContext } from "../../context";
-import { useApolloClient, useQuery } from "react-apollo";
 import TitleDescriptionCMS from "./components/titleDescriptionCMS";
 import QueryFormCMS from "./components/queryFormCMS";
 import SlidingImageCardCMS from "./components/slidingImageCardCMS";
@@ -15,7 +14,6 @@ import SlidingImageCardCMS from "./components/slidingImageCardCMS";
 const CmsComponent = (props) => {
   const classes = useStyles();
   const snack = React.useContext(AlertContext);
-  const client = useApolloClient();
   const location = useLocation();
   const [state, setState] = useState([]);
   console.log("state", state);
@@ -64,9 +62,10 @@ const CmsComponent = (props) => {
           open: true,
           msg: "Successfully Updated!",
         });
+        const newStateSet = JSON.parse(JSON.stringify(newState))
+        setState(newStateSet)
         fetchCall();
       });
-      setState(newState)
   };
 
   const getTheTable = (val) => {

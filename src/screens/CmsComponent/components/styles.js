@@ -8,6 +8,9 @@ export const useStyles = makeStyles((theme) => ({
   dialogPaper: {
     minWidth: "1200px",
   },
+  dialogPaperMid: {
+    minWidth: "800px",
+  },
   dialogHeader: {
     display: "flex",
     justifyContent: "space-between",

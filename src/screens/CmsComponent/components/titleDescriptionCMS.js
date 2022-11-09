@@ -24,15 +24,13 @@ const TitleDescriptionCMS = (props) => {
   const alert = useContext(AlertContext);
   const [open, setOpen] = React.useState(false);
   const [state, setState] = React.useState({
-    position: "",
-    urlParam: "",
-    mobile: "",
-    web: "",
-    url: null,
+    title: "",
+    description:""
   });
   const [titleDesc,setTitleDesc] = React.useState([])
   React.useEffect(() => {
-    setTitleDesc([props?.data?.props])
+    setTitleDesc([props?.data?.props]);
+    setState(props?.data?.props)
   },[])
 
   const handleClickOpen = () => {
@@ -53,16 +51,16 @@ const TitleDescriptionCMS = (props) => {
     let getData = [];
     getData = {
       component: props?.data?.component,
-      props: {
-        banners: [...props?.data?.props?.banners, state]
-      }
+      props: state
     }
+    setTitleDesc([getData.props])
     setOpen(false)
-    props.handleSubmit(getData,"BannerComponent","banners")
+    props.handleSubmit(getData,"TitleAndData","")
   };
 
   const handleEdit = (e, rowData, rowIndex) => {
-    debugger;
+    handleClickOpen();
+
   }
   return (
     <Paper className={classes.root}>
@@ -78,29 +76,31 @@ const TitleDescriptionCMS = (props) => {
         handleEdit={handleEdit}
       />
 
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog classes={{ paper: classes.dialogPaperMid }} open={open} onClose={handleClose}>
         <DialogTitle id="form-dialog-title">Add New Title and Description Item</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            id="position"
-            label="Position"
+            id="title"
+            label="Title"
             variant="outlined"
             fullWidth
             onChange={onChangeData}
-            value={state.position}
-            name="position"
+            value={state.title}
+            name="title"
           />
           <TextField
             margin="dense"
-            id="urlParam"
-            label="Banner's Redirect Link (Routes Only)"
+            id="description"
+            label="Description"
             variant="outlined"
             fullWidth
+            multiline={true}
+            rows={10}
             onChange={onChangeData}
-            value={state.urlParam}
-            name="urlParam"
+            value={state.description}
+            name="description"
           />
         </DialogContent>
         <DialogActions>

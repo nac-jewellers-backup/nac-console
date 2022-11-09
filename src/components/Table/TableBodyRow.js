@@ -60,7 +60,7 @@ const getComponent = (data) => {
             gap: 6,
           }}
         >
-          <EditIcon onClick={data?.handleEdit} />
+          <EditIcon onClick={data?.handleEdit} style={{cursor:"pointer"}} />
           <DeleteIcon onClick={data?.handleDelete} style={{color:"red",cursor:"pointer"}} />
         </div>
       );

@@ -7,7 +7,6 @@ import {
   Grid,
   Paper,
   TextField,
-  Typography,
 } from "@material-ui/core";
 import React from "react";
 import { TableComp } from "../../../components";
@@ -27,7 +26,7 @@ const header = [
   "Action",
 ];
 const tableData = [
-  { type: "INCREMENT", name: "position" },
+  { type: "TEXT", name: "position" },
   { type: "TEXT", name: "url" },
   { type: "MBL_IMAGE", name: "mobile" },
   { type: "WEB_IMAGE", name: "web" },
@@ -38,13 +37,19 @@ const BannerCMS = (props) => {
   const classes = useStyles();
   const alert = useContext(AlertContext);
   const [open, setOpen] = React.useState(false);
-  const [state, setState] = React.useState({
+  const initialState = {
     position: "",
-    urlParam: "",
+    urlParam: null,
     mobile: "",
     web: "",
-    url: null
-  });
+    url: "",
+  };
+  const initialEdit = {
+    isEdit: false,
+    editIndex: null,
+  };
+  const [state, setState] = React.useState(initialState);
+  const [editData, setEditData] = React.useState(initialEdit);
   const [disableButton, setDisable] = React.useState({
     web: false,
     mobile: false,
@@ -56,6 +61,8 @@ const BannerCMS = (props) => {
 
   const handleClose = () => {
     setOpen(false);
+    setState(initialState);
+    setEditData(initialEdit);
   };
 
   const onChangeData = (event) => {
@@ -66,15 +73,39 @@ const BannerCMS = (props) => {
   };
 
   const onsubmitvalue = async () => {
-    let getData = [];
-    getData = {
-      component: props?.data?.component,
-      props: {
-        banners: [...props?.data?.props?.banners, state]
+    if (state.position && state.url && state.mobile && state.web) {
+      if (editData.isEdit) {
+        const editBanner = props?.data?.props?.banners;
+        editBanner.splice(editData.editIndex, 1, state);
+        let getData = [];
+        getData = {
+          component: props?.data?.component,
+          props: {
+            banners: editBanner,
+          },
+        };
+        setOpen(false);
+        props.handleSubmit(getData, "BannerComponent", "banners");
+      } else {
+        let getData = [];
+        getData = {
+          component: props?.data?.component,
+          props: {
+            banners: [...props?.data?.props?.banners, state],
+          },
+        };
+        setOpen(false);
+        props.handleSubmit(getData, "BannerComponent", "banners");
       }
+      setEditData(initialEdit);
+      setState(initialState);
+    }else{
+      alert.setSnack({
+        open: true,
+        severity: "error",
+        msg: "Please fill all the fields",
+      });
     }
-    setOpen(false)
-    props.handleSubmit(getData,"BannerComponent","banners")
   };
 
   const handleChange = (file, name) => {
@@ -85,7 +116,7 @@ const BannerCMS = (props) => {
             ...state,
             [name]: res?.data?.web,
           });
-          setDisable({ ...disableButton, [name]: true });
+          // setDisable({ ...disableButton, [name]: true });
 
           alert.setSnack({
             open: true,
@@ -101,18 +132,23 @@ const BannerCMS = (props) => {
 
   const handleDelete = (e, rowData, rowIndex) => {
     let getData = [];
-    const banners = props?.data?.props?.banners
-    banners.splice(rowIndex,1);
-    
+    const banners = props?.data?.props?.banners;
+    banners.splice(rowIndex, 1);
     getData = {
       component: props?.data?.component,
       props: {
-        banners: banners
-      }
-    }
-    console.log("spliceBanners",getData)
-    props.handleSubmit(getData,"BannerComponent","banners")
-  }
+        banners: banners,
+      },
+    };
+    props.handleSubmit(getData, "BannerComponent", "banners");
+  };
+
+  const handleEdit = (e, rowData, rowIndex) => {
+    setOpen(true);
+    setEditData({ ...editData, isEdit: true, editIndex: rowIndex });
+    setState(rowData);
+  };
+
   return (
     <Paper className={classes.root}>
       <TableHeaderComp
@@ -124,6 +160,7 @@ const BannerCMS = (props) => {
         tableData={tableData}
         data={props?.data?.props?.banners}
         handleDelete={handleDelete}
+        handleEdit={handleEdit}
       />
 
       <Dialog open={open} onClose={handleClose}>
@@ -139,16 +176,18 @@ const BannerCMS = (props) => {
             onChange={onChangeData}
             value={state.position}
             name="position"
+            required
           />
           <TextField
             margin="dense"
-            id="urlParam"
+            id="url"
             label="Banner's Redirect Link (Routes Only)"
             variant="outlined"
             fullWidth
             onChange={onChangeData}
-            value={state.urlParam}
-            name="urlParam"
+            value={state.url}
+            name="url"
+            required
           />
           <Grid
             container

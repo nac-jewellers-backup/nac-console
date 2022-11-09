@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   Paper,
   TextField,
 } from "@material-ui/core";
@@ -13,6 +14,8 @@ import { TableComp } from "../../../components";
 import { AlertContext } from "../../../context";
 import { useStyles } from "./styles";
 import TableHeaderComp from "./TableHeadComp";
+import { UploadImage } from "../../../utils/imageUpload";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 const header = ["S.No", "Image", "Action"];
 const tableData = [
@@ -28,10 +31,14 @@ const QueryFormCMS = (props) => {
   const [state, setState] = React.useState({
     image: "",
   });
+  console.log("state",state);
   const [image, setImage] = React.useState([]);
+
   React.useEffect(() => {
     setImage([props?.data?.props]);
+    setState(props?.data?.props);
   }, []);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -39,26 +46,47 @@ const QueryFormCMS = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
+
   const onChangeData = (event) => {
     setState({
       ...state,
       [event.target.name]: event.target.value,
     });
   };
+
+  const handleChange = (file, name) => {
+    UploadImage(file)
+      .then((res) => {
+        if (res?.data?.web) {
+          setState({
+            ...state,
+            [name]: res?.data?.web,
+          });
+          alert.setSnack({
+            open: true,
+            severity: "success",
+            msg: "Image Uploaded Successfully",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const onsubmitvalue = async () => {
     let getData = [];
     getData = {
       component: props?.data?.component,
-      props: {
-        banners: [...props?.data?.props?.banners, state],
-      },
+      props: state
     };
+    setImage([getData.props])
     setOpen(false);
-    props.handleSubmit(getData, "BannerComponent", "banners");
+    props.handleSubmit(getData, "QueryForm", "");
   };
 
   const handleEdit = (e, rowData, rowIndex) => {
-    debugger;
+    handleClickOpen();
   };
   return (
     <Paper className={classes.root}>
@@ -75,31 +103,28 @@ const QueryFormCMS = (props) => {
       />
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle id="form-dialog-title">
-          Edit Query Form
-        </DialogTitle>
+        <DialogTitle id="form-dialog-title">Edit Query Form</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="position"
-            label="Position"
-            variant="outlined"
-            fullWidth
-            onChange={onChangeData}
-            value={state.position}
-            name="position"
-          />
-          <TextField
-            margin="dense"
-            id="urlParam"
-            label="Banner's Redirect Link (Routes Only)"
-            variant="outlined"
-            fullWidth
-            onChange={onChangeData}
-            value={state.urlParam}
-            name="urlParam"
-          />
+          <Grid>
+            <input
+              accept="image/*"
+              style={{ display: "none" }}
+              id="button-file"
+              multiple
+              type="file"
+              onChange={(e) => handleChange(e.target.files[0], "image")}
+            />
+            <label htmlFor="button-file">
+              <Button
+                variant="outlined"
+                component="span"
+                startIcon={<CloudUploadIcon />}
+                // disabled={disableButton.mobile}
+              >
+                Store Image
+              </Button>
+            </label>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={onsubmitvalue}>Add</Button>

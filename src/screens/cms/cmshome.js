@@ -10,7 +10,6 @@ import { useHistory } from "react-router-dom";
 const CmsHome = (props) => {
   let history = useHistory();
   const handleClick = (name) => {
-    debugger;
     history.push({
       pathname:'/cmsComponent',
       state:{
@@ -21,7 +20,7 @@ const CmsHome = (props) => {
   return (
     <Grid container spacing={3}>
       {/* <AddContact contactlist={[]}/> */}
-      <Grid container item xs={12} sm={12} spacing={2}>
+      {/* <Grid container item xs={12} sm={12} spacing={2}>
         <Typography component="h5" variant="h5">
           CMS Complete List
         </Typography>
@@ -88,12 +87,12 @@ const CmsHome = (props) => {
             </CardContent>
           </Card>
         </Link>
-      </Grid>
+      </Grid> */}
 
       {/* cms page */}
       <Grid item xs={6} sm={4} lg={3}>
         {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
-        <div onClick={() => handleClick("store")}>
+        <div onClick={() => handleClick("store")} style={{cursor:"pointer"}}>
           <Card fullwidth className="card2" >
             <CardContent>
               <Typography
@@ -110,7 +109,7 @@ const CmsHome = (props) => {
       </Grid>
       <Grid item xs={6} sm={4} lg={3}>
         {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
-        <div onClick={() => handleClick("akshayaTritiya")}>
+        <div onClick={() => handleClick("akshayaTritiya")} style={{cursor:"pointer"}}>
           <Card fullwidth className="card2" >
             <CardContent>
               <Typography
