@@ -99,7 +99,7 @@ const BannerCMS = (props) => {
       }
       setEditData(initialEdit);
       setState(initialState);
-    }else{
+    } else {
       alert.setSnack({
         open: true,
         severity: "error",
@@ -236,6 +236,32 @@ const BannerCMS = (props) => {
               </label>
             </Grid>
           </Grid>
+          {(state.mobile.length > 0 || state.web.length > 0) && (
+            <Grid
+              container
+              justifyContent="flex-start"
+              style={{ padding: "16px 0px" }}
+            >
+              {state.mobile.length > 0 && (
+                <Grid style={{textAlign:"center"}} xs={6} md={6} item>
+                  <img
+                    alt="nacimages"
+                    src={state.mobile}
+                    style={{ width: "100px", height: "auto" }}
+                  />
+                </Grid>
+              )}
+              {state.web.length > 0 && (
+                <Grid style={{textAlign:"center"}} xs={6} md={6} item>
+                  <img
+                    alt="nacimages"
+                    src={state.web}
+                    style={{ width: "100px", height: "auto" }}
+                  />
+                </Grid>
+              )}
+            </Grid>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={onsubmitvalue}>Add</Button>

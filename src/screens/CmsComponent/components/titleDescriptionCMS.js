@@ -47,7 +47,15 @@ const TitleDescriptionCMS = (props) => {
     });
   };
 
+  const validation = () => {
+    if(state.description.length < 1 || state.title.length < 1){
+      return false
+    }else{
+      return true
+    }
+  }
   const onsubmitvalue = async () => {
+    if(validation()){
     let getData = [];
     getData = {
       component: props?.data?.component,
@@ -56,6 +64,13 @@ const TitleDescriptionCMS = (props) => {
     setTitleDesc([getData.props])
     setOpen(false)
     props.handleSubmit(getData,"TitleAndData","")
+  }else{
+    alert.setSnack({
+      open: true,
+      severity: "error",
+      msg: "Please fill all the fields in the form ",
+    });
+  }
   };
 
   const handleEdit = (e, rowData, rowIndex) => {
