@@ -39,7 +39,7 @@ const tableData = [
 const initialState = {
   price: null,
   offerPrice: null,
-  title:null,
+  title: null,
   save: 0,
   image: {
     placeImage: {
@@ -288,6 +288,7 @@ const SlidingImageCardCMS = (props) => {
             container
             justifyContent="flex-start"
             style={{ padding: "16px 0px" }}
+            spacing={3}
           >
             <Grid item>
               <input
@@ -309,6 +310,13 @@ const SlidingImageCardCMS = (props) => {
                 </Button>
               </label>
             </Grid>
+            {state.image.placeImage.img && <Grid item>
+              <img
+                alt="nacimages"
+                src={state.image.placeImage.img}
+                style={{ width: "100px", height: "auto" }}
+              />
+            </Grid>}
           </Grid>
           <Grid container spacing={2}>
             <Grid item xs={6} md={3}>
