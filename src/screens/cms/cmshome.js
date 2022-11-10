@@ -5,12 +5,22 @@ import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const CmsHome = (props) => {
+  let history = useHistory();
+  const handleClick = (name) => {
+    history.push({
+      pathname:'/cmsComponent',
+      state:{
+        name:name
+      }
+    })
+  }
   return (
     <Grid container spacing={3}>
       {/* <AddContact contactlist={[]}/> */}
-      <Grid container item xs={12} sm={12} spacing={2}>
+      {/* <Grid container item xs={12} sm={12} spacing={2}>
         <Typography component="h5" variant="h5">
           CMS Complete List
         </Typography>
@@ -77,6 +87,42 @@ const CmsHome = (props) => {
             </CardContent>
           </Card>
         </Link>
+      </Grid> */}
+
+      {/* cms page */}
+      <Grid item xs={6} sm={4} lg={3}>
+        {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
+        <div onClick={() => handleClick("store")} style={{cursor:"pointer"}}>
+          <Card fullwidth className="card2" >
+            <CardContent>
+              <Typography
+                style={{ textAlign: "center", marginTop: 8 }}
+                component="h6"
+                variant="h5"
+              >
+                Store
+              </Typography>
+            </CardContent>
+          </Card>
+          </div>
+        {/* </Link> */}
+      </Grid>
+      <Grid item xs={6} sm={4} lg={3}>
+        {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
+        <div onClick={() => handleClick("akshayaTritiya")} style={{cursor:"pointer"}}>
+          <Card fullwidth className="card2" >
+            <CardContent>
+              <Typography
+                style={{ textAlign: "center", marginTop: 8 }}
+                component="h6"
+                variant="h5"
+              >
+                Akshaya Tritiya
+              </Typography>
+            </CardContent>
+          </Card>
+          </div>
+        {/* </Link> */}
       </Grid>
     </Grid>
   );

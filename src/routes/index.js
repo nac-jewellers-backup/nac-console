@@ -78,7 +78,8 @@ import {
   DailyMetalRate,
   PriceLogs,
   ImageUpload,
-  AppointmentManagementDetails
+  AppointmentManagementDetails,
+  CmsComponent
 } from "../screens";
 import Editcategory from "../screens/CategoryList/components/editpage/editcategory";
 import newmaterial from "../screens/CategoryList/components/newmaterial/newmaterial";
@@ -309,6 +310,10 @@ const MainApp = () => {
           <PrivateRoute
             path={route.dailyMetalRate}
             component={DailyMetalRate}
+          />
+          <PrivateRoute
+            path={route.cmsComponents}
+            component={CmsComponent}
           />
         </Switch>
       </NetworkProvider>
