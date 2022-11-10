@@ -20,7 +20,7 @@ const CmsHome = (props) => {
   return (
     <Grid container spacing={3}>
       {/* <AddContact contactlist={[]}/> */}
-      {/* <Grid container item xs={12} sm={12} spacing={2}>
+      <Grid container item xs={12} sm={12} spacing={2}>
         <Typography component="h5" variant="h5">
           CMS Complete List
         </Typography>
@@ -87,7 +87,7 @@ const CmsHome = (props) => {
             </CardContent>
           </Card>
         </Link>
-      </Grid> */}
+      </Grid>
 
       {/* cms page */}
       <Grid item xs={6} sm={4} lg={3}>
