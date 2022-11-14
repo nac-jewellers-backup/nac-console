@@ -21,7 +21,7 @@ const header = ["S.No", "Title", "Descriptiom", "Action"];
 const tableData = [
   { type: "INCREMENT", name: "" },
   { type: "TEXT", name: "title" },
-  { type: "TEXT", name: "description" },
+  { type: "HTMLTEXT", name: "richEditor" },
   { type: "EDIT", name: "" },
 ];
 
@@ -40,7 +40,7 @@ const TitleDescriptionCMS = (props) => {
     setState(props?.data?.props);
   }, []);
 
-  console.log("richEditor",state.richEditor);
+  console.log("richEditorState",state);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -124,20 +124,8 @@ const TitleDescriptionCMS = (props) => {
             value={state.title}
             name="title"
           />
-          {/* <TextField
-            margin="dense"
-            id="description"
-            label="Description"
-            variant="outlined"
-            fullWidth
-            multiline={true}
-            rows={10}
-            onChange={onChangeData}
-            value={state.description}
-            name="description"
-          /> */}
           <div style={{border:"1px solid #c0c0c0",padding:"8px", borderRadius:"8px"}}>
-            <EditorConvertToHTML handleChangeState={handleChangeState} />
+            <EditorConvertToHTML handleChangeState={handleChangeState} parentState={state.richEditor} />
           </div>
         </DialogContent>
         <DialogActions>

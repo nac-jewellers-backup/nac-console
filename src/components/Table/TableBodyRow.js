@@ -2,6 +2,7 @@ import { TableCell, TableRow, Button } from "@material-ui/core";
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import parse from "html-react-parser";
 
 const getComponent = (data) => {
   switch (data.type) {
@@ -16,6 +17,11 @@ const getComponent = (data) => {
           {data.rowData}
         </div>
       );
+    }
+    case "HTMLTEXT":{
+      return(
+        <div>{parse(data.rowData)}</div>
+      )
     }
     case "INCREMENT": {
       return <div>{data.rowIndex + 1}</div>;
