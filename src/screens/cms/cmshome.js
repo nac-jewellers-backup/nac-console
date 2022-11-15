@@ -3,20 +3,44 @@ import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import { API_URL } from "../../config";
+import { ALLCDNPAGES } from "../../graphql/cmsQuery";
 
 const CmsHome = (props) => {
   let history = useHistory();
+
+  const [state, setState] = useState([]);
+  console.log("fetchedPages", state);
+
   const handleClick = (name) => {
     history.push({
-      pathname:'/cmsComponent',
-      state:{
-        name:name
-      }
+      pathname: "/cmsComponent",
+      state: {
+        name: name,
+      },
+    });
+  };
+
+  useEffect(() => {
+    fetch(`${API_URL}/graphql`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: ALLCDNPAGES,
+      }),
     })
-  }
+      .then((res) => res.json())
+      .then((data) => {
+        debugger;
+        const dataRecieved = data.data.allCdns.nodes;
+        setState(dataRecieved);
+      });
+  }, []);
   return (
     <Grid container spacing={3}>
       {/* <AddContact contactlist={[]}/> */}
@@ -90,40 +114,28 @@ const CmsHome = (props) => {
       </Grid>
 
       {/* cms page */}
-      <Grid item xs={6} sm={4} lg={3}>
-        {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
-        <div onClick={() => handleClick("store")} style={{cursor:"pointer"}}>
-          <Card fullwidth className="card2" >
-            <CardContent>
-              <Typography
-                style={{ textAlign: "center", marginTop: 8 }}
-                component="h6"
-                variant="h5"
-              >
-                Store
-              </Typography>
-            </CardContent>
-          </Card>
+      {state.map((val) => (
+        <Grid item xs={6} sm={4} lg={3}>
+          {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
+          <div
+            onClick={() => handleClick(val.page)}
+            style={{ cursor: "pointer" }}
+          >
+            <Card fullwidth className="card2">
+              <CardContent>
+                <Typography
+                  style={{ textAlign: "center", marginTop: 8 }}
+                  component="h6"
+                  variant="h5"
+                >
+                  {val.page}
+                </Typography>
+              </CardContent>
+            </Card>
           </div>
-        {/* </Link> */}
-      </Grid>
-      <Grid item xs={6} sm={4} lg={3}>
-        {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
-        <div onClick={() => handleClick("akshayaTritiya")} style={{cursor:"pointer"}}>
-          <Card fullwidth className="card2" >
-            <CardContent>
-              <Typography
-                style={{ textAlign: "center", marginTop: 8 }}
-                component="h6"
-                variant="h5"
-              >
-                Akshaya Tritiya
-              </Typography>
-            </CardContent>
-          </Card>
-          </div>
-        {/* </Link> */}
-      </Grid>
+          {/* </Link> */}
+        </Grid>
+      ))}
     </Grid>
   );
 };

@@ -10,6 +10,15 @@ export const CDNPAGES = `
       }
     `;
 
+export const ALLCDNPAGES = `query MyQuery {
+  allCdns {
+    nodes {
+      page
+    }
+  }
+}
+`;
+
 export const CMS_UPDATE = `
 mutation updateStore( $stringifyState: JSON!,$page: String!) {
   updateCdnByPage(input: { cdnPatch: { data: $stringifyState }, page: $page }) {
@@ -24,15 +33,4 @@ mutation updateStore( $stringifyState: JSON!,$page: String!) {
     }
   }
 }
-`;
-
-
-let UPDATE_HOLIDAY = gql`
-  mutation ($id: Int!, $item: HolidayManagerPatch!) {
-    updateHolidayManagerById(input: { id: $id, holidayManagerPatch: $item }) {
-      holidayManager {
-        id
-      }
-    }
-  }
 `;

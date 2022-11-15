@@ -31,7 +31,6 @@ const QueryFormCMS = (props) => {
   const [state, setState] = React.useState({
     image: "",
   });
-  console.log("state",state);
   const [image, setImage] = React.useState([]);
 
   React.useEffect(() => {
