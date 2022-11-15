@@ -6,7 +6,7 @@ import {
   DialogTitle,
   Paper,
   TextField,
-} from "@material-ui/core";
+} from "@material-ui/core"; 
 import React from "react";
 import { useContext } from "react";
 import { TableComp } from "../../../components";
