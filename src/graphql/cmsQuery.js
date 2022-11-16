@@ -14,6 +14,7 @@ export const ALLCDNPAGES = `query MyQuery {
   allCdns {
     nodes {
       page
+      data
     }
   }
 }
