@@ -13,6 +13,9 @@ import { TableComp } from "../../../components";
 import { useStyles } from "./styles";
 import TableHeaderComp from "./TableHeadComp";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { useContext } from "react";
+import { AlertContext } from "../../../context";
+import { UploadImage } from "../../../utils/imageUpload";
 
 const header = ["Title", "Content", "Mobile Image", "Web Image", "Action"];
 
@@ -27,6 +30,7 @@ const tableData = [
 const CustomCareerBannerCMS = (props) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const alert = useContext(AlertContext);
   const initialState = {
     title: "",
     content: "",
@@ -43,12 +47,6 @@ const CustomCareerBannerCMS = (props) => {
     setOpen(true);
   };
 
-  const onsubmitvalue = () => {
-    setOpen(false);
-    setState(initialState);
-    console.log("stt", state);
-  };
-
   const handleClose = () => {
     setOpen(false);
     setState(initialState);
@@ -59,6 +57,61 @@ const CustomCareerBannerCMS = (props) => {
       ...state,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const handleChange = (file, name) => {
+    UploadImage(file)
+      .then((res) => {
+        if (res?.data?.web) {
+          setState({
+            ...state,
+            [name]: res?.data?.web,
+          });
+          // setDisable({ ...disableButton, [name]: true });
+
+          alert.setSnack({
+            open: true,
+            severity: "success",
+            msg: "Image Uploaded Successfully",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const onsubmitvalue = async () => {
+    if (state.title && state.content && state.mobile && state.web) {
+      let getData = [];
+      getData = {
+        component: props?.data?.component,
+        props: {
+          banners: [...props?.data?.props?.banners, state],
+        },
+      };
+      setOpen(false);
+      props.handleSubmit(getData, "CustomBanner", "banners");
+    } else {
+      alert.setSnack({
+        open: true,
+        severity: "error",
+        msg: "Please fill all the fields",
+      });
+    }
+  };
+
+  const handleDelete = (e, rowData, rowIndex) => {
+    let getData = [];
+    const banners = props?.data?.props?.banners;
+    banners.splice(rowIndex, 1);
+    getData = {
+      component: props?.data?.component,
+      props: {
+        banners: banners,
+      },
+    };
+    props.handleSubmit(getData, "CustomBanner", "banners");
   };
 
   return (
@@ -72,6 +125,7 @@ const CustomCareerBannerCMS = (props) => {
           header={header}
           tableData={tableData}
           data={props?.data?.props?.banners}
+          handleDelete={handleDelete}
         />
 
         {/* Dialog */}
@@ -117,6 +171,7 @@ const CustomCareerBannerCMS = (props) => {
                   id="button-file"
                   multiple
                   type="file"
+                  onChange={(e) => handleChange(e.target.files[0], "mobile")}
                 />
                 <label htmlFor="button-file">
                   <Button
@@ -137,6 +192,7 @@ const CustomCareerBannerCMS = (props) => {
                   id="button-files"
                   multiple
                   type="file"
+                  onChange={(e) => handleChange(e.target.files[0], "web")}
                 />
                 <label htmlFor="button-files">
                   <Button

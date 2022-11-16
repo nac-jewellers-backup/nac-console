@@ -91,10 +91,10 @@ const CmsComponent = (props) => {
         return <SlidingImageCardCMS data={val} handleSubmit={handleSubmit} />;
       }
       case "CustomBanner": {
-        return <CustomCareerBannerCMS data={val} />;
+        return <CustomCareerBannerCMS data={val} handleSubmit={handleSubmit} />;
       }
       case "CareerCard": {
-        return <CustomCareerCardCMS data={val} />;
+        return <CustomCareerCardCMS data={val} handleSubmit={handleSubmit} />;
       }
       default: {
         return <h1></h1>;

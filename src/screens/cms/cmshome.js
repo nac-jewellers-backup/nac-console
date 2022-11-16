@@ -36,7 +36,7 @@ const CmsHome = (props) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        debugger;
+        // debugger;
         const dataRecieved = data.data.allCdns.nodes;
         setState(dataRecieved);
       });

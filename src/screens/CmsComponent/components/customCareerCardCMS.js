@@ -1,6 +1,16 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Paper,
+  TextField,
+} from "@material-ui/core";
 import React from "react";
+import { useContext } from "react";
 import { TableComp } from "../../../components";
+import { AlertContext } from "../../../context";
 import { useStyles } from "./styles";
 import TableHeaderComp from "./TableHeadComp";
 
@@ -16,6 +26,8 @@ const tableData = [
 const CustomCareerCardCMS = (props) => {
   const classes = useStyles();
 
+  const alert = useContext(AlertContext);
+
   const [open, setOpen] = React.useState(false);
   const initialState = {
     job_Role: "",
@@ -28,10 +40,37 @@ const CustomCareerCardCMS = (props) => {
     setOpen(true);
   };
 
-  const onsubmitvalue = () => {
-    setOpen(false);
-    // setState(initialState);
-    console.log("stt-1", state);
+  const onsubmitvalue = async () => {
+    if (state.job_Role && state.location && state.description) {
+      let getData = [];
+      getData = {
+        component: props?.data?.component,
+        props: {
+          cardContent: [...props?.data?.props?.cardContent, state],
+        },
+      };
+      setOpen(false);
+      props.handleSubmit(getData, "CareerCard", "cardContent");
+    } else {
+      alert.setSnack({
+        open: true,
+        severity: "error",
+        msg: "Please fill all the fields",
+      });
+    }
+  };
+
+  const handleDelete = (e, rowData, rowIndex) => {
+    let getData = [];
+    const cardContent = props?.data?.props?.cardContent;
+    cardContent.splice(rowIndex, 1);
+    getData = {
+      component: props?.data?.component,
+      props: {
+        cardContent: cardContent,
+      },
+    };
+    props.handleSubmit(getData, "CareerCard", "cardContent");
   };
 
   const handleClose = () => {
@@ -56,6 +95,7 @@ const CustomCareerCardCMS = (props) => {
           header={header}
           tableData={tableData}
           data={props?.data?.props?.cardContent}
+          handleDelete={handleDelete}
         />
 
         {/* Dialog */}
