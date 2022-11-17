@@ -10,6 +10,8 @@ import { AlertContext } from "../../context";
 import TitleDescriptionCMS from "./components/titleDescriptionCMS";
 import QueryFormCMS from "./components/queryFormCMS";
 import SlidingImageCardCMS from "./components/slidingImageCardCMS";
+import CustomCareerBannerCMS from "./components/customCareerBannerCMS";
+import CustomCareerCardCMS from "./components/customCareerCardCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -53,7 +55,10 @@ const CmsComponent = (props) => {
       },
       body: JSON.stringify({
         query: CMS_UPDATE,
-        variables: { stringifyState: stringifyState, page: location.state.name },
+        variables: {
+          stringifyState: stringifyState,
+          page: location.state.name,
+        },
       }),
     })
       .then((res) => res.json())
@@ -62,8 +67,8 @@ const CmsComponent = (props) => {
           open: true,
           msg: "Successfully Updated!",
         });
-        const newStateSet = JSON.parse(JSON.stringify(newState))
-        setState(newStateSet)
+        const newStateSet = JSON.parse(JSON.stringify(newState));
+        setState(newStateSet);
         fetchCall();
       });
   };
@@ -79,11 +84,17 @@ const CmsComponent = (props) => {
       case "TitleAndData": {
         return <TitleDescriptionCMS data={val} handleSubmit={handleSubmit} />;
       }
-      case "QueryForm":{
+      case "QueryForm": {
         return <QueryFormCMS data={val} handleSubmit={handleSubmit} />;
       }
-      case "SlideImgMediaCard":{
+      case "SlideImgMediaCard": {
         return <SlidingImageCardCMS data={val} handleSubmit={handleSubmit} />;
+      }
+      case "CustomBanner": {
+        return <CustomCareerBannerCMS data={val} handleSubmit={handleSubmit} />;
+      }
+      case "CareerCard": {
+        return <CustomCareerCardCMS data={val} handleSubmit={handleSubmit} />;
       }
       default: {
         return <h1></h1>;

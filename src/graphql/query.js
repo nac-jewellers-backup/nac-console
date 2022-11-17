@@ -2277,6 +2277,19 @@ mutation($id: Int!, $status: String) {
 }
 `
 
+const MUTATE_MEETING = `
+mutation($id :Int!,$meetingLink: String!) {
+  updateAppointmentById(
+    input: { id: $id, appointmentPatch: { meetingLink: $meetingLink } }
+  ) {
+    appointment {
+      id
+      meetingLink
+    }
+  }
+}
+`
+
 const GETORDERCOMMUNICATIONLOGS = `
 query MyQuery($id: UUID!) {
   orderById(id: $id) {
@@ -2676,5 +2689,6 @@ export {
   MUTATE_STATUS,
   GETAPPLICATIONCOMMUNICATIONLOGS,
   CHECK_APPOINTMENT,
-  CHECK_TIMESLOT
+  CHECK_TIMESLOT,
+  MUTATE_MEETING
 };

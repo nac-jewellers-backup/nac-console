@@ -21,7 +21,7 @@ import {
 } from "@material-ui/core";
 import { GRAPHQL_DEV_CLIENT } from "../../../config";
 import { API_URL } from "../../../config";
-import { MUTATE_STATUS } from "../../../graphql/query";
+import { MUTATE_STATUS,MUTATE_MEETING } from "../../../graphql/query";
 import { AlertContext } from "../../../context";
 
 const useStyles = makeStyles((theme) => ({
@@ -55,6 +55,29 @@ const AppointmentExtra= (props) => {
    setmeetingLink(order?.allAppointments?.nodes[0]?.meetingLink)
   },[order])
 
+
+  const handleMeeting = async (link)=>{
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: MUTATE_MEETING,
+        variables: { id: parseInt(id), meetingLink:link },
+      }),
+    };
+
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((fatchvalue) => {
+        snack.setSnack({
+          open: true,
+          msg: "Meeting Link Send Successfully!",
+        });
+      })
+      .catch(console.error);
+  }
+
   const handleSelect = async (value) => {
     setSelected(value)
     const url = GRAPHQL_DEV_CLIENT;
@@ -81,7 +104,7 @@ const AppointmentExtra= (props) => {
 
   const sendEmail = () => {
     if(link !== ''){
-      const url = API_URL + "/appointment/send_invite";
+      const url = API_URL + "/trigger_mail";
       const opts = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -91,10 +114,7 @@ const AppointmentExtra= (props) => {
       fetch(url, opts)
         .then((res) => res.json())
         .then((fatchvalue) => {
-          snack.setSnack({
-            open: true,
-            msg: "Meeting Link Send Successfully!",
-          });
+          handleMeeting(link)
         })
         .catch((err) => {
           snack.setSnack({
