@@ -6,21 +6,20 @@ import {
   Link,
   Button,
   Table,
+  Typography,
 } from "@material-ui/core";
 import React from "react";
 import { useStyles } from "./style";
 import TableBodyRow from "./TableBodyRow";
 
-const TableComp = (
-  {
-    header = [],
-    tableData = [],
-    data = [],
-    handleViewStores = () => null,
-    handleDelete = () => null,
-    handleEdit = () => null
-  },
-) => {
+const TableComp = ({
+  header = [],
+  tableData = [],
+  data = [],
+  handleViewStores = () => null,
+  handleDelete = () => null,
+  handleEdit = () => null,
+}) => {
   const classes = useStyles();
   return (
     <div className={classes.tableWrapper}>
@@ -38,6 +37,7 @@ const TableComp = (
             ))}
           </TableRow>
         </TableHead>
+        {data.length > 0 ? 
         <TableBody>
           {data.map((val, index) => (
             <TableBodyRow
@@ -49,7 +49,16 @@ const TableComp = (
               handleEdit={handleEdit}
             />
           ))}
-        </TableBody>
+        </TableBody>:
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "10px 0px",
+          }}
+        >
+          <Typography variant="body1"> No data Found </Typography>
+        </div>}
       </Table>
     </div>
   );

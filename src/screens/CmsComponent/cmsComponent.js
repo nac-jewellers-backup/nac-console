@@ -74,7 +74,7 @@ const CmsComponent = (props) => {
         return <BannerCMS data={val} handleSubmit={handleSubmit} />;
       }
       case "Storelocator": {
-        return <StoreLocatorCMS data={val?.props} />;
+        return <StoreLocatorCMS data={val} handleSubmit={handleSubmit} />;
       }
       case "TitleAndData": {
         return <TitleDescriptionCMS data={val} handleSubmit={handleSubmit} />;
