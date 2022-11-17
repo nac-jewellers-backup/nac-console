@@ -9,7 +9,7 @@ import {
   Button,
   DialogActions,
 } from "@material-ui/core";
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { TableComp } from "../../../components";
 import { useStyles } from "./styles";
@@ -17,6 +17,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import TableHeaderComp from "./TableHeadComp";
 import { UploadImage } from "../../../utils/imageUpload";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { AlertContext } from "../../../context";
 
 const header = ["S.No", "City", "Total Stores", "View Stores", "Action"];
 const tableData = [
@@ -64,6 +65,8 @@ const initialEdit = {
 
 function StoreLocatorCMS(props) {
   const classes = useStyles();
+  const alert = useContext(AlertContext);
+
   const [openStores, setOpenStores] = useState(false);
   const [stores, setStores] = useState([]);
   const [addStoresOpens, setAddStores] = useState(false);
@@ -71,16 +74,12 @@ function StoreLocatorCMS(props) {
     city: "",
     stores: [],
   });
-  console.log("stateLocatorNew", state);
   const [showStoreFields, setShowStoreFields] = useState(false);
   const [storeState, setStoreState] = useState(initialStoreDetails);
   const [editData, setEditData] = useState(initialEdit);
   const [storesEdit, setStoresEdit] = useState(initialEdit);
 
-  console.log("storeState", storeState);
-
   const handleViewStores = (e, data, index) => {
-    console.log("dataClicked", data);
     setOpenStores(true);
     setStores(data);
   };
@@ -95,6 +94,11 @@ function StoreLocatorCMS(props) {
 
   const handleAddNewStoresClose = () => {
     setAddStores(false);
+    setState({
+      city: "",
+      stores: [],
+    });
+    setEditData(initialEdit);
   };
 
   const onChangeData = (event) => {
@@ -115,24 +119,42 @@ function StoreLocatorCMS(props) {
     setShowStoreFields(true);
   };
 
+  const validationHead = ["title", "button", "para", "location", "img", "href"];
+  const storeDetailsValidate = () => {
+    let err = [];
+    validationHead.map((val) => {
+      if (storeState[val].length === 0) err.push(val);
+    });
+    return err;
+  };
+
   const addStoreDetails = () => {
-    if (storesEdit.isEdit) {
-      const editStores = state.stores;
-      editStores.splice(storesEdit.editIndex, 1, storeState);
-      const newState = {
-        city: state.city,
-        stores: editStores,
-      };
-      setShowStoreFields(false);
-      setState(newState);
+    const validate = storeDetailsValidate();
+    if (validate.length === 0) {
+      if (storesEdit.isEdit) {
+        const editStores = state.stores;
+        editStores.splice(storesEdit.editIndex, 1, storeState);
+        const newState = {
+          city: state.city,
+          stores: editStores,
+        };
+        setShowStoreFields(false);
+        setState(newState);
+      } else {
+        setShowStoreFields(false);
+        const newStore = [...state.stores, storeState];
+        setState({
+          ...state,
+          stores: newStore,
+        });
+        setStoreState(initialStoreDetails);
+      }
     } else {
-      setShowStoreFields(false);
-      const newStore = [...state.stores, storeState];
-      setState({
-        ...state,
-        stores: newStore,
+      alert.setSnack({
+        open: true,
+        severity: "error",
+        msg: "Please fill the mandatory details",
       });
-      setStoreState(initialStoreDetails);
     }
   };
 
@@ -144,8 +166,6 @@ function StoreLocatorCMS(props) {
             ...storeState,
             [name]: res?.data?.web,
           });
-          // setDisable({ ...disableButton, [name]: true });
-
           alert.setSnack({
             open: true,
             severity: "success",
@@ -159,17 +179,34 @@ function StoreLocatorCMS(props) {
   };
 
   const onsubmitvalue = () => {
-    if (editData.isEdit) {
-      alert("in editmode da dei");
+    if (state.city.length > 0 && state.stores.length > 0) {
+      if (editData.isEdit) {
+        const storeDataEdit = props?.data?.props?.storeData;
+        storeDataEdit.splice(editData.editIndex, 1, state);
+        const getData = {
+          component: props?.data?.component,
+          props: {
+            storeData: storeDataEdit,
+          },
+        };
+        handleAddNewStoresClose();
+        props.handleSubmit(getData, "Storelocator", "storeData");
+      } else {
+        const getData = {
+          component: props?.data?.component,
+          props: {
+            storeData: [...props?.data?.props?.storeData, state],
+          },
+        };
+        handleAddNewStoresClose();
+        props.handleSubmit(getData, "Storelocator", "storeData");
+      }
     } else {
-      const getData = {
-        component: props?.data?.component,
-        props: {
-          storeData: [...props?.data?.props?.storeData, state],
-        },
-      };
-      handleAddNewStoresClose();
-      props.handleSubmit(getData, "Storelocator", "storeData");
+      alert.setSnack({
+        open: true,
+        severity: "error",
+        msg: "Please add both the State and the Store",
+      });
     }
   };
 
@@ -183,7 +220,6 @@ function StoreLocatorCMS(props) {
         storeData: storeData,
       },
     };
-    console.log("StorelocatorDelete", getData);
     props.handleSubmit(getData, "Storelocator", "storeData");
   };
 
@@ -409,7 +445,7 @@ function StoreLocatorCMS(props) {
 
           <DialogActions style={{ display: "flex", justifyContent: "center" }}>
             <Button variant="contained" color="primary" onClick={onsubmitvalue}>
-              Add
+              Submit
             </Button>
             <Button
               variant="contained"
