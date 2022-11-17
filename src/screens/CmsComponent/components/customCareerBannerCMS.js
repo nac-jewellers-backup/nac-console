@@ -24,7 +24,7 @@ const tableData = [
   { type: "TEXT", name: "content" },
   { type: "MBL_IMAGE", name: "mobile" },
   { type: "WEB_IMAGE", name: "web" },
-  { type: "ACTION", name: "" },
+  { type: "EDIT", name: "" },
 ];
 
 const CustomCareerBannerCMS = (props) => {
