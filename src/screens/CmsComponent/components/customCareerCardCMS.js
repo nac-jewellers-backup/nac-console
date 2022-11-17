@@ -14,16 +14,18 @@ import { AlertContext } from "../../../context";
 import { useStyles } from "./styles";
 import TableHeaderComp from "./TableHeadComp";
 
-const header = ["Job Role", "Location", "Description", "Action"];
+const header = ["Job Role", "Location", "Description", "Button Text", "Action"];
 
 const tableData = [
   { type: "TEXT", name: "job_Role" },
   { type: "TEXT", name: "location" },
   { type: "TEXT", name: "description" },
+  { type: "TEXT", name: "button_Text" },
   { type: "ACTION", name: "" },
 ];
 
 const CustomCareerCardCMS = (props) => {
+  console.log("textt", props);
   const classes = useStyles();
 
   const alert = useContext(AlertContext);
@@ -33,7 +35,15 @@ const CustomCareerCardCMS = (props) => {
     job_Role: "",
     location: "",
     description: "",
+    button_Text: "",
   };
+
+  const initialEdit = {
+    isEdit: false,
+    editIndex: null,
+  };
+
+  const [editData, setEditData] = React.useState(initialEdit);
   const [state, setState] = React.useState(initialState);
 
   const handleClickOpen = () => {
@@ -41,16 +51,35 @@ const CustomCareerCardCMS = (props) => {
   };
 
   const onsubmitvalue = async () => {
-    if (state.job_Role && state.location && state.description) {
-      let getData = [];
-      getData = {
-        component: props?.data?.component,
-        props: {
-          cardContent: [...props?.data?.props?.cardContent, state],
-        },
-      };
-      setOpen(false);
-      props.handleSubmit(getData, "CareerCard", "cardContent");
+    if (
+      state.job_Role &&
+      state.location &&
+      state.description &&
+      state.button_Text
+    ) {
+      if (editData.isEdit) {
+        const editContent = props?.data?.props?.cardContent;
+        editContent.splice(editData.editIndex, 1, state);
+        let getData = [];
+        getData = {
+          component: props?.data?.component,
+          props: {
+            cardContent: editContent,
+          },
+        };
+        setOpen(false);
+        props.handleSubmit(getData, "CareerCard", "cardContent");
+      } else {
+        let getData = [];
+        getData = {
+          component: props?.data?.component,
+          props: {
+            cardContent: [...props?.data?.props?.cardContent, state],
+          },
+        };
+        setOpen(false);
+        props.handleSubmit(getData, "CareerCard", "cardContent");
+      }
     } else {
       alert.setSnack({
         open: true,
@@ -84,6 +113,13 @@ const CustomCareerCardCMS = (props) => {
       [event.target.name]: event.target.value,
     });
   };
+
+  const handleEdit = (e, rowData, rowIndex) => {
+    setOpen(true);
+    setEditData({ ...editData, isEdit: true, editIndex: rowIndex });
+    setState(rowData);
+  };
+
   return (
     <>
       <Paper className={classes.root}>
@@ -96,6 +132,7 @@ const CustomCareerCardCMS = (props) => {
           tableData={tableData}
           data={props?.data?.props?.cardContent}
           handleDelete={handleDelete}
+          handleEdit={handleEdit}
         />
 
         {/* Dialog */}
@@ -135,6 +172,17 @@ const CustomCareerCardCMS = (props) => {
               value={state.description}
               onChange={onChangeData}
               name="description"
+              required
+            />
+            <TextField
+              margin="dense"
+              id="button_Text"
+              label="Button Text"
+              variant="outlined"
+              fullWidth
+              value={state.button_Text}
+              onChange={onChangeData}
+              name="button_Text"
               required
             />
           </DialogContent>

@@ -37,6 +37,13 @@ const CustomCareerBannerCMS = (props) => {
     mobile: "",
     web: "",
   };
+
+  const initialEdit = {
+    isEdit: false,
+    editIndex: null,
+  };
+
+  const [editData, setEditData] = React.useState(initialEdit);
   const [state, setState] = React.useState(initialState);
   const [disableButton, setDisable] = React.useState({
     web: false,
@@ -83,15 +90,31 @@ const CustomCareerBannerCMS = (props) => {
 
   const onsubmitvalue = async () => {
     if (state.title && state.content && state.mobile && state.web) {
-      let getData = [];
-      getData = {
-        component: props?.data?.component,
-        props: {
-          banners: [...props?.data?.props?.banners, state],
-        },
-      };
-      setOpen(false);
-      props.handleSubmit(getData, "CustomBanner", "banners");
+      if (editData.isEdit) {
+        const editBanner = props?.data?.props?.banners;
+        editBanner.splice(editData.editIndex, 1, state);
+        let getData = [];
+        getData = {
+          component: props?.data?.component,
+          props: {
+            banners: editBanner,
+          },
+        };
+        setOpen(false);
+        props.handleSubmit(getData, "CustomBanner", "banners");
+      } else {
+        let getData = [];
+        getData = {
+          component: props?.data?.component,
+          props: {
+            banners: [...props?.data?.props?.banners, state],
+          },
+        };
+        setOpen(false);
+        props.handleSubmit(getData, "CustomBanner", "banners");
+      }
+      setEditData(initialEdit);
+      setState(initialState);
     } else {
       alert.setSnack({
         open: true,
@@ -114,18 +137,26 @@ const CustomCareerBannerCMS = (props) => {
     props.handleSubmit(getData, "CustomBanner", "banners");
   };
 
+  const handleEdit = (e, rowData, rowIndex) => {
+    setOpen(true);
+    setEditData({ ...editData, isEdit: true, editIndex: rowIndex });
+    setState(rowData);
+  };
+
   return (
     <>
       <Paper className={classes.root}>
         <TableHeaderComp
           name={"Career Banner Component"}
           handleAddNew={handleClickOpen}
+          noAddNew
         />
         <TableComp
           header={header}
           tableData={tableData}
           data={props?.data?.props?.banners}
           handleDelete={handleDelete}
+          handleEdit={handleEdit}
         />
 
         {/* Dialog */}
