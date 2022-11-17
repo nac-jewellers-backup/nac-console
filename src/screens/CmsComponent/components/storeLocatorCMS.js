@@ -35,6 +35,16 @@ const tableStoreData = [
   { type: "TEXT", name: "location", width: "200px" },
   { type: "WEB_IMAGE", name: "img", width: "200px" },
   { type: "TEXT", name: "button" },
+  { type: "ACTION", name: "" },
+];
+
+const tableStoreView = [
+  { type: "INCREMENT", name: "S.No" },
+  { type: "TEXT", name: "title" },
+  { type: "TEXT", name: "para" },
+  { type: "TEXT", name: "location", width: "200px" },
+  { type: "WEB_IMAGE", name: "img", width: "200px" },
+  { type: "TEXT", name: "button" },
 ];
 
 const initialStoreDetails = {
@@ -45,6 +55,11 @@ const initialStoreDetails = {
   img: "",
   key: "",
   href: "",
+};
+
+const initialEdit = {
+  isEdit: false,
+  editIndex: null,
 };
 
 function StoreLocatorCMS(props) {
@@ -59,7 +74,11 @@ function StoreLocatorCMS(props) {
   console.log("stateLocatorNew", state);
   const [showStoreFields, setShowStoreFields] = useState(false);
   const [storeState, setStoreState] = useState(initialStoreDetails);
+  const [editData, setEditData] = useState(initialEdit);
+  const [storesEdit, setStoresEdit] = useState(initialEdit);
+
   console.log("storeState", storeState);
+
   const handleViewStores = (e, data, index) => {
     console.log("dataClicked", data);
     setOpenStores(true);
@@ -97,14 +116,24 @@ function StoreLocatorCMS(props) {
   };
 
   const addStoreDetails = () => {
-    debugger;
-    setShowStoreFields(false);
-    const newStore = [...state.stores, storeState];
-    setState({
-      ...state,
-      stores: newStore,
-    });
-    setStoreState(initialStoreDetails);
+    if (storesEdit.isEdit) {
+      const editStores = state.stores;
+      editStores.splice(storesEdit.editIndex, 1, storeState);
+      const newState = {
+        city: state.city,
+        stores: editStores,
+      };
+      setShowStoreFields(false);
+      setState(newState);
+    } else {
+      setShowStoreFields(false);
+      const newStore = [...state.stores, storeState];
+      setState({
+        ...state,
+        stores: newStore,
+      });
+      setStoreState(initialStoreDetails);
+    }
   };
 
   const handleChange = (file, name) => {
@@ -130,14 +159,18 @@ function StoreLocatorCMS(props) {
   };
 
   const onsubmitvalue = () => {
-    const getData = {
-      component: props?.data?.component,
-      props: {
-        storeData: [...props?.data?.props?.storeData, state],
-      },
-    };
-    handleAddNewStoresClose();
-    props.handleSubmit(getData, "Storelocator", "storeData");
+    if (editData.isEdit) {
+      alert("in editmode da dei");
+    } else {
+      const getData = {
+        component: props?.data?.component,
+        props: {
+          storeData: [...props?.data?.props?.storeData, state],
+        },
+      };
+      handleAddNewStoresClose();
+      props.handleSubmit(getData, "Storelocator", "storeData");
+    }
   };
 
   const handleDelete = (e, rowData, rowIndex) => {
@@ -154,6 +187,28 @@ function StoreLocatorCMS(props) {
     props.handleSubmit(getData, "Storelocator", "storeData");
   };
 
+  const handleEdit = (e, rowData, rowIndex) => {
+    handleAddNew();
+    setEditData({ ...editData, isEdit: true, editIndex: rowIndex });
+    setState(rowData);
+  };
+
+  const handleStoresEdit = (e, rowData, rowIndex) => {
+    setShowStoreFields(true);
+    setStoresEdit({ ...editData, isEdit: true, editIndex: rowIndex });
+    setStoreState(rowData);
+  };
+
+  const handleDeleteStore = (e, rowData, rowIndex) => {
+    const deleteStores = state.stores;
+    deleteStores.splice(rowIndex, 1);
+    const newState = {
+      city: state.city,
+      stores: deleteStores,
+    };
+    setState(newState);
+  };
+
   return (
     <Paper className={classes.root}>
       <TableHeaderComp
@@ -167,6 +222,7 @@ function StoreLocatorCMS(props) {
         data={props?.data?.props?.storeData}
         handleViewStores={handleViewStores}
         handleDelete={handleDelete}
+        handleEdit={handleEdit}
       />
 
       {/* View the Stores */}
@@ -187,13 +243,13 @@ function StoreLocatorCMS(props) {
         <DialogContent>
           <TableComp
             header={storeHeader}
-            tableData={tableStoreData}
+            tableData={tableStoreView}
             data={stores?.stores}
           />
         </DialogContent>
       </Dialog>
 
-      {/* View the Stores */}
+      {/* Add the Data */}
       <Dialog
         classes={{ paper: classes.dialogPaper }}
         fullWidth
@@ -347,6 +403,8 @@ function StoreLocatorCMS(props) {
             header={storeHeader}
             tableData={tableStoreData}
             data={state?.stores}
+            handleEdit={handleStoresEdit}
+            handleDelete={handleDeleteStore}
           />
 
           <DialogActions style={{ display: "flex", justifyContent: "center" }}>
