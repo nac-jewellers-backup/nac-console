@@ -34,3 +34,10 @@ main{
     transform: rotate(360deg);
   }
 }
+
+.rdw-editor-main{
+  height: 200px;
+  overflow: auto;
+  box-sizing: border-box;
+  border:1px solid #cecece
+}
