@@ -12,6 +12,8 @@ import QueryFormCMS from "./components/queryFormCMS";
 import SlidingImageCardCMS from "./components/slidingImageCardCMS";
 import CustomCareerBannerCMS from "./components/customCareerBannerCMS";
 import CustomCareerCardCMS from "./components/customCareerCardCMS";
+import CustomCollectionHeaderCMS from "./components/customCollectionHeaderCMS";
+import CustomCollectionCardsCMS from "./components/customCollectionCardsCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -95,6 +97,14 @@ const CmsComponent = (props) => {
       }
       case "CareerCard": {
         return <CustomCareerCardCMS data={val} handleSubmit={handleSubmit} />;
+      }
+      case "CollectionHeader": {
+        return (
+          <CustomCollectionHeaderCMS data={val} handleSubmit={handleSubmit} />
+        );
+      }
+      case "CollectionCards": {
+        return <CustomCollectionCardsCMS data={val} handleSubmit={handleSubmit} />;
       }
       default: {
         return <h1></h1>;

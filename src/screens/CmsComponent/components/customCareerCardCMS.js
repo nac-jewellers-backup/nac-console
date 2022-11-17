@@ -14,9 +14,17 @@ import { AlertContext } from "../../../context";
 import { useStyles } from "./styles";
 import TableHeaderComp from "./TableHeadComp";
 
-const header = ["Job Role", "Location", "Description", "Button Text", "Action"];
+const header = [
+  "S.No",
+  "Job Role",
+  "Location",
+  "Description",
+  "Button Text",
+  "Action",
+];
 
 const tableData = [
+  { type: "INCREMENT", name: "" },
   { type: "TEXT", name: "job_Role" },
   { type: "TEXT", name: "location" },
   { type: "TEXT", name: "description" },
