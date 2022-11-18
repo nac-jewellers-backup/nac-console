@@ -37,28 +37,28 @@ const TableComp = ({
             ))}
           </TableRow>
         </TableHead>
-        {data.length > 0 ? 
-        <TableBody>
-          {data.map((val, index) => (
-            <TableBodyRow
-              tableData={tableData}
-              rowData={val}
-              rowIndex={index}
-              handleViewStores={handleViewStores}
-              handleDelete={handleDelete}
-              handleEdit={handleEdit}
-            />
-          ))}
-        </TableBody>:
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            padding: "10px 0px",
-          }}
-        >
-          <Typography variant="body1"> No data Found </Typography>
-        </div>}
+        {data.length > 0 ?
+          <TableBody>
+            {data.map((val, index) => (
+              <TableBodyRow
+                tableData={tableData}
+                rowData={val}
+                rowIndex={index}
+                handleViewStores={handleViewStores}
+                handleDelete={handleDelete}
+                handleEdit={handleEdit}
+              />
+            ))}
+          </TableBody> :
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "10px 0px",
+            }}
+          >
+            <Typography variant="body1"> No data Found </Typography>
+          </div>}
       </Table>
     </div>
   );

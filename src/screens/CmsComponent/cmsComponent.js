@@ -10,6 +10,12 @@ import { AlertContext } from "../../context";
 import TitleDescriptionCMS from "./components/titleDescriptionCMS";
 import QueryFormCMS from "./components/queryFormCMS";
 import SlidingImageCardCMS from "./components/slidingImageCardCMS";
+import SpclTitleDescr from "./components/spclTitleDescrCMS";
+import BookYourAppointmentCMS from "./components/bookYourAppointmentCMS";
+import TestimonialCMS from "./components/testimonialCMS";
+import AboutCollection from "./components/aboutCollectionCMS";
+import TitleComp from "./components/titleCompCMS";
+
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -79,12 +85,28 @@ const CmsComponent = (props) => {
       case "TitleAndData": {
         return <TitleDescriptionCMS data={val} handleSubmit={handleSubmit} />;
       }
-      case "QueryForm":{
+      case "QueryForm": {
         return <QueryFormCMS data={val} handleSubmit={handleSubmit} />;
       }
-      case "SlideImgMediaCard":{
+      case "SpclTitleDescr": {
+        return <SpclTitleDescr data={val} handleSubmit={handleSubmit} />;
+      }
+      case "AboutBookAppointment": {
+        return <BookYourAppointmentCMS data={val} handleSubmit={handleSubmit} />;
+      }
+      case "titleComp": {
+        return <TitleComp data={val} handleSubmit={handleSubmit} />;
+      }
+      case "SlideImgMediaCard": {
         return <SlidingImageCardCMS data={val} handleSubmit={handleSubmit} />;
       }
+      case "Testimonial": {
+        return <TestimonialCMS data={val} handleSubmit={handleSubmit} />;
+      }
+      case "TestimonialTwo": {
+        return <AboutCollection data={val} handleSubmit={handleSubmit} />;
+      }
+
       default: {
         return <h1></h1>;
       }
