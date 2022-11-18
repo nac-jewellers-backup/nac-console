@@ -12,6 +12,7 @@ import QueryFormCMS from "./components/queryFormCMS";
 import SlidingImageCardCMS from "./components/slidingImageCardCMS";
 import CustomCareerBannerCMS from "./components/customCareerBannerCMS";
 import CustomCareerCardCMS from "./components/customCareerCardCMS";
+import CustomNewsCMS from "./components/customNewsCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -95,6 +96,9 @@ const CmsComponent = (props) => {
       }
       case "CareerCard": {
         return <CustomCareerCardCMS data={val} handleSubmit={handleSubmit} />;
+      }
+      case "CustomNews": {
+        return <CustomNewsCMS data={val} handleSubmit={handleSubmit} />;
       }
       default: {
         return <h1></h1>;
