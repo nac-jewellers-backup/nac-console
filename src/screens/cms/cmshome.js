@@ -41,6 +41,11 @@ const CmsHome = (props) => {
         setState(dataRecieved);
       });
   }, []);
+
+  const getThePageTitle = (name) => {
+    const snakeCase =  name.replace(/[A-Z]/g, val => " "  + `${val.toLowerCase()}`);
+    return snakeCase
+  }
   return (
     <Grid container spacing={3}>
       {/* <AddContact contactlist={[]}/> */}
@@ -124,11 +129,11 @@ const CmsHome = (props) => {
             <Card fullwidth className="card2">
               <CardContent>
                 <Typography
-                  style={{ textAlign: "center", marginTop: 8 }}
+                  style={{ textAlign: "center", marginTop: 8,textTransform:"capitalize" }}
                   component="h6"
                   variant="h5"
                 >
-                  {val.page}
+                  {getThePageTitle(val.page)}
                 </Typography>
               </CardContent>
             </Card>
