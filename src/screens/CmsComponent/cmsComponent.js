@@ -18,6 +18,7 @@ import BookYourAppointmentCMS from "./components/bookYourAppointmentCMS";
 import TestimonialCMS from "./components/testimonialCMS";
 import AboutCollection from "./components/aboutCollectionCMS";
 import TitleComp from "./components/titleCompCMS";
+import TitleWithDescription from "./components/titleWithDescription";
 
 
 const CmsComponent = (props) => {
@@ -120,6 +121,9 @@ const CmsComponent = (props) => {
       }
       case "TestimonialTwo": {
         return <AboutCollection data={val} handleSubmit={handleSubmit} />;
+      }
+      case "TitleAndDescription":{
+        return <TitleWithDescription data={val} handleSubmit={handleSubmit} />
       }
 
       default: {
