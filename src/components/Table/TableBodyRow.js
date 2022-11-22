@@ -72,7 +72,7 @@ const getComponent = (data) => {
       );
     }
     case "EDIT": {
-      return (<EditIcon onClick={data?.handleEdit} />)
+      return (<EditIcon style={{cursor:"pointer"}} onClick={data?.handleEdit} />)
     }
   }
 };

@@ -14,6 +14,14 @@ import CustomCareerBannerCMS from "./components/customCareerBannerCMS";
 import CustomCareerCardCMS from "./components/customCareerCardCMS";
 import CustomCollectionHeaderCMS from "./components/customCollectionHeaderCMS";
 import CustomCollectionCardsCMS from "./components/customCollectionCardsCMS";
+import CustomNewsCMS from "./components/customNewsCMS";
+import SpclTitleDescr from "./components/spclTitleDescrCMS";
+import BookYourAppointmentCMS from "./components/bookYourAppointmentCMS";
+import TestimonialCMS from "./components/testimonialCMS";
+import AboutCollection from "./components/aboutCollectionCMS";
+import TitleComp from "./components/titleCompCMS";
+import TitleWithDescription from "./components/titleWithDescription";
+import CustomAdvertisementCMS from "./components/customAdvertisementCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -106,6 +114,35 @@ const CmsComponent = (props) => {
       case "CollectionCards": {
         return <CustomCollectionCardsCMS data={val} handleSubmit={handleSubmit} />;
       }
+      case "CustomNews": {
+        return <CustomNewsCMS data={val} handleSubmit={handleSubmit} />;
+      }
+      case "SpclTitleDescr": {
+        return <SpclTitleDescr data={val} handleSubmit={handleSubmit} />;
+      }
+      case "AboutBookAppointment": {
+        return (
+          <BookYourAppointmentCMS data={val} handleSubmit={handleSubmit} />
+        );
+      }
+      case "titleComp": {
+        return <TitleComp data={val} handleSubmit={handleSubmit} />;
+      }
+      case "Testimonial": {
+        return <TestimonialCMS data={val} handleSubmit={handleSubmit} />;
+      }
+      case "TestimonialTwo": {
+        return <AboutCollection data={val} handleSubmit={handleSubmit} />;
+      }
+      case "TitleAndDescription": {
+        return <TitleWithDescription data={val} handleSubmit={handleSubmit} />;
+      }
+      case "CustomAdvertising": {
+        return (
+          <CustomAdvertisementCMS data={val} handleSubmit={handleSubmit} />
+        );
+      }
+
       default: {
         return <h1></h1>;
       }
