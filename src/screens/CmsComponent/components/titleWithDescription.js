@@ -1,4 +1,12 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Paper,
+  TextField,
+} from "@material-ui/core";
 import React from "react";
 import { useContext } from "react";
 import { TableComp } from "../../../components";
@@ -6,18 +14,13 @@ import { AlertContext } from "../../../context";
 import { useStyles } from "./styles";
 import TableHeaderComp from "./TableHeadComp";
 
-const header = [
-    "S.No",
-    "Title",
-    "Descriptiom",
-    "Action",
-  ];
-  const tableData = [
-    { type: "INCREMENT", name: "" },
-    { type: "TEXT", name: "title" },
-    { type: "TEXT", name: "description" },
-    { type: "EDIT", name: "" },
-  ];
+const header = ["S.No", "Title", "Descriptiom", "Action"];
+const tableData = [
+  { type: "INCREMENT", name: "" },
+  { type: "TEXT", name: "title" },
+  { type: "TEXT", name: "description" },
+  { type: "EDIT", name: "" },
+];
 
 const TitleWithDescription = (props) => {
   const classes = useStyles();
@@ -25,12 +28,12 @@ const TitleWithDescription = (props) => {
   const [open, setOpen] = React.useState(false);
   const [state, setState] = React.useState({
     title: "",
-    description:""
+    description: "",
   });
-  const [titleDesc,setTitleDesc] = React.useState([])
+  const [titleDesc, setTitleDesc] = React.useState([]);
   React.useEffect(() => {
-    setTitleDesc([props?.data?.props])
-  },[])
+    setTitleDesc([props?.data?.props]);
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -47,20 +50,19 @@ const TitleWithDescription = (props) => {
   };
 
   const onsubmitvalue = async () => {
-    let getData = [];
-    getData = {
+    const getData = {
       component: props?.data?.component,
-      props: {
-        banners: [...props?.data?.props?.banners, state]
-      }
-    }
-    setOpen(false)
-    props.handleSubmit(getData,"BannerComponent","banners")
+      props: state
+    };
+    setOpen(false);
+    setTitleDesc([state])
+    props.handleSubmit(getData,"TitleAndDescription","")
   };
 
   const handleEdit = (e, rowData, rowIndex) => {
-    handleClickOpen()
-  }
+    handleClickOpen();
+    setState(rowData);
+  };
   return (
     <Paper className={classes.root}>
       <TableHeaderComp
@@ -75,8 +77,14 @@ const TitleWithDescription = (props) => {
         handleEdit={handleEdit}
       />
 
-      <Dialog classes={{ paper: classes.dialogPaperMid }} open={open} onClose={handleClose}>
-        <DialogTitle id="form-dialog-title">Add New Title and Description Item</DialogTitle>
+      <Dialog
+        classes={{ paper: classes.dialogPaperMid }}
+        open={open}
+        onClose={handleClose}
+      >
+        <DialogTitle id="form-dialog-title">
+          Add New Title and Description Item
+        </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
