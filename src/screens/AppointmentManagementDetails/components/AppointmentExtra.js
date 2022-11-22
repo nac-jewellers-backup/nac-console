@@ -46,7 +46,6 @@ const AppointmentExtra= (props) => {
   const client = useApolloClient();
   const classes = useStyles();
   const [selected,setSelected] = React.useState('')
-  const [link,setLink] = React.useState('')
   const [meetingLink,setmeetingLink] = React.useState('');
   const snack = React.useContext(AlertContext);
 
@@ -56,14 +55,14 @@ const AppointmentExtra= (props) => {
   },[order])
 
 
-  const handleMeeting = async (link)=>{
+  const handleMeeting = async ()=>{
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: MUTATE_MEETING,
-        variables: { id: parseInt(id), meetingLink:link },
+        variables: { id: parseInt(id), meetingLink:meetingLink },
       }),
     };
 
@@ -99,22 +98,22 @@ const AppointmentExtra= (props) => {
   };
 
   const handleLinkchange=(val)=>{
-     setLink(val)
+     setmeetingLink(val)
   }
 
   const sendEmail = () => {
-    if(link !== ''){
+    if(meetingLink !== ''){
       const url = API_URL + "/trigger_mail";
       const opts = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ appointment_id: parseInt(id),
-        meeting_link: link }),
+        meeting_link: meetingLink }),
       };
       fetch(url, opts)
         .then((res) => res.json())
         .then((fatchvalue) => {
-          handleMeeting(link)
+          handleMeeting()
         })
         .catch((err) => {
           snack.setSnack({

@@ -34,6 +34,7 @@ const tableData = [
 ];
 
 const BannerCMS = (props) => {
+  console.log("hfjdskalSDJBSK", props);
   const classes = useStyles();
   const alert = useContext(AlertContext);
   const [open, setOpen] = React.useState(false);
@@ -42,7 +43,7 @@ const BannerCMS = (props) => {
     urlParam: null,
     mobile: "",
     web: "",
-    url: "",
+    url: "",  
   };
   const initialEdit = {
     isEdit: false,
@@ -161,7 +162,7 @@ const BannerCMS = (props) => {
         data={props?.data?.props?.banners}
         handleDelete={handleDelete}
         handleEdit={handleEdit}
-      />
+      />  
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle id="form-dialog-title">Add New Banner Item</DialogTitle>
@@ -243,7 +244,7 @@ const BannerCMS = (props) => {
               style={{ padding: "16px 0px" }}
             >
               {state.mobile.length > 0 && (
-                <Grid style={{textAlign:"center"}} xs={6} md={6} item>
+                <Grid style={{ textAlign: "center" }} xs={6} md={6} item>
                   <img
                     alt="nacimages"
                     src={state.mobile}
@@ -252,7 +253,7 @@ const BannerCMS = (props) => {
                 </Grid>
               )}
               {state.web.length > 0 && (
-                <Grid style={{textAlign:"center"}} xs={6} md={6} item>
+                <Grid style={{ textAlign: "center" }} xs={6} md={6} item>
                   <img
                     alt="nacimages"
                     src={state.web}
