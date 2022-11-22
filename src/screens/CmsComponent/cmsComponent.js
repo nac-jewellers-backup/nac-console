@@ -17,7 +17,7 @@ import BookYourAppointmentCMS from "./components/bookYourAppointmentCMS";
 import TestimonialCMS from "./components/testimonialCMS";
 import AboutCollection from "./components/aboutCollectionCMS";
 import TitleComp from "./components/titleCompCMS";
-
+import CustomAdvertisementCMS from "./components/customAdvertisementCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -106,7 +106,9 @@ const CmsComponent = (props) => {
         return <SpclTitleDescr data={val} handleSubmit={handleSubmit} />;
       }
       case "AboutBookAppointment": {
-        return <BookYourAppointmentCMS data={val} handleSubmit={handleSubmit} />;
+        return (
+          <BookYourAppointmentCMS data={val} handleSubmit={handleSubmit} />
+        );
       }
       case "titleComp": {
         return <TitleComp data={val} handleSubmit={handleSubmit} />;
@@ -116,6 +118,11 @@ const CmsComponent = (props) => {
       }
       case "TestimonialTwo": {
         return <AboutCollection data={val} handleSubmit={handleSubmit} />;
+      }
+      case "CustomAdvertising": {
+        return (
+          <CustomAdvertisementCMS data={val} handleSubmit={handleSubmit} />
+        );
       }
 
       default: {
