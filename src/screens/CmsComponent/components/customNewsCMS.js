@@ -221,7 +221,7 @@ const CustomNewsCMS = (props) => {
                   disabled={disableButton.img}
                   startIcon={<CloudUploadIcon />}
                 >
-                  Desktop Image
+                  Add Image
                 </Button>
               </label>
             </Grid>
