@@ -74,6 +74,16 @@ const getComponent = (data) => {
     case "EDIT": {
       return (<EditIcon style={{cursor:"pointer"}} onClick={data?.handleEdit} />)
     }
+    case "BUTTON_ARRAY" :{
+      return <div>
+        {data.rowData.map((val) => (
+          <div style={{paddingBottom:"4px"}}>
+            <div>{val.name}</div>
+            {val.url.length > 0 && <div>{val.url}</div>}
+          </div>
+        ))}
+      </div>
+    }
   }
 };
 

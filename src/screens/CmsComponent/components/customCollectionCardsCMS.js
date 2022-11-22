@@ -17,12 +17,21 @@ import { UploadImage } from "../../../utils/imageUpload";
 import { AlertContext } from "../../../context";
 import { useContext } from "react";
 
-const header = ["S.No", "Image", "Content", "Action"];
+const header = ["S.No", "Image", "Content", "Buttons", "Action"];
 
 const tableData = [
   { type: "INCREMENT", name: "" },
   { type: "WEB_IMAGE", name: "img" },
   { type: "TEXT", name: "content" },
+  { type: "BUTTON_ARRAY", name: "buttons" },
+  { type: "ACTION", name: "" },
+];
+
+const innerHeader = ["S.No", "Buttons", "Link", "Action"];
+const innerTableData = [
+  { type: "INCREMENT", name: "" },
+  { type: "TEXT", name: "name" },
+  { type: "TEXT", name: "url" },
   { type: "ACTION", name: "" },
 ];
 
@@ -36,6 +45,7 @@ const CustomCollectionCardsCMS = (props) => {
   const initialState = {
     img: "",
     content: "",
+    buttons: [],
   };
 
   const initialEdit = {
@@ -142,6 +152,14 @@ const CustomCollectionCardsCMS = (props) => {
     setState(rowData);
   };
 
+  const handleInnerDelete = (e, rowData, rowIndex) => {
+
+  }
+
+  const handleInnerEdit= (e, rowData, rowIndex) => {
+
+  }
+ 
   return (
     <>
       <Paper className={classes.root}>
@@ -178,7 +196,6 @@ const CustomCollectionCardsCMS = (props) => {
               name="content"
               required
             />
-
             {/* Image Upload */}
 
             <Grid container style={{ padding: "16px 0px" }}>
@@ -203,20 +220,23 @@ const CustomCollectionCardsCMS = (props) => {
                   </Button>
                 </label>
               </Grid>
-            </Grid>
-            {state.img.length > 0 && (
-              <Grid container style={{ padding: "16px 0px" }}>
-                {state.img.length > 0 && (
-                  <Grid style={{ textAlign: "center" }} xs={6} md={6} item>
+              {state.img.length > 0 && (
+              <Grid item style={{ padding: "0px 8px" }}>
                     <img
                       alt="nacimages"
                       src={state.img}
                       style={{ width: "100px", height: "auto" }}
                     />
-                  </Grid>
-                )}
               </Grid>
             )}
+            </Grid>
+            <TableComp
+              header={innerHeader}
+              tableData={innerTableData}
+              data={state.buttons}
+              handleDelete={handleInnerDelete}
+              handleEdit={handleInnerEdit}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={onsubmitvalue}>Add</Button>
