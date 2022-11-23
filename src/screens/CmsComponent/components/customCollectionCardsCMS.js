@@ -35,29 +35,35 @@ const innerTableData = [
   { type: "ACTION", name: "" },
 ];
 
-const CustomCollectionCardsCMS = (props) => {
-  console.log("prop456", props);
-  const classes = useStyles();
+const initialButtonState = {
+  name: "",
+  url: "",
+};
 
-  const [open, setOpen] = React.useState(false);
+const initialState = {
+  img: "",
+  content: "",
+  buttons: [],
+};
+
+const initialEdit = {
+  isEdit: false,
+  editIndex: null,
+};
+
+const CustomCollectionCardsCMS = (props) => {
+  const classes = useStyles();
   const alert = useContext(AlertContext);
 
-  const initialState = {
-    img: "",
-    content: "",
-    buttons: [],
-  };
-
-  const initialEdit = {
-    isEdit: false,
-    editIndex: null,
-  };
-
   const [state, setState] = React.useState(initialState);
+    console.log("stateHandle",state);
+  const [open, setOpen] = React.useState(false);
   const [editData, setEditData] = React.useState(initialEdit);
   const [disableButton, setDisable] = React.useState({
     img: false,
   });
+  const [buttonState, setButtonState] = React.useState(initialButtonState);
+  const [buttonEditState, setButtonEditState] = React.useState(initialEdit);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -66,6 +72,7 @@ const CustomCollectionCardsCMS = (props) => {
   const handleClose = () => {
     setOpen(false);
     setState(initialState);
+    setButtonState(initialButtonState)
   };
 
   const onChangeData = (event) => {
@@ -83,8 +90,6 @@ const CustomCollectionCardsCMS = (props) => {
             ...state,
             [name]: res?.data?.web,
           });
-          // setDisable({ ...disableButton, [name]: true });
-
           alert.setSnack({
             open: true,
             severity: "success",
@@ -153,13 +158,54 @@ const CustomCollectionCardsCMS = (props) => {
   };
 
   const handleInnerDelete = (e, rowData, rowIndex) => {
+    const deleteButton = state.buttons;
+    deleteButton.splice(rowIndex,1);
+    setState({
+      ...state, buttons: deleteButton
+    })
+    setButtonState(initialButtonState)
+  };
 
-  }
+  const handleInnerEdit = (e, rowData, rowIndex) => {
+    setButtonState(rowData);
+    setButtonEditState({
+      ...buttonEditState,
+      isEdit: true,
+      editIndex: rowIndex,
+    });
+  };
 
-  const handleInnerEdit= (e, rowData, rowIndex) => {
+  const onChangeButtonData = (event) => {
+    setButtonState({
+      ...buttonState,
+      [event.target.name]: event.target.value,
+    });
+  };
 
-  }
- 
+  const handleAddButtonUrl = () => {
+    if (buttonEditState.isEdit) {
+      const editButton = state.buttons;
+      editButton.splice(buttonEditState.editIndex,1,buttonState);
+      setState({
+        ...state, buttons: editButton
+      })
+    } else {
+      if (buttonState.name.length > 0) {
+        setState({
+          ...state,
+          buttons: [...state.buttons, buttonState],
+        });
+        setButtonState(initialButtonState);
+      } else {
+        alert.setSnack({
+          open: true,
+          severity: "error",
+          msg: "Please add the button",
+        });
+      }
+    }
+  };
+
   return (
     <>
       <Paper className={classes.root}>
@@ -221,14 +267,49 @@ const CustomCollectionCardsCMS = (props) => {
                 </label>
               </Grid>
               {state.img.length > 0 && (
-              <Grid item style={{ padding: "0px 8px" }}>
-                    <img
-                      alt="nacimages"
-                      src={state.img}
-                      style={{ width: "100px", height: "auto" }}
-                    />
-              </Grid>
-            )}
+                <Grid item style={{ padding: "0px 8px" }}>
+                  <img
+                    alt="nacimages"
+                    src={state.img}
+                    style={{ width: "100px", height: "auto" }}
+                  />
+                </Grid>
+              )}
+            </Grid>
+
+            <Grid style={{ borderTop: "1px solid #e0e0e0" }}>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="button"
+                label="Button"
+                variant="outlined"
+                fullWidth
+                value={buttonState.name}
+                onChange={onChangeButtonData}
+                name="name"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="url"
+                label="Link"
+                variant="outlined"
+                fullWidth
+                value={buttonState.url}
+                onChange={onChangeButtonData}
+                name="url"
+              />
+              <div style={{ textAlign: "center" }}>
+                <Button
+                  style={{ margin: "8px 0px 12px" }}
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddButtonUrl}
+                >
+                  Add Button and Url
+                </Button>
+              </div>
             </Grid>
             <TableComp
               header={innerHeader}
@@ -239,8 +320,12 @@ const CustomCollectionCardsCMS = (props) => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={onsubmitvalue}>Add</Button>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button variant="contained" color="primary" onClick={onsubmitvalue}>
+              Add
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleClose}>
+              Cancel
+            </Button>
           </DialogActions>
         </Dialog>
       </Paper>
