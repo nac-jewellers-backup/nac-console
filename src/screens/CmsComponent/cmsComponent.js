@@ -20,6 +20,7 @@ import AboutCollection from "./components/aboutCollectionCMS";
 import TitleComp from "./components/titleCompCMS";
 import TitleWithDescription from "./components/titleWithDescription";
 import CustomAdvertisementCMS from "./components/customAdvertisementCMS";
+import ContactUsCMS from "./components/contactUsCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -131,6 +132,10 @@ const CmsComponent = (props) => {
         return (
           <CustomAdvertisementCMS data={val} handleSubmit={handleSubmit} />
         );
+      }
+
+      case "formContent": {
+        return <ContactUsCMS data={val} handleSubmit={handleSubmit} />;
       }
 
       default: {
