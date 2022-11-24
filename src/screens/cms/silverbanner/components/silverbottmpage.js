@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Paper,
@@ -17,13 +17,16 @@ import {
   DialogContent,
   DialogActions,
 } from "@material-ui/core";
-
 import {
   ALLSTYLORISILVERLISTINGBOTTOMBANNERS,
   CREATESILVERLISTINGBOTTOMBANNER,
   DELETESILVERLISTINGBOTTOMBANNER,
 } from "../../../../graphql/query";
 import { GRAPHQL_DEV_CLIENT, APP_URL } from "../../../../config";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { UploadImage } from "../../../../utils/imageUpload";
+import { AlertContext } from "../../../../context";
+
 const useStyles2 = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -64,38 +67,48 @@ const SilverListingBottom = (props) => {
     web: "",
   });
 
-  useEffect(() => {
-    async function styloribannerfetch() {
-      const url = GRAPHQL_DEV_CLIENT;
-      const opts = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: ALLSTYLORISILVERLISTINGBOTTOMBANNERS,
-        }),
-      };
-      await fetch(url, opts)
-        .then((res) => res.json())
-        .then((fatchvalue) => {
-          let data = fatchvalue.data.allBanners.nodes;
-          data.sort((a, b) => parseFloat(a.position) - parseFloat(b.position));
+  const [disableButton, setDisable] = useState({
+    web: false,
+    mobile: false,
+  });
+  const alert = useContext(AlertContext);
 
-          setalllandingbanner(data);
-        })
-        .catch(console.error);
-    }
+  useEffect(() => {
     styloribannerfetch();
   }, []);
+  const styloribannerfetch = async () => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: ALLSTYLORISILVERLISTINGBOTTOMBANNERS,
+      }),
+    };
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((fatchvalue) => {
+        let data = fatchvalue.data.allBanners.nodes;
+        data.sort((a, b) => parseFloat(a.position) - parseFloat(b.position));
 
+        setalllandingbanner(data);
+      })
+      .catch(console.error);
+  };
   const handleClickOpen = () => {
     setOpen(true);
+    ClearState();
   };
 
   const handleClose = () => {
     setOpen(false);
+    ClearState();
   };
   const onChangeData = (event) => {
-    setCreatelandingbanner({ ...createlandingbanner, [event.target.name]: event.target.value });
+    setCreatelandingbanner({
+      ...createlandingbanner,
+      [event.target.name]: event.target.value,
+    });
   };
   const handleDelete = async (id) => {
     const url = GRAPHQL_DEV_CLIENT;
@@ -110,58 +123,116 @@ const SilverListingBottom = (props) => {
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
-        window.location.reload();
+        styloribannerfetch();
       })
       .catch(console.error);
   };
 
   const onsubmitvalue = async () => {
-    let create_banner_data = {
-      position: +"1",
-      url: "#",
-      mobile: createlandingbanner.mobile,
-      web: createlandingbanner.web,
-      now: new Date().toISOString(),
-    };
+    if (createlandingbanner.mobile && createlandingbanner.web) {
+      let create_banner_data = {
+        position: +"1",
+        url: "#",
+        mobile: createlandingbanner.mobile,
+        web: createlandingbanner.web,
+        now: new Date().toISOString(),
+      };
 
-    const url = GRAPHQL_DEV_CLIENT;
-    const opts = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: CREATESILVERLISTINGBOTTOMBANNER,
-        variables: create_banner_data,
-      }),
-    };
-  
-    await fetch(url, opts)
-      .then((res) => res.json())
-      .then((fatchvalue) => {
-        setOpen(false);
-        window.location.reload();
-      })
-      .catch(console.error);
+      const url = GRAPHQL_DEV_CLIENT;
+      const opts = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: CREATESILVERLISTINGBOTTOMBANNER,
+          variables: create_banner_data,
+        }),
+      };
+
+      await fetch(url, opts)
+        .then((res) => res.json())
+        .then((fatchvalue) => {
+          setOpen(false);
+          window.location.reload();
+        })
+        .catch(console.error);
+    } else {
+      alert.setSnack({
+        open: true,
+        severity: "warning",
+        msg: "Data is Missing!",
+      });
+    }
   };
+  const handleChange = (file, name) => {
+    UploadImage(file)
+      .then((res) => {
+        if (res?.data?.web) {
+          setCreatelandingbanner({
+            ...createlandingbanner,
+            web: res?.data?.web,
+            mobile: res?.data?.web,
+          });
+          setDisable({ ...disableButton, web: true, mobile: true });
 
+          alert.setSnack({
+            open: true,
+            severity: "success",
+            msg: "Image Uploaded Successfully",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const ClearState = () => {
+    setCreatelandingbanner({
+      position: "",
+      link: "",
+      mobile: "",
+      web: "",
+    });
+    setDisable({
+      web: false,
+      mobile: false,
+    });
+  };
   return (
     <>
       <Paper className={classes.root}>
-        <Grid container item xs={12} style={{ padding: "16px" }} sm={12} alignItems={"flex-end"}>
+        <Grid
+          container
+          item
+          xs={12}
+          style={{ padding: "16px" }}
+          sm={12}
+          alignItems={"flex-end"}
+        >
           <Grid fullwidth item xs={9} sm={9}>
-            <Typography component="h6" variant="h6" style={{ fontWeight: "bold" }}>
+            <Typography
+              component="h6"
+              variant="h6"
+              style={{ fontWeight: "bold" }}
+            >
               NAC - Listing Page - Bottom Banners
             </Typography>
           </Grid>
 
           <Grid fullwidth item xs={3} sm={3} style={{ "text-align": "right" }}>
-            <Button variant="contained" color="primary" onClick={handleClickOpen}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleClickOpen}
+            >
               Add New
             </Button>
           </Grid>
         </Grid>
 
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle id="form-dialog-title">NAC - Listing Page - Bottom Banners : </DialogTitle>
+          <DialogTitle id="form-dialog-title">
+            NAC - Listing Page - Bottom Banners :{" "}
+          </DialogTitle>
           <DialogContent>
             {/* <TextField
               autoFocus
@@ -184,26 +255,28 @@ const SilverListingBottom = (props) => {
               value={createlandingbanner.link}
               name="link"
             /> */}
-            <TextField
-              margin="dense"
-              id="mobile"
-              label="Mobile Image"
-              variant="outlined"
-              fullWidth
-              onChange={onChangeData}
-              value={createlandingbanner.mobile}
-              name="mobile"
-            />
-            <TextField
-              margin="dense"
-              id="web"
-              label="Desktop Image"
-              variant="outlined"
-              fullWidth
-              onChange={onChangeData}
-              value={createlandingbanner.web}
-              name="web"
-            />
+            <Grid container justifyContent="space-around"  style={{ padding: "16px 0px" }}>
+              <Grid item>
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="button-file"
+                  multiple
+                  type="file"
+                  onChange={(e) => handleChange(e.target.files[0], "mobile")}
+                />
+                <label htmlFor="button-file">
+                  <Button
+                    variant="outlined"
+                    component="span"
+                    startIcon={<CloudUploadIcon />}
+                    disabled={disableButton.mobile}
+                  >
+                    Upload Banner
+                  </Button>
+                </label>
+              </Grid>
+              </Grid>
           </DialogContent>
           <DialogActions>
             <Button onClick={onsubmitvalue}>Submit</Button>
@@ -212,7 +285,13 @@ const SilverListingBottom = (props) => {
         </Dialog>
 
         <div className={classes.tableWrapper}>
-          <Table className={classes.table} border={1} borderColor={"#ddd"} size="small" stickyHeader>
+          <Table
+            className={classes.table}
+            border={1}
+            borderColor={"#ddd"}
+            size="small"
+            stickyHeader
+          >
             <TableHead>
               <TableRow>
                 <TableCell>S.No</TableCell>
@@ -227,7 +306,11 @@ const SilverListingBottom = (props) => {
                 <TableRow key={val.id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
-                    <Link href={`${APP_URL}/silver-jewellery`} target="_blank" className={classes.link_style}>
+                    <Link
+                      href={`${APP_URL}/silver-jewellery`}
+                      target="_blank"
+                      className={classes.link_style}
+                    >
                       {`${APP_URL}/silver-jewellery`}
                     </Link>
                   </TableCell>
@@ -237,12 +320,23 @@ const SilverListingBottom = (props) => {
                     </Link>
                   </TableCell> */}
                   <TableCell>
-                    <Link href={val.web} target="_blank" className={classes.link_style}>
-                      <img alt="nacimages" src={val.web} style={{ width: "150px", height: "auto" }} />
+                    <Link
+                      href={val.web}
+                      target="_blank"
+                      className={classes.link_style}
+                    >
+                      <img
+                        alt="nacimages"
+                        src={val.web}
+                        style={{ width: "150px", height: "auto" }}
+                      />
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleDelete(val.id)} style={{ color: "#fff", backgroundColor: "red" }}>
+                    <Button
+                      onClick={() => handleDelete(val.id)}
+                      style={{ color: "#fff", backgroundColor: "red" }}
+                    >
                       Delete
                     </Button>
                   </TableCell>

@@ -2267,6 +2267,29 @@ const DELETENEWARRIVALPRODUCT = `mutation MyMutation($ProductId: String!) {
 
 `;
 
+const MUTATE_STATUS = `
+mutation($id: Int!, $status: String) {
+  updateAppointmentById(
+    input: { id: $id, appointmentPatch: { status: $status } }
+  ) {
+    clientMutationId
+  }
+}
+`
+
+const MUTATE_MEETING = `
+mutation($id :Int!,$meetingLink: String!) {
+  updateAppointmentById(
+    input: { id: $id, appointmentPatch: { meetingLink: $meetingLink } }
+  ) {
+    appointment {
+      id
+      meetingLink
+    }
+  }
+}
+`
+
 const GETORDERCOMMUNICATIONLOGS = `
 query MyQuery($id: UUID!) {
   orderById(id: $id) {
@@ -2295,10 +2318,33 @@ query MyQuery($id: UUID!) {
 
 `;
 
+const GETAPPLICATIONCOMMUNICATIONLOGS = `
+query MyQuery($id: Int!) {
+  appointmentById(id: $id) {
+    storeLocationByLocationId {
+      id
+      address
+      name
+    }
+    appointmentCommunicationLogsByAppointmentId {
+      nodes {
+        id
+        appointmentId
+        communicationType
+        createdAt
+        senderResponseId
+        type
+        updatedAt
+      }
+    }
+  }
+}
+
+`;
+
 const ALL_APPOINTMENTS_DATE = `
   query MyQuery {
     allAppointmentDates(
-      condition: { isActive: true }
       orderBy: START_DATE_TIME_ASC
     ) {
       nodes {
@@ -2309,38 +2355,147 @@ const ALL_APPOINTMENTS_DATE = `
         isActive
         startDate
         startDateTime
+        endDateTime
         updatedAt
         updatedBy
-        appointmentDateTimeSlotsByAppointmentDateId(
-          condition: { isActive: true }
-          orderBy: START_DATE_TIME_ASC
-        ) {
-          nodes {
-            appointmentDateId
-            createdAt
-            createdBy
-            endDateTime
-            startDateTime
-            endTime
-            id
-            isActive
-            startTime
+      }
+    }
+  }
+`;
+
+const CHECK_APPOINTMENT = `
+query($startDate: Date!,$endDate: Date!){
+  allAppointmentDates(
+    condition: {
+      startDate: $startDate,
+      endDate: $endDate
+    }
+  ) {
+    nodes {
+      createdAt
+      createdBy
+      endDate
+      id
+      isActive
+      startDate
+      startDateTime
+      endDateTime
+      updatedAt
+      updatedBy
+    }
+  }
+}
+
+`
+
+const FILTER_APPOINTEMENTS = gql`
+query($startDate: Date!, $endDate: Date!) {
+  allAppointmentDates(
+    filter: {
+      startDate: {
+        greaterThanOrEqualTo: $startDate
+        lessThanOrEqualTo: $endDate
+      }
+    }
+    orderBy: START_DATE_ASC
+  ) {
+    nodes {
+      createdAt
+      createdBy
+      endDate
+      id
+      isActive
+      startDate
+      startDateTime
+      endDateTime
+      updatedAt
+      updatedBy
+    }
+  }
+}
+`;
+
+const ALL_APPOINTMENTS_TIMESLOT =(appointmentDateId,appointmentTypeId) => gql`
+ query{  
+   allAppointmentDateTimeSlots(
+    condition: {
+      appointmentDateId: "${appointmentDateId}"
+      appointmentTypeId: ${appointmentTypeId}
+    }
+  ) {
+    nodes {
+      id
+      appointmentDateId
+      appointmentTypeId
+      startTime
+      endTime
+      isActive
+    }
+  }
+ }
+`
+
+const CHECK_TIMESLOT=gql`
+query($startTime: Time,$endTime: Time){
+  allAppointmentDateTimeSlots(condition: {endTime: $endTime, startTime: $startTime}) {
+    nodes {
+      id
+      appointmentDateId
+      appointmentTypeId
+      startTime
+      endTime
+      isActive
+    }
+  }
+}
+`
+
+
+const APPOINTMENTS_TYPE = `
+  query MyQuery {
+    allAppointmentTypeMasters {
+      nodes {
+        id
+        name
+        isActive
+        appointmentsByAppointmentTypeId{
+          edges {
+            node {
+              id
+            }
           }
         }
       }
     }
   }
 `;
-const SHOW_APPOINMENT_DETAILS = `
-query MyQuery {
-  allAppointments(orderBy: CREATED_AT_DESC) {
+
+
+const SHOW_APPOINMENT_DETAILS = gql`
+query(
+  $limit: Int
+  $offset: Int
+  $appointment_filter: AppointmentFilter!
+  $order_by: [AppointmentsOrderBy!]
+){
+  allAppointments(
+    first: $limit
+    offset: $offset
+    filter: $appointment_filter
+    orderBy: $order_by
+    ) {
     nodes {
       id
       mobile
       mobileCountryCode
       customerName
       email
-      appointmentDateTimeSlotBySlotId {
+      isActive
+      status
+      type: appointmentTypeMasterByAppointmentTypeId {
+        name
+      }
+      appointmentDateTimeSlotBySlotId{
         startTime
         startDateTime
         endDateTime
@@ -2353,6 +2508,40 @@ query MyQuery {
         name
       }
       locationId
+    }
+    totalCount
+  }
+}
+
+`;
+
+const SHOW_ALL_PPOINMENT_DETAILS = gql`
+query(
+  $id: Int
+){
+  allAppointments(filter: {id: {equalTo: $id}}) {
+    nodes {
+      isVerified
+      isActive
+      email
+      customerName
+      status
+      locationId
+      storeLocationByLocationId {
+        address
+      }
+      specialRequests
+      productCategory
+      meetingLink
+      metalType
+      mobile
+      isOnline
+      isItRequired
+      id
+      areMoreMembersJoining
+      appointmentDateTimeSlotBySlotId {
+        appointmentTypeId
+      }
     }
   }
 }
@@ -2494,4 +2683,12 @@ export {
   ALL_APPOINTMENTS_DATE,
   SHOW_APPOINMENT_DETAILS,
   PRICE_RUN_LOGS,
+  APPOINTMENTS_TYPE,
+  ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS,
+  SHOW_ALL_PPOINMENT_DETAILS,
+  MUTATE_STATUS,
+  GETAPPLICATIONCOMMUNICATIONLOGS,
+  CHECK_APPOINTMENT,
+  CHECK_TIMESLOT,
+  MUTATE_MEETING
 };

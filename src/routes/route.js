@@ -8,6 +8,7 @@ const route = {
   productlist: "/productlist",
   orderlist: "/orderlist",
   orderdetails: "/orderdetails/:id",
+  appointmentdetails: "/appointmentdetails/:id",
   userorders: "/orderlist/:userid",
   userwishlist: "/userwishlist/:userid",
   address: "/address/:userid",
@@ -95,6 +96,9 @@ const route = {
   Manageshedule: "/manageshedule",
   abandoned_cart: "/cart-details",
   pricelogs: "/price-logs",
+  imageUpload:"/imageUpload",
+
+  cmsComponents:"/cmsComponent"
 };
 
 export default route;

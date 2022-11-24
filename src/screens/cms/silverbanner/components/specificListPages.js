@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Paper,
@@ -18,7 +18,14 @@ import {
   DialogActions,
 } from "@material-ui/core";
 import { GRAPHQL_DEV_CLIENT, APP_URL } from "../../../../config";
-import { CREATESPECIFICLISTINGPAGE, ALLSPECIFICLISTINGPAGE, DELETESILVERLANDINGBANNER } from "../../../../graphql/query";
+import {
+  CREATESPECIFICLISTINGPAGE,
+  ALLSPECIFICLISTINGPAGE,
+  DELETESILVERLANDINGBANNER,
+} from "../../../../graphql/query";
+import { UploadImage } from "../../../../utils/imageUpload";
+import { AlertContext } from "../../../../context";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 const useStyles2 = makeStyles((theme) => ({
   root: {
@@ -56,10 +63,15 @@ function SpecificListPages(props) {
   const [alllandingbanner, setalllandingbanner] = useState([]);
   const [createlandingbanner, setCreatelandingbanner] = useState({
     position: "",
-    urlParam: "",
+    link: "",
     mobile: "",
     web: "",
   });
+  const [disableButton, setDisable] = useState({
+    web: false,
+    mobile: false,
+  });
+  const alert = useContext(AlertContext);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -70,57 +82,72 @@ function SpecificListPages(props) {
   };
 
   const onChangeData = (event) => {
-    setCreatelandingbanner({ ...createlandingbanner, [event.target.name]: event.target.value });
+    setCreatelandingbanner({
+      ...createlandingbanner,
+      [event.target.name]: event.target.value,
+    });
   };
 
   useEffect(() => {
-    async function styloribannerfetch() {
-      const url = GRAPHQL_DEV_CLIENT;
-      const opts = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: ALLSPECIFICLISTINGPAGE,
-        }),
-      };
-
-      await fetch(url, opts)
-        .then((res) => res.json())
-        .then((fatchvalue) => {
-          let data = fatchvalue.data.allBanners.nodes;
-          data.sort((a, b) => parseFloat(a.position) - parseFloat(b.position));
-
-          setalllandingbanner(data);
-        })
-        .catch(console.error);
-    }
     styloribannerfetch();
   }, []);
-
-  const onsubmitvalue = async () => {
-    let create_banner_data = {
-      urlParam: createlandingbanner.urlParam,
-      mobile: createlandingbanner.mobile,
-      web: createlandingbanner.web,
-      now: new Date().toISOString(),
-    };
+  const styloribannerfetch = async () => {
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: CREATESPECIFICLISTINGPAGE,
-        variables: create_banner_data,
+        query: ALLSPECIFICLISTINGPAGE,
       }),
     };
 
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
-        setOpen(false);
-        window.location.reload();
+        let data = fatchvalue.data.allBanners.nodes;
+        data.sort((a, b) => parseFloat(a.position) - parseFloat(b.position));
+
+        setalllandingbanner(data);
       })
       .catch(console.error);
+  };
+  const onsubmitvalue = async () => {
+    if (
+      createlandingbanner.urlParam &&
+      createlandingbanner.mobile &&
+      createlandingbanner.web
+    ) {
+      let create_banner_data = {
+        urlParam: createlandingbanner.urlParam,
+        mobile: createlandingbanner.mobile,
+        web: createlandingbanner.web,
+        now: new Date().toISOString(),
+      };
+      const url = GRAPHQL_DEV_CLIENT;
+      const opts = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: CREATESPECIFICLISTINGPAGE,
+          variables: create_banner_data,
+        }),
+      };
+
+      await fetch(url, opts)
+        .then((res) => res.json())
+        .then((fatchvalue) => {
+          ClearState();
+          styloribannerfetch();
+          setOpen(false);
+        })
+        .catch(console.error);
+    } else {
+      alert.setSnack({
+        open: true,
+        severity: "warning",
+        msg: "Data is Missing!",
+      });
+    }
   };
 
   const handleDelete = async (id) => {
@@ -137,30 +164,81 @@ function SpecificListPages(props) {
     await fetch(url, opts)
       .then((res) => res.json())
       .then((fatchvalue) => {
-        window.location.reload();
+        styloribannerfetch();
       })
       .catch(console.error);
   };
+  const handleChange = (file, name) => {
+    UploadImage(file)
+      .then((res) => {
+        if (res?.data?.web) {
+          setCreatelandingbanner({
+            ...createlandingbanner,
+            mobile: res?.data?.web,
+            web: res?.data?.web,
+          });
+          setDisable({ ...disableButton, mobile: true, web: true });
 
+          alert.setSnack({
+            open: true,
+            severity: "success",
+            msg: "Image Uploaded Successfully",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const ClearState = () => {
+    setCreatelandingbanner({
+      position: "",
+      link: "",
+      mobile: "",
+      web: "",
+    });
+    setDisable({
+      web: false,
+      mobile: false,
+    });
+  };
   return (
     <>
       <Paper className={classes.root}>
-        <Grid container item xs={12} style={{ padding: "16px" }} sm={12} alignItems={"flex-end"}>
+        <Grid
+          container
+          item
+          xs={12}
+          style={{ padding: "16px" }}
+          sm={12}
+          alignItems={"flex-end"}
+        >
           <Grid fullwidth item xs={9} sm={9}>
-            <Typography component="h6" variant="h6" style={{ fontWeight: "bold" }}>
+            <Typography
+              component="h6"
+              variant="h6"
+              style={{ fontWeight: "bold" }}
+            >
               NAC - Specific Listing Page - Banners
             </Typography>
           </Grid>
 
           <Grid fullwidth item xs={3} sm={3} style={{ "text-align": "right" }}>
-            <Button variant="contained" color="primary" onClick={handleClickOpen}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleClickOpen}
+            >
               Add New
             </Button>
           </Grid>
         </Grid>
 
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle id="form-dialog-title">NAC - Specific Listing Page - Banners : </DialogTitle>
+          <DialogTitle id="form-dialog-title">
+            NAC - Specific Listing Page - Banners :{" "}
+          </DialogTitle>
           <DialogContent>
             {/* <TextField
               autoFocus
@@ -183,26 +261,32 @@ function SpecificListPages(props) {
               value={createlandingbanner.urlParam}
               name="urlParam"
             />
-            <TextField
-              margin="dense"
-              id="mobile"
-              label="Mobile Image URL"
-              variant="outlined"
-              fullWidth
-              onChange={onChangeData}
-              value={createlandingbanner.mobile}
-              name="mobile"
-            />
-            <TextField
-              margin="dense"
-              id="web"
-              label="Desktop Image URL"
-              variant="outlined"
-              fullWidth
-              onChange={onChangeData}
-              value={createlandingbanner.web}
-              name="web"
-            />
+                   <Grid
+              container
+              justifyContent="space-around"
+              style={{ padding: "16px 0px" }}
+            >
+              <Grid item>
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="button-file"
+                  multiple
+                  type="file"
+                  onChange={(e) => handleChange(e.target.files[0], "web")}
+                />
+                <label htmlFor="button-file">
+                  <Button
+                    variant="outlined"
+                    component="span"
+                    startIcon={<CloudUploadIcon />}
+                    disabled={disableButton.mobile}
+                  >
+                    Upload Banner
+                  </Button>
+                </label>
+              </Grid>
+            </Grid>
           </DialogContent>
           <DialogActions>
             <Button onClick={onsubmitvalue}>Submit</Button>
@@ -211,7 +295,13 @@ function SpecificListPages(props) {
         </Dialog>
 
         <div className={classes.tableWrapper}>
-          <Table className={classes.table} border={1} borderColor={"#ddd"} size="small" stickyHeader>
+          <Table
+            className={classes.table}
+            border={1}
+            borderColor={"#ddd"}
+            size="small"
+            stickyHeader
+          >
             <TableHead>
               <TableRow>
                 <TableCell>S.No</TableCell>
@@ -226,7 +316,11 @@ function SpecificListPages(props) {
                 <TableRow key={val.id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
-                    <Link href={`${APP_URL + val.urlParam}`} target="_blank" className={classes.link_style}>
+                    <Link
+                      href={`${APP_URL + val.urlParam}`}
+                      target="_blank"
+                      className={classes.link_style}
+                    >
                       {`${APP_URL + val.urlParam}`}
                     </Link>
                   </TableCell>
@@ -236,12 +330,23 @@ function SpecificListPages(props) {
                     </Link>
                   </TableCell> */}
                   <TableCell>
-                    <Link href={val.web} target="_blank" className={classes.link_style}>
-                      <img alt="nacimages" src={val.web} style={{ width: "150px", height: "auto" }} />
+                    <Link
+                      href={val.web}
+                      target="_blank"
+                      className={classes.link_style}
+                    >
+                      <img
+                        alt="nacimages"
+                        src={val.web}
+                        style={{ width: "150px", height: "auto" }}
+                      />
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleDelete(val.id)} style={{ color: "#fff", backgroundColor: "red" }}>
+                    <Button
+                      onClick={() => handleDelete(val.id)}
+                      style={{ color: "#fff", backgroundColor: "red" }}
+                    >
                       Delete
                     </Button>
                   </TableCell>

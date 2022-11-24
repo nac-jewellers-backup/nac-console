@@ -126,6 +126,7 @@ const ActionIcon = (props) => {
 let filterData = {};
 
 export const OrderList = withRouter((props) => {
+  
   let user_id = props.location.pathname.split("/")[2];
   if (user_id) {
     filterData = {

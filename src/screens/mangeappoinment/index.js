@@ -7,20 +7,36 @@ import TableFooter from "@material-ui/core/TableFooter";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
+import { TableContainer ,IconButton,Grid,TextField,InputAdornment, Select, MenuItem,LinearProgress,Backdrop,CircularProgress } from "@material-ui/core";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import SearchIcon from "@material-ui/icons/Search";
+import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import Typography from "@material-ui/core/Typography";
 import React, { useEffect, useState } from "react";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
+import { useApolloClient, useQuery } from "react-apollo";
 import moment from "moment";
-import { SHOW_APPOINMENT_DETAILS } from "../../graphql/query";
+import { SHOW_APPOINMENT_DETAILS,MUTATE_STATUS,APPOINTMENTS_TYPE } from "../../graphql/query";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+  KeyboardTimePicker
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import { NetworkStatus } from "apollo-client";
+
 const columns = [
   { id: "user_id", label: "Id" },
   { id: "name", label: "Name" },
   { id: "email", label: "Email" },
   { id: "mobile", label: "Mobile" },
   { id: "date", label: "Date" },
-  { id: "location", label: "Location" },
+  // { id: "location", label: "Location" },
   { id: "StartTime", label: "Start Time" },
   { id: "EndTime", label: "End Time" },
+  { id: "Type", label: "Type" },
+  { id: "Status", label: "Status" },
+  { id: "actions", label: "" },
 ];
 
 const useStyles2 = makeStyles((theme) => ({
@@ -30,23 +46,44 @@ const useStyles2 = makeStyles((theme) => ({
   },
   table: {
     minWidth: 500,
+    backgroundColor:"white"
   },
   tableWrapper: {
     overflowX: "auto",
   },
   title: {
     color: "black",
-
     fontSize: "16px",
     padding: "20px",
   },
+  select:{
+    "& .MuiInputBase-root":{
+      height:"85%"
+    }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
+
+let filterData = {};
 
 export const Manageappoinment = (props) => {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [data, setData] = useState([]);
+  const [startDate, setStartDate] = React.useState(null);
+  const [endDate, setEndDate] = React.useState(null);
+  const [appointmentFilter, setAppointmentFilter] = React.useState({
+    ...filterData,
+    id: { isNull: false },
+  });
+  const [appointmentTypes, setAppointmentTypes] = useState([]);
+  const [selectedStatus, setSelectedStatus] = React.useState("");
+  const [selectedType, setSelectedType] = React.useState("");
+  const [orderBy, setOrderBy] = React.useState(["CREATED_AT_DESC"]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -56,24 +93,90 @@ export const Manageappoinment = (props) => {
     setPage(0);
   };
 
-  useEffect(() => {
+  const { loading, data, error, networkStatus } = useQuery(SHOW_APPOINMENT_DETAILS, {
+    variables: {
+      limit: rowsPerPage,
+      offset: page * rowsPerPage,
+      appointment_filter: { ...appointmentFilter },
+      order_by: orderBy,
+    },
+  });
+
+  React.useEffect(()=>{
+    GetAllAppointmentTypes();
+  },[])
+
+  const GetAllAppointmentTypes = async () => {
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: SHOW_APPOINMENT_DETAILS,
+        query: APPOINTMENTS_TYPE,
       }),
     };
-    fetch(url, opts)
+    await fetch(url, opts)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res.data.allAppointments.nodes);
-        debugger;
-        setData(res.data.allAppointments.nodes);
+          setAppointmentTypes(res.data.allAppointmentTypeMasters.nodes)
       })
       .catch(console.error);
-  }, []);
+  };
+
+  let rowData = data?.allAppointments?.nodes;
+
+  const handleDateChange = (date, value) => {
+    if (value === "start") {
+      setStartDate(date);
+    }
+    if (value === "end") {
+      if (date > startDate && startDate) {
+        setEndDate(date);
+        setAppointmentFilter({
+          ...appointmentFilter,
+          appointmentDateTimeSlotBySlotId: {
+            appointmentDateByAppointmentDateId: {
+              startDate: { greaterThanOrEqualTo: moment(startDate).format("YYYY-MM-DD"),lessThanOrEqualTo: moment(date).format("YYYY-MM-DD")},
+              endDate: { greaterThanOrEqualTo: moment(startDate).format("YYYY-MM-DD"), lessThanOrEqualTo: moment(date).format("YYYY-MM-DD")}
+            }
+          },   
+        });
+      } else alert("the To date must be higher than from");
+    }
+  };
+
+  const ActionIcon = (props) => {
+    return (
+      <>
+        <IconButton
+          onClick={() => {
+            window.open(`appointmentdetails/${props.id}`);
+          }}
+        >
+          <VisibilityIcon />
+        </IconButton>
+      </>
+    );
+  };
+
+  const handleSelect = async (value,id) => {
+    const url = GRAPHQL_DEV_CLIENT;
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: MUTATE_STATUS,
+        variables: { id: id,status:value },
+      }),
+    };
+
+    await fetch(url, opts)
+      .then((res) => res.json())
+      .then((fatchvalue) => {
+        window.location.reload();
+      })
+      .catch(console.error);
+  };
 
   function tConvert(time) {
     // Check correct time format and split into components
@@ -91,15 +194,145 @@ export const Manageappoinment = (props) => {
   }
 
   return (
-    <Paper className={classes.root}>
-      <div className={classes.tableWrapper}>
+    <div className={classes.root}>
+      
+                <Backdrop className={classes.backdrop} open={loading}>
+                  <CircularProgress color="inherit"/>
+                </Backdrop>
+             
         <Typography className={classes.title}>Manage Appointment</Typography>
-        <Table
-          className={classes.table}
-          border={1}
-          borderColor={"#ddd"}
-          size="small"
-          stickyHeader
+        <Grid container item xs={12} sm={12} spacing={2}>
+        <Grid container item xs={3}>
+          <TextField
+            variant="outlined"
+            fullWidth
+            placeholder="Search by name, email, phone"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            onChange={(event) => {
+              setAppointmentFilter({
+                  ...appointmentFilter,
+                  or: [ {mobile: { includesInsensitive: event.target.value }} , {customerName: { includesInsensitive: event.target.value }}, {email: { includesInsensitive: event.target.value } }]
+              });
+            }}
+          />
+        </Grid>
+        <Grid container item xs={2}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+          margin="normal"
+          label="Start Date"
+          value={startDate}
+          onChange={(date) => handleDateChange(date, "start")}
+          style={{ marginTop: 0 }}
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+          autoOk
+          variant="inline"
+          inputVariant="outlined"
+        />
+          </MuiPickersUtilsProvider>
+        </Grid>
+        <Grid container item xs={2}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+          margin="normal"
+          label="End Date"
+          value={endDate}
+          onChange={(date) => handleDateChange(date, "end")}
+          style={{ marginTop: 0 }}
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+          autoOk
+          variant="inline"
+          inputVariant="outlined"
+        />
+          </MuiPickersUtilsProvider>
+        </Grid>
+        <Grid container item xs={2}>
+        <TextField 
+        fullWidth
+        variant="outlined"
+        select
+        label="Status"
+        value={selectedStatus}
+        onChange={(event) => {
+          setSelectedStatus(event.target.value);
+          setAppointmentFilter({
+            ...appointmentFilter,
+            status: {equalTo: event.target.value}
+          })
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="start" style={{ cursor: "pointer" }}>
+              {selectedStatus !== "" && (
+                <CancelOutlinedIcon
+                  onClick={(event) => {
+                    setSelectedStatus("");
+                    delete appointmentFilter.status;
+                    setAppointmentFilter({ ...appointmentFilter });
+                  }}
+                />
+              )}
+            </InputAdornment>
+          ),
+        }}
+        >
+                          <MenuItem value="In-Progress">In-Progress</MenuItem>
+                          <MenuItem value="Approved">Approved</MenuItem>
+                          <MenuItem value="Completed">Completed</MenuItem>
+                          <MenuItem value="Submitted">Submitted</MenuItem>
+                          <MenuItem value="Cancelled">Cancelled</MenuItem>
+          </TextField>
+        </Grid>
+        <Grid container item xs={2}>
+        <TextField 
+        fullWidth
+        variant="outlined"
+        select
+        label="Type"
+        value={selectedType}
+        onChange={(event) => {
+          setSelectedType(event.target.value);
+          setAppointmentFilter({
+            ...appointmentFilter,
+            appointmentTypeId: {equalTo: event.target.value}
+          })
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="start" style={{ cursor: "pointer" }}>
+              {selectedType !== "" && (
+                <CancelOutlinedIcon
+                  onClick={(event) => {
+                    setSelectedType("");
+                    delete appointmentFilter.appointmentTypeId;
+                    setAppointmentFilter({ ...appointmentFilter });
+                  }}
+                />
+              )}
+            </InputAdornment>
+          ),
+        }}
+        >
+                            {appointmentTypes?.map((_)=>{
+          return(
+            <MenuItem value={_.id}>{_.name}</MenuItem>
+          )
+         })}
+          </TextField>
+        </Grid>
+      </Grid>
+        <TableContainer component={Paper}>
+        <Table      
         >
           <TableHead>
             <TableRow>
@@ -116,10 +349,9 @@ export const Manageappoinment = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data && data.length > 0
-              ? data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => (
+            {rowData &&
+                rowData.length > 0 ?
+                rowData.map((row, index) => (
                     <TableRow key={row.id}>
                       <TableCell align="left">{row?.id ?? ""}</TableCell>
                       <TableCell align="left">
@@ -135,9 +367,9 @@ export const Manageappoinment = (props) => {
                             ).format("Do MMM YYYY")
                           : ""}
                       </TableCell>
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         {row?.storeLocationByLocationId?.name ?? ""}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="left">
                         {row?.appointmentDateTimeSlotBySlotId?.startTime
                           ? tConvert(
@@ -152,24 +384,35 @@ export const Manageappoinment = (props) => {
                             )
                           : ""}
                       </TableCell>
+                      <TableCell align="left">
+                        {row?.type?.name ?? ""}
+                      </TableCell>
+                      <TableCell align="left">
+                        {row?.status ?? ""}
+                      </TableCell>
+                      <TableCell align="left">
+                        <ActionIcon id={row.id}/>
+                      </TableCell>
                     </TableRow>
                   ))
-              : "No Data"}
+              : <p style={{position:'absolute',right:"50%"}}>{"No Data"}</p>}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 15, 20, 25, 50, 100]}
-                count={data.length}
+                count={data?.allAppointments?.totalCount}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
+                onPageChange={() => {}}
               />
             </TableRow>
           </TableFooter>
         </Table>
-      </div>
-    </Paper>
+        </TableContainer>
+        
+    </div>
   );
 };

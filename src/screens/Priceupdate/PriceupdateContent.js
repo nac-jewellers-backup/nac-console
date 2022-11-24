@@ -42,11 +42,11 @@ export default function PriceupdateContent(props) {
       var bodydata = {};
       bodydata = {
         component: component.label,
-        product_sku: products,
+        req_product_id: products,
       };
       setStartrun(true);
       let response = await sendNetworkRequest(
-        "/price_run_latest",
+        "/price_run_new",
         {},
         bodydata,
         false
@@ -54,7 +54,7 @@ export default function PriceupdateContent(props) {
       if (response.statuscode == 200) {
         snack.setSnack({
           open: true,
-          msg: response.message,
+          msg: response.message || "Started Successfully!",
         });
       } else {
         snack.setSnack({
