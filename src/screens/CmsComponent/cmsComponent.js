@@ -22,6 +22,8 @@ import AboutCollection from "./components/aboutCollectionCMS";
 import TitleComp from "./components/titleCompCMS";
 import TitleWithDescription from "./components/titleWithDescription";
 import CustomAdvertisementCMS from "./components/customAdvertisementCMS";
+import ExperienceBannerCMS from "./components/experienceBannerCMS";
+import ExperienceCardCMS from "./components/experienceCardCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -112,7 +114,9 @@ const CmsComponent = (props) => {
         );
       }
       case "CollectionCards": {
-        return <CustomCollectionCardsCMS data={val} handleSubmit={handleSubmit} />;
+        return (
+          <CustomCollectionCardsCMS data={val} handleSubmit={handleSubmit} />
+        );
       }
       case "CustomNews": {
         return <CustomNewsCMS data={val} handleSubmit={handleSubmit} />;
@@ -141,6 +145,14 @@ const CmsComponent = (props) => {
         return (
           <CustomAdvertisementCMS data={val} handleSubmit={handleSubmit} />
         );
+      }
+
+      case "experienceBanner": {
+        return <ExperienceBannerCMS data={val} handleSubmit={handleSubmit} />;
+      }
+
+      case "experienceCard": {
+        return <ExperienceCardCMS data={val} handleSubmit={handleSubmit} />;
       }
 
       default: {
