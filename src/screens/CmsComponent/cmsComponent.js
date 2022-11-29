@@ -22,6 +22,8 @@ import AboutCollection from "./components/aboutCollectionCMS";
 import TitleComp from "./components/titleCompCMS";
 import TitleWithDescription from "./components/titleWithDescription";
 import CustomAdvertisementCMS from "./components/customAdvertisementCMS";
+import StoreLocatorDetailsCMS from "./components/storeLocatorDetailsCMS";
+import { Button, Grid } from "@material-ui/core";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -142,7 +144,11 @@ const CmsComponent = (props) => {
           <CustomAdvertisementCMS data={val} handleSubmit={handleSubmit} />
         );
       }
-
+      case "StoreDetailsComponent":{
+        return(
+          <StoreLocatorDetailsCMS data={val} handleSubmit={handleSubmit}/>
+        )
+      }
       default: {
         return <h1></h1>;
       }
@@ -151,6 +157,18 @@ const CmsComponent = (props) => {
 
   return (
     <div>
+      <div>
+        <Grid
+        container
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center"
+        >
+          <Grid>
+            <Button variant="contained" color="primary">Clone</Button>
+          </Grid>
+        </Grid>
+      </div>
       {state.map((val, i) => {
         return getTheTable(val);
       })}
