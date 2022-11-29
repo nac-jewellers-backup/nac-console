@@ -43,8 +43,12 @@ const CmsHome = (props) => {
   }, []);
 
   const getThePageTitle = (name) => {
-    const snakeCase =  name.replace(/[A-Z]/g, val => " "  + `${val.toLowerCase()}`);
-    return snakeCase
+    let createdName =  name.replace(/[A-Z]/g, val => " "  + `${val.toLowerCase()}`);
+    if(name === "loc"){
+      return createdName = "Store Locator Details"
+    }else{
+      return createdName
+    }
   }
   return (
     <Grid container spacing={3}>

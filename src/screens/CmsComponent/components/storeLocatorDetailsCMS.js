@@ -65,6 +65,7 @@ const StoreLocatorDetailsCMS = (props) => {
   const handleClose = () => {
     setOpen(false);
     setState(initialState);
+    setEditData(initialEdit)
   };
 
   const onsubmitvalue = async () => {
@@ -72,8 +73,7 @@ const StoreLocatorDetailsCMS = (props) => {
       state.title &&
       state.address &&
       state.contactNo &&
-      state.key  &&
-      state.url
+      state.key  
     ) {
       if (editData.isEdit) {
         const editContent = props?.data?.props;
@@ -168,7 +168,7 @@ const StoreLocatorDetailsCMS = (props) => {
           <TextField
             margin="dense"
             id="url"
-            label="Link"
+            label="Map Link"
             variant="outlined"
             fullWidth
             value={state.url}
