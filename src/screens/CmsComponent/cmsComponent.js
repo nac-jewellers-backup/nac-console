@@ -157,18 +157,7 @@ const CmsComponent = (props) => {
 
   return (
     <div>
-      <div>
-        <Grid
-        container
-        direction="row"
-        justifyContent="flex-end"
-        alignItems="center"
-        >
-          <Grid>
-            <Button variant="contained" color="primary">Clone</Button>
-          </Grid>
-        </Grid>
-      </div>
+
       {state.map((val, i) => {
         return getTheTable(val);
       })}
