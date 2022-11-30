@@ -22,6 +22,7 @@ import AboutCollection from "./components/aboutCollectionCMS";
 import TitleComp from "./components/titleCompCMS";
 import TitleWithDescription from "./components/titleWithDescription";
 import CustomAdvertisementCMS from "./components/customAdvertisementCMS";
+import ExperienceCardCMS from "./components/experienceCardCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -84,6 +85,7 @@ const CmsComponent = (props) => {
   };
 
   const getTheTable = (val) => {
+    console.log("val000", val);
     switch (val?.component) {
       case "BannerComponent": {
         return <BannerCMS data={val} handleSubmit={handleSubmit} />;
@@ -112,7 +114,9 @@ const CmsComponent = (props) => {
         );
       }
       case "CollectionCards": {
-        return <CustomCollectionCardsCMS data={val} handleSubmit={handleSubmit} />;
+        return (
+          <CustomCollectionCardsCMS data={val} handleSubmit={handleSubmit} />
+        );
       }
       case "CustomNews": {
         return <CustomNewsCMS data={val} handleSubmit={handleSubmit} />;
@@ -141,6 +145,9 @@ const CmsComponent = (props) => {
         return (
           <CustomAdvertisementCMS data={val} handleSubmit={handleSubmit} />
         );
+      }
+      case "ExperienceCard": {
+        return <ExperienceCardCMS data={val} handleSubmit={handleSubmit} />;
       }
 
       default: {

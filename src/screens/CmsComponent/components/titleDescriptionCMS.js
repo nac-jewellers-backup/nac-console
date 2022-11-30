@@ -26,6 +26,7 @@ const tableData = [
 ];
 
 const TitleDescriptionCMS = (props) => {
+  console.log("7871",props);
   const classes = useStyles();
   const alert = useContext(AlertContext);
   const [open, setOpen] = React.useState(false);
