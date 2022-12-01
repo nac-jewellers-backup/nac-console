@@ -15,6 +15,7 @@ export const ALLCDNPAGES = `query MyQuery {
     nodes {
       page
       data
+      isActive
     }
   }
 }
@@ -35,3 +36,28 @@ mutation updateStore( $stringifyState: JSON!,$page: String!) {
   }
 }
 `;
+
+export const CREATE_CMS = `
+mutation createNew($cloneData: JSON!, $page: String!){
+  createCdn(input: {cdn: {data: $cloneData, page: $page}}) {
+    cdn {
+      data
+      page
+    }
+  }
+}`;
+
+export const UPDATE_STATUS_CMS = `
+mutation updateStatus($isActive: Boolean!, $page: String!){
+  updateCdnByPage(input: {cdnPatch: {isActive: $isActive}, page: $page}){
+    cdn {
+      createdAt
+      data
+      id
+      isActive
+      nodeId
+      page
+      updatedAt
+    }
+  }
+}`;
