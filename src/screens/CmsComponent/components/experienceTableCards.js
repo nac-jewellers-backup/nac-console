@@ -59,6 +59,7 @@ import {
     const handleClose = () => {
       setOpen(false);
       setState(initialState);
+      setEditData(initialEdit)
     };
   
     const onChangeData = (event) => {
@@ -101,6 +102,8 @@ import {
             },
           };
           setOpen(false);
+          setEditData(initialEdit)
+          setState(initialState);
           props.handleSubmit(getData, "experienceCard", "cardContent");
         } else {
           let getData = [];
@@ -111,6 +114,8 @@ import {
             },
           };
           setOpen(false);
+          setEditData(initialEdit)
+          setState(initialState);
           props.handleSubmit(getData, "experienceCard", "cardContent");
         }
         setEditData(initialEdit);
