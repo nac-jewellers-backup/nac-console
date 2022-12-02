@@ -31,6 +31,8 @@ import {
   Grid,
   TextField,
 } from "@material-ui/core";
+import ExperienceBannerCMS from "./components/experienceBannerCMS";
+import ExperienceCardCMS from "./components/experienceCardCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -206,6 +208,14 @@ const CmsComponent = (props) => {
         return (
           <CustomAdvertisementCMS data={val} handleSubmit={handleSubmit} />
         );
+      }
+
+      case "experienceBanner": {
+        return <ExperienceBannerCMS data={val} handleSubmit={handleSubmit} />;
+      }
+
+      case "experienceCard": {
+        return <ExperienceCardCMS data={val} handleSubmit={handleSubmit} />;
       }
 
       default: {
