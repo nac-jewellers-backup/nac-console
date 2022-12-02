@@ -33,6 +33,7 @@ import {
 } from "@material-ui/core";
 import ExperienceBannerCMS from "./components/experienceBannerCMS";
 import ExperienceCardCMS from "./components/experienceCardCMS";
+import ExperienceTableCardCMS from "./components/experienceTableCards";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -149,6 +150,7 @@ const CmsComponent = (props) => {
   };
 
   const getTheTable = (val) => {
+    console.log("val000", val);
     switch (val?.component) {
       case "BannerComponent": {
         return <BannerCMS data={val} handleSubmit={handleSubmit} />;
@@ -209,13 +211,16 @@ const CmsComponent = (props) => {
           <CustomAdvertisementCMS data={val} handleSubmit={handleSubmit} />
         );
       }
+      case "ExperienceCard": {
+        return <ExperienceCardCMS data={val} handleSubmit={handleSubmit} />;
+      }
 
       case "experienceBanner": {
         return <ExperienceBannerCMS data={val} handleSubmit={handleSubmit} />;
       }
 
       case "experienceCard": {
-        return <ExperienceCardCMS data={val} handleSubmit={handleSubmit} />;
+        return <ExperienceTableCardCMS data={val} handleSubmit={handleSubmit} />;
       }
 
       default: {

@@ -172,7 +172,7 @@ export const ManageShedule = (props) => {
     await fetch(url, opts)
       .then((res) => res.json())
       .then(async(res) => {
-        if(res?.data?.allAppointmentDates?.nodes.length > 0){
+        if(res?.data?.allAppointmentDateTimeSlots?.nodes.length > 0){
           snack.setSnack({
             open: true,
             severity: 'warning',

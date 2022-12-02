@@ -16,58 +16,72 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { UploadImage } from "../../../utils/imageUpload";
 import { AlertContext } from "../../../context";
 import { useContext } from "react";
-
-const header = ["S.No", "Image", "Title", "Description", "Url", "Action"];
-
+import EditorConvertToHTML from "./richTextEditor";
+const header = [
+  "S.No",
+  "Background Image",
+  "Header Image",
+  "Description",
+  "Form Title",
+  "Submit Text",
+  "Button Text",
+  "Type",
+  "Action",
+];
 const tableData = [
   { type: "INCREMENT", name: "" },
-  { type: "WEB_IMAGE", name: "image" },
-  { type: "TEXT", name: "title" },
-  { type: "TEXT", name: "description" },
-  { type: "TEXT", name: "url" },
-  { type: "ACTION", name: "" },
+  { type: "WEB_IMAGE", name: "background_Image" },
+  { type: "WEB_IMAGE", name: "header_Image" },
+  { type: "HTMLTEXT", name: "description" },
+  { type: "HTMLTEXT", name: "form_Title" },
+  { type: "TEXT", name: "submit_Content" },
+  { type: "TEXT", name: "button_Text" },
+  { type: "TEXT", name: "type" },
+  { type: "EDIT", name: "" },
 ];
-
+const initialState = {
+  background_Image: "",
+  header_Image: "",
+  description: "",
+  form_Title: "",
+  submit_Content: "",
+  button_Text: "",
+  type: "",
+};
+const initialEdit = {
+  isEdit: false,
+  editIndex: null,
+};
 const ExperienceCardCMS = (props) => {
+  console.log("console data", props);
+  const { data } = props;
   const classes = useStyles();
   const alert = useContext(AlertContext);
-
-  const initialState = {
-    image: "",
-    title: "",
-    description: "",
-    url: "",
-  };
-
-  const initialEdit = {
-    isEdit: false,
-    editIndex: null,
-  };
-
+  const [sendData, setSendData] = React.useState([]);
   const [state, setState] = React.useState(initialState);
   const [open, setOpen] = React.useState(false);
   const [editData, setEditData] = React.useState(initialEdit);
   const [disableButton, setDisable] = React.useState({
-    image: false,
+    background_Image: false,
+    header_Image: false,
   });
-  const [buttonEditState, setButtonEditState] = React.useState(initialEdit);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
-
+  React.useEffect(() => {
+    setSendData([data?.props]);
+    setState(data?.props);
+  }, [data?.props]);
   const handleClose = () => {
     setOpen(false);
     setState(initialState);
   };
-
   const onChangeData = (event) => {
     setState({
       ...state,
       [event.target.name]: event.target.value,
     });
   };
-
   const handleChange = (file, name) => {
     UploadImage(file)
       .then((res) => {
@@ -87,32 +101,31 @@ const ExperienceCardCMS = (props) => {
         console.log(err);
       });
   };
-
   const onsubmitvalue = async () => {
-    if (state.image && state.title && state.description && state.url) {
+    if (
+      state.background_Image &&
+      state.header_Image &&
+      state.description &&
+      state.form_Title &&
+      state.submit_Content &&
+      state.button_Text &&
+      state.type
+    ) {
+      let getData = [];
       if (editData.isEdit) {
-        const editContent = props?.data?.props?.cardContent;
-        editContent.splice(editData.editIndex, 1, state);
-        let getData = [];
         getData = {
-          component: props?.data?.component,
-          props: {
-            cardContent: editContent,
-          },
+          component: data?.component,
+          props: state,
         };
         setOpen(false);
-        props.handleSubmit(getData, "experienceCard", "cardContent");
       } else {
-        let getData = [];
         getData = {
-          component: props?.data?.component,
-          props: {
-            cardContent: [...props?.data?.props?.cardContent, state],
-          },
+          component: data?.component,
+          props: [...data?.props, state],
         };
         setOpen(false);
-        props.handleSubmit(getData, "experienceCard", "cardContent");
       }
+      props.handleSubmit(getData, "ExperienceCard", "props");
       setEditData(initialEdit);
       setState(initialState);
     } else {
@@ -123,43 +136,38 @@ const ExperienceCardCMS = (props) => {
       });
     }
   };
-
-  const handleDelete = (e, rowData, rowIndex) => {
-    let getData = [];
-    const content = props?.data?.props?.cardContent;
-    content.splice(rowIndex, 1);
-    getData = {
-      component: props?.data?.component,
-      props: {
-        cardContent: content,
-      },
-    };
-    props.handleSubmit(getData, "experienceCard", "cardContent");
-  };
-
   const handleEdit = (e, rowData, rowIndex) => {
     setOpen(true);
     setEditData({ ...editData, isEdit: true, editIndex: rowIndex });
-    setState(rowData);
+    console.log("rowData", rowData);
   };
-
+  const handleChangeState = (data) => {
+    setState({
+      ...state,
+      description: data,
+    });
+  };
+  const handleChangeTitle = (data) => {
+    setState({
+      ...state,
+      form_Title: data,
+    });
+  };
   return (
     <>
       <Paper className={classes.root}>
         <TableHeaderComp
-          name={"Experience Cards Component"}
+          name={"Experience Card Component"}
           handleAddNew={handleClickOpen}
+          noAddNew
         />
         <TableComp
           header={header}
           tableData={tableData}
-          data={props?.data?.props?.cardContent}
-          handleDelete={handleDelete}
+          data={sendData}
           handleEdit={handleEdit}
         />
-
         {/* Dialog */}
-
         <Dialog
           classes={{ paper: classes.dialogPaperMid }}
           open={open}
@@ -167,46 +175,51 @@ const ExperienceCardCMS = (props) => {
         >
           <DialogTitle id="form-dialog-title">Add New Card Item</DialogTitle>
           <DialogContent>
+            <EditorConvertToHTML
+              handleChangeState={handleChangeState}
+              parentState={state.description}
+            />
+            <EditorConvertToHTML
+              handleChangeState={handleChangeTitle}
+              parentState={state.form_Title}
+            />
             <TextField
               autoFocus
               margin="dense"
-              id="title"
-              label="Title"
+              id="submit Content"
+              label="Submit_Content"
               variant="outlined"
               fullWidth
-              value={state.title}
+              value={state.submit_Content}
               onChange={onChangeData}
-              name="title"
+              name="submit_Content"
               required
             />
-
             <TextField
               autoFocus
               margin="dense"
-              id="description"
-              label="Description"
+              id="button_Text"
+              label="Button Text"
               variant="outlined"
               fullWidth
-              value={state.description}
+              value={state.button_Text}
               onChange={onChangeData}
-              name="description"
+              name="button_Text"
               required
             />
-
             <TextField
               autoFocus
               margin="dense"
-              id="url"
-              label="Url"
+              id="type"
+              label="Type"
               variant="outlined"
               fullWidth
-              value={state.url}
+              value={state.type}
               onChange={onChangeData}
-              name="url"
+              name="type"
               required
             />
             {/* Image Upload */}
-
             <Grid container style={{ padding: "16px 0px" }}>
               <Grid item>
                 <input
@@ -216,24 +229,58 @@ const ExperienceCardCMS = (props) => {
                   id="button-files"
                   multiple
                   type="file"
-                  onChange={(e) => handleChange(e.target.files[0], "image")}
+                  onChange={(e) =>
+                    handleChange(e.target.files[0], "background_Image")
+                  }
                 />
                 <label htmlFor="button-files">
                   <Button
                     variant="outlined"
                     component="span"
-                    disabled={disableButton.image}
+                    disabled={disableButton.background_Image}
                     startIcon={<CloudUploadIcon />}
                   >
                     Desktop Image
                   </Button>
                 </label>
               </Grid>
-              {state.image.length > 0 && (
+              {state.background_Image.length > 0 && (
                 <Grid item style={{ padding: "0px 8px" }}>
                   <img
                     alt="nacimages"
-                    src={state.image}
+                    src={state.background_Image}
+                    style={{ width: "100px", height: "auto" }}
+                  />
+                </Grid>
+              )}
+              <Grid item>
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  style={{ display: "none" }}
+                  id="button-files"
+                  multiple
+                  type="file"
+                  onChange={(e) =>
+                    handleChange(e.target.files[0], "header_Image")
+                  }
+                />
+                <label htmlFor="button-files">
+                  <Button
+                    variant="outlined"
+                    component="span"
+                    disabled={disableButton.header_Image}
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Desktop Image
+                  </Button>
+                </label>
+              </Grid>
+              {state.header_Image.length > 0 && (
+                <Grid item style={{ padding: "0px 8px" }}>
+                  <img
+                    alt="nacimages"
+                    src={state.header_Image}
                     style={{ width: "100px", height: "auto" }}
                   />
                 </Grid>
@@ -253,5 +300,4 @@ const ExperienceCardCMS = (props) => {
     </>
   );
 };
-
 export default ExperienceCardCMS;

@@ -2437,7 +2437,17 @@ const ALL_APPOINTMENTS_TIMESLOT =(appointmentDateId,appointmentTypeId) => gql`
 
 const CHECK_TIMESLOT=gql`
 query($startTime: Time,$endTime: Time){
-  allAppointmentDateTimeSlots(condition: {endTime: $endTime, startTime: $startTime}) {
+  allAppointmentDateTimeSlots(
+    filter: {
+      startTime: {
+        greaterThanOrEqualTo: $startTime
+        lessThanOrEqualTo: $endTime
+      }
+      endTime:{
+       lessThanOrEqualTo:$endTime 
+      }
+    }
+  ) {
     nodes {
       id
       appointmentDateId
