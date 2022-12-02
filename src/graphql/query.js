@@ -2444,6 +2444,7 @@ query($startTime: Time,$endTime: Time){
         lessThanOrEqualTo: $endTime
       }
       endTime:{
+       greaterThanOrEqualTo: $startTime
        lessThanOrEqualTo:$endTime 
       }
     }
