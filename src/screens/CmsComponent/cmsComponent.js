@@ -34,6 +34,7 @@ import {
 import ExperienceBannerCMS from "./components/experienceBannerCMS";
 import ExperienceCardCMS from "./components/experienceCardCMS";
 import ExperienceTableCardCMS from "./components/experienceTableCards";
+import StoreLocatorDetailsCMS from "./components/storeLocatorDetailsCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -223,6 +224,11 @@ const CmsComponent = (props) => {
         return <ExperienceTableCardCMS data={val} handleSubmit={handleSubmit} />;
       }
 
+      case "StoreDetailsComponent":{
+        return(
+          <StoreLocatorDetailsCMS data={val} handleSubmit={handleSubmit}/>
+        )
+      }
       default: {
         return <h1></h1>;
       }
@@ -243,6 +249,7 @@ const CmsComponent = (props) => {
           </Button>
         </Grid>
       </Grid>
+
       {state.map((val, i) => {
         return getTheTable(val);
       })}
