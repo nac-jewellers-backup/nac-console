@@ -22,6 +22,7 @@ import AboutCollection from "./components/aboutCollectionCMS";
 import TitleComp from "./components/titleCompCMS";
 import TitleWithDescription from "./components/titleWithDescription";
 import CustomAdvertisementCMS from "./components/customAdvertisementCMS";
+import SiteMapCMS from "./components/siteMapCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -35,7 +36,7 @@ const CmsComponent = (props) => {
   }, []);
 
   const fetchCall = () => {
-    const pageName = location.state.name;
+    const pageName = location?.state?.name;
     fetch(`${API_URL}/graphql`, {
       method: "post",
       headers: {
@@ -48,7 +49,8 @@ const CmsComponent = (props) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        const dataRecieved = JSON.parse(data.data.cdnByPage.data);
+        const dataRecieved = JSON.parse(data?.data?.cdnByPage?.data);
+        console.log("dataRecieved", dataRecieved)
         setState(dataRecieved);
       });
   };
@@ -73,6 +75,7 @@ const CmsComponent = (props) => {
     })
       .then((res) => res.json())
       .then((data) => {
+
         snack.setSnack({
           open: true,
           msg: "Successfully Updated!",
@@ -98,6 +101,7 @@ const CmsComponent = (props) => {
         return <QueryFormCMS data={val} handleSubmit={handleSubmit} />;
       }
       case "SlideImgMediaCard": {
+
         return <SlidingImageCardCMS data={val} handleSubmit={handleSubmit} />;
       }
       case "CustomBanner": {
@@ -142,6 +146,16 @@ const CmsComponent = (props) => {
           <CustomAdvertisementCMS data={val} handleSubmit={handleSubmit} />
         );
       }
+      case "siteMap": {
+        return (
+
+          <SiteMapCMS data={val} handleSubmit={handleSubmit} />
+        );
+      }
+      // case "arrayText": {
+      //   console.log("valueRender", val)
+      //   return "balalji";
+      // }
 
       default: {
         return <h1></h1>;
@@ -151,7 +165,7 @@ const CmsComponent = (props) => {
 
   return (
     <div>
-      {state.map((val, i) => {
+      {state?.map((val, i) => {
         return getTheTable(val);
       })}
     </div>

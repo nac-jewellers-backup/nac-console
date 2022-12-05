@@ -115,6 +115,8 @@ const AboutCollection = (props) => {
         setEditData(initialEdit);
         props.handleSubmit(getData, "TestimonialTwo", "storeData");
       } else {
+        debugger
+        console.log(editData, "isaddd")
         let getData = [];
         getData = {
           component: props?.data?.component,
@@ -214,7 +216,7 @@ const AboutCollection = (props) => {
                     variant="outlined"
                     component="span"
                     startIcon={<CloudUploadIcon />}
-                    // disabled={disableButton.mobile}
+                  // disabled={disableButton.mobile}
                   >
                     Image Upload
                   </Button>

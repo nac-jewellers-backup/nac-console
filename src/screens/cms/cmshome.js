@@ -43,7 +43,7 @@ const CmsHome = (props) => {
   }, []);
 
   const getThePageTitle = (name) => {
-    const snakeCase =  name.replace(/[A-Z]/g, val => " "  + `${val.toLowerCase()}`);
+    const snakeCase = name.replace(/[A-Z]/g, val => " " + `${val.toLowerCase()}`);
     return snakeCase
   }
   return (
@@ -124,12 +124,11 @@ const CmsHome = (props) => {
           {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
           <div
             onClick={() => handleClick(val.page)}
-            style={{ cursor: "pointer" }}
-          >
+            style={{ cursor: "pointer" }}>
             <Card fullwidth className="card2">
               <CardContent>
                 <Typography
-                  style={{ textAlign: "center", marginTop: 8,textTransform:"capitalize" }}
+                  style={{ textAlign: "center", marginTop: 8, textTransform: "capitalize" }}
                   component="h6"
                   variant="h5"
                 >
