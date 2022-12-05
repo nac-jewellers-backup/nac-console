@@ -76,6 +76,8 @@ const CustomCareerCardCMS = (props) => {
           },
         };
         setOpen(false);
+        setState(initialState)
+        setEditData(initialEdit)
         props.handleSubmit(getData, "CareerCard", "cardContent");
       } else {
         let getData = [];
@@ -86,6 +88,7 @@ const CustomCareerCardCMS = (props) => {
           },
         };
         setOpen(false);
+        setState(initialState)
         props.handleSubmit(getData, "CareerCard", "cardContent");
       }
     } else {

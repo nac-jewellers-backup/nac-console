@@ -15,7 +15,7 @@ class EditorConvertToHTML extends Component {
 
   componentDidMount() {
     const parentState = this.props.parentState;
-    console.log("parentState", parentState);
+    console.log("parentState-1", parentState);
     const contentBlock = htmlToDraft(parentState);
     if (contentBlock) {
       const contentState = ContentState.createFromBlockArray(
@@ -34,7 +34,7 @@ class EditorConvertToHTML extends Component {
       editorState,
     });
     const data = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    console.log("data", data);
+    console.log("data-00", data);
     this.props.handleChangeState(data);
     // }
   };

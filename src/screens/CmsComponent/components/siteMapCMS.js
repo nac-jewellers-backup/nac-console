@@ -172,8 +172,7 @@ const SiteMapCMS = (props) => {
                 />
                 <Dialog
                     classes={{ paper: classes.dialogPaperMid }}
-                    open={open}
-                >
+                    open={open}>
                     <DialogTitle id="form-dialog-title">
                         <div className={classes.dialogTitle} style={{ display: "flex" }}>
                             <Typography>Edit Site Map Component</Typography>

@@ -28,11 +28,14 @@ const tableData = [
   { type: "ACTION", name: "" },
 ];
 
-const storeHeader = ["S.No", "Title", "Address", "Location", "Image", "Button"];
+const storeHeader = ["S.No", "Title", "Address","Store Id", "Location", "Image", "Button","Action"];
+const viewStoreHeader = ["S.No", "Title", "Address","Store Id", "Location", "Image", "Button"];
+
 const tableStoreData = [
   { type: "INCREMENT", name: "S.No" },
   { type: "TEXT", name: "title" },
   { type: "TEXT", name: "para" },
+  { type: "TEXT", name: "key" },
   { type: "TEXT", name: "location", width: "200px" },
   { type: "WEB_IMAGE", name: "img", width: "200px" },
   { type: "TEXT", name: "button" },
@@ -43,6 +46,7 @@ const tableStoreView = [
   { type: "INCREMENT", name: "S.No" },
   { type: "TEXT", name: "title" },
   { type: "TEXT", name: "para" },
+  { type: "TEXT", name: "key" },
   { type: "TEXT", name: "location", width: "200px" },
   { type: "WEB_IMAGE", name: "img", width: "200px" },
   { type: "TEXT", name: "button" },
@@ -119,7 +123,7 @@ function StoreLocatorCMS(props) {
     setShowStoreFields(true);
   };
 
-  const validationHead = ["title", "button", "para", "location", "img", "href"];
+  const validationHead = ["title", "button", "para", "location", "img", "key"];
   const storeDetailsValidate = () => {
     let err = [];
     validationHead.map((val) => {
@@ -278,7 +282,7 @@ function StoreLocatorCMS(props) {
         </DialogTitle>
         <DialogContent>
           <TableComp
-            header={storeHeader}
+            header={viewStoreHeader}
             tableData={tableStoreView}
             data={stores?.stores}
           />
@@ -361,13 +365,13 @@ function StoreLocatorCMS(props) {
               </Grid>
               <TextField
                 margin="dense"
-                id="link"
-                label="Link"
+                id="key"
+                label="Store Id"
                 variant="outlined"
                 fullWidth
                 onChange={onChangeStoreData}
-                value={storeState.href}
-                name="href"
+                value={storeState.key}
+                name="key"
               />
               <TextField
                 margin="dense"
