@@ -222,10 +222,6 @@ const CmsComponent = (props) => {
           <SiteMapCMS data={val} handleSubmit={handleSubmit} />
         );
       }
-      // case "arrayText": {
-      //   console.log("valueRender", val)
-      //   return "balalji";
-      // }
       case "ExperienceCard": {
         return <ExperienceCardCMS data={val} handleSubmit={handleSubmit} />;
       }
