@@ -35,6 +35,8 @@ import ExperienceBannerCMS from "./components/experienceBannerCMS";
 import ExperienceCardCMS from "./components/experienceCardCMS";
 import ExperienceTableCardCMS from "./components/experienceTableCards";
 import StoreLocatorDetailsCMS from "./components/storeLocatorDetailsCMS";
+import TempleBannerCMS from "./components/TempleWorkCMS";
+import TempleFooterCMS from "./components/templeFooterCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -82,7 +84,7 @@ const CmsComponent = (props) => {
             msg: "Page Created Successfully",
           });
         });
-    }else{
+    } else {
       snack.setSnack({
         open: true,
         msg: "Please enter the page Route",
@@ -224,9 +226,21 @@ const CmsComponent = (props) => {
         return <ExperienceTableCardCMS data={val} handleSubmit={handleSubmit} />;
       }
 
-      case "StoreDetailsComponent":{
-        return(
-          <StoreLocatorDetailsCMS data={val} handleSubmit={handleSubmit}/>
+      case "StoreDetailsComponent": {
+        return (
+          <StoreLocatorDetailsCMS data={val} handleSubmit={handleSubmit} />
+        )
+      }
+
+      case "TempleWorkBannerComponent": {
+        return (
+          <TempleBannerCMS data={val} handleSubmit={handleSubmit} />
+        )
+      }
+
+      case "FooterComponent": {
+        return (
+          <TempleFooterCMS data={val} handleSubmit={handleSubmit} />
         )
       }
       default: {
