@@ -88,10 +88,8 @@ const getComponent = (data) => {
       return (
         data?.rowData?.map((_) => {
           return <Typography>
-            <a href={_?.url}
-              style={{ textDecoration: "none" }}>
-              {_?.name}
-            </a>
+            <div>{_.name}</div>
+            {_.url.length > 0 && <div style={{ color: "blue" }}>{_.url}</div>}
           </Typography>
         })
       );
