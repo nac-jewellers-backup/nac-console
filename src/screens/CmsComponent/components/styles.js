@@ -73,4 +73,32 @@ export const useStyles = makeStyles((theme) => ({
       },
     },
   },
+
+  datePicker: {
+    "& .react-datepicker-wrapper": {
+      "& .react-datepicker__input-container": {
+        "& input": {
+          width: "100% !important",
+          padding: "8.5px 12px !important",
+        },
+      },
+    },
+  },
+
+  textFields: {
+    "& .rdw-editor-main": {
+      borderRadius: "4px",
+    },
+    "& .public-DraftStyleDefault-ltr": {
+      padding: "0px 12px",
+    },
+  },
+
+  headerBottom: {
+    marginTop: "15px",
+    "& p": {
+      fontSize: "12px",
+      fontWeight: 500,
+    },
+  },
 }));

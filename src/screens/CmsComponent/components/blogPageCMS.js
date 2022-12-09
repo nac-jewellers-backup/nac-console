@@ -19,6 +19,9 @@ import { UploadImage } from "../../../utils/imageUpload";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { AlertContext } from "../../../context";
 import { Autocomplete } from "@material-ui/lab";
+import EditorConvertToHTML from "./richTextEditor";
+import { DatePickerComp } from "../../../components";
+import moment from "moment";
 
 const header = [
   "S.No",
@@ -39,7 +42,7 @@ const tableData = [
   { type: "TEXT", name: "header_Bottom" },
   { type: "TEXT", name: "heading" },
   { type: "TEXT", name: "content" },
-  { type: "TEXT", name: "date" },
+  { type: "DATE_PICKER", name: "date" },
   { type: "TEXT", name: "bottomText" },
   { type: "VIEW_STORES", name: "blogs" },
   { type: "ACTION", name: "" },
@@ -53,11 +56,12 @@ const initialBlogDetails = {
   header_Bottom: "",
   heading: "",
   content: "",
-  date: "",
+  date: new Date(),
   bottomText: "",
   description_1: "",
   description_2: "",
   description_3: "",
+  end_Text: "",
   third_Image: {
     align: "",
     image: "",
@@ -84,11 +88,8 @@ function BlogPageCMS(props) {
   });
 
   const [value, setValue] = React.useState({ ...initialBlogDetails });
-
-  const [showStoreFields, setShowStoreFields] = useState(false);
   const [blogState, setBlogState] = useState({ ...initialBlogDetails });
   const [editData, setEditData] = useState(initialEdit);
-  const [storesEdit, setStoresEdit] = useState(initialEdit);
 
   const handleViewMore = (e, data, index) => {
     setOpenBlog(true);
@@ -106,6 +107,7 @@ function BlogPageCMS(props) {
   const handleAddNewStoresClose = () => {
     setAddBlogs(false);
     setEditData(initialEdit);
+    setBlogState(initialBlogDetails);
   };
 
   const onChangeStoreData = (event) => {
@@ -113,10 +115,6 @@ function BlogPageCMS(props) {
       ...blogState,
       [event.target.name]: event.target.value,
     });
-  };
-
-  const handleShowStoreField = () => {
-    setShowStoreFields(true);
   };
 
   const handleChange = (file, name) => {
@@ -180,6 +178,7 @@ function BlogPageCMS(props) {
       blogState.description_1 &&
       blogState.description_2 &&
       blogState.description_3 &&
+      blogState.end_Text &&
       blogState.third_Image.align &&
       blogState.third_Image.image.length > 0 &&
       blogState.second_Image.banners.length > 0
@@ -189,10 +188,11 @@ function BlogPageCMS(props) {
         storeDataEdit.splice(editData.editIndex, 1, {
           bottomText: blogState?.bottomText,
           content: blogState?.content,
-          date: blogState?.date,
+          date: moment(blogState?.date).format("MM/DD/YYYY"),
           description_1: blogState?.description_1,
           description_2: blogState?.description_2,
           description_3: blogState?.description_3,
+          end_Text: blogState?.end_Text,
           header: blogState?.header,
           header_Bottom: blogState?.header_Bottom,
           heading: blogState?.heading,
@@ -230,10 +230,11 @@ function BlogPageCMS(props) {
               {
                 bottomText: blogState?.bottomText,
                 content: blogState?.content,
-                date: blogState?.date,
+                date: new Date(blogState?.date),
                 description_1: blogState?.description_1,
                 description_2: blogState?.description_2,
                 description_3: blogState?.description_3,
+                end_Text: blogState?.end_Text,
                 header: blogState?.header,
                 header_Bottom: blogState?.header_Bottom,
                 heading: blogState?.heading,
@@ -248,7 +249,6 @@ function BlogPageCMS(props) {
           },
         };
         setAddBlogs(false);
-        console.log("getData second", getData);
         props.handleSubmit(getData, "blogPageCard", "cardContent");
       }
       setEditData(initialEdit);
@@ -260,7 +260,6 @@ function BlogPageCMS(props) {
         msg: "Please fill all the fields",
       });
     }
-    console.log("blogState", blogState);
   };
 
   const handleEdit = (e, rowData, rowIndex) => {
@@ -282,6 +281,36 @@ function BlogPageCMS(props) {
     props.handleSubmit(getData, "blogPageCard", "cardContent");
   };
 
+  const handleChangeheaderBottom = (data) => {
+    setBlogState({
+      ...blogState,
+      header_Bottom: data,
+    });
+  };
+
+  const handleChangeDescription_1 = (data) => {
+    setBlogState({
+      ...blogState,
+      description_1: data,
+    });
+  };
+
+  const handleChangeDescription_2 = (data) => {
+    setBlogState({
+      ...blogState,
+      description_2: data,
+    });
+  };
+
+  const handleChangeDescription_3 = (data) => {
+    setBlogState({
+      ...blogState,
+      description_3: data,
+    });
+  };
+  const handleDate = (value) => {
+    setBlogState({ ...blogState, date: value });
+  };
   return (
     <Paper className={classes.root}>
       <TableHeaderComp
@@ -382,6 +411,18 @@ function BlogPageCMS(props) {
               </div>
               <div className={classes.border}>
                 <Grid>
+                  <div className={classes.imageText}>
+                    <Typography>End Text</Typography>
+                  </div>
+                </Grid>
+                <Grid>
+                  <div className={classes.contentText}>
+                    <Typography>{blogs?.end_Text}</Typography>
+                  </div>
+                </Grid>
+              </div>
+              <div className={classes.border}>
+                <Grid>
                   <div className={classes.alignText}>
                     <Typography>Align</Typography>
                   </div>
@@ -424,7 +465,7 @@ function BlogPageCMS(props) {
               paddingBottom: "6px",
             }}
           ></div>
-          <div>
+          <div className={classes.textFields}>
             <TextField
               margin="dense"
               id="header"
@@ -436,19 +477,17 @@ function BlogPageCMS(props) {
               name="header"
               required
             />
+            <div>
+              <div className={classes.headerBottom}>
+                <Typography>Header Bottom Text :</Typography>
+              </div>
+              <EditorConvertToHTML
+                handleChangeState={handleChangeheaderBottom}
+                parentState={blogState.header_Bottom}
+              />
+            </div>
             <TextField
-              margin="dense"
-              id="header_Bottom"
-              label="Header Bottom"
-              variant="outlined"
-              fullWidth
-              onChange={onChangeStoreData}
-              value={blogState?.header_Bottom}
-              name="header_Bottom"
-              required
-            />
-            <TextField
-              margin="dense"
+              margin="normal"
               id="outlined-multiline-flexible"
               label="Heading Text"
               variant="outlined"
@@ -459,7 +498,7 @@ function BlogPageCMS(props) {
               required
             />
             <TextField
-              margin="dense"
+              margin="normal"
               id="content"
               label="Content"
               variant="outlined"
@@ -471,19 +510,17 @@ function BlogPageCMS(props) {
               rows={4}
               required
             />
+            <div>
+              <div className={classes.headerBottom}>
+                <Typography>Date Picker :</Typography>
+              </div>
+              <div className={classes.datePicker}>
+                <DatePickerComp onChange={handleDate} value={blogState?.date} />
+                {console.log(blogState?.date, "ll")}
+              </div>
+            </div>
             <TextField
-              margin="dense"
-              id="date"
-              label="Date"
-              variant="outlined"
-              fullWidth
-              onChange={onChangeStoreData}
-              value={blogState?.date}
-              name="date"
-              required
-            />
-            <TextField
-              margin="dense"
+              margin="normal"
               id="bottomText"
               label="Button Text"
               variant="outlined"
@@ -493,41 +530,42 @@ function BlogPageCMS(props) {
               name="bottomText"
               required
             />
+            <div>
+              <div className={classes.headerBottom}>
+                <Typography>Description_1 Text :</Typography>
+              </div>
+              <EditorConvertToHTML
+                handleChangeState={handleChangeDescription_1}
+                parentState={blogState.description_1}
+              />
+            </div>
+            <div>
+              <div className={classes.headerBottom}>
+                <Typography>Description_2 Text :</Typography>
+              </div>
+              <EditorConvertToHTML
+                handleChangeState={handleChangeDescription_2}
+                parentState={blogState.description_2}
+              />
+            </div>
+            <div>
+              <div className={classes.headerBottom}>
+                <Typography>Description_3 Text :</Typography>
+              </div>
+              <EditorConvertToHTML
+                handleChangeState={handleChangeDescription_3}
+                parentState={blogState.description_3}
+              />
+            </div>
             <TextField
-              margin="dense"
-              id="description_1"
-              label="Description_1"
+              margin="normal"
+              id="end_Text"
+              label="End Text"
               variant="outlined"
               fullWidth
               onChange={onChangeStoreData}
-              value={blogState?.description_1}
-              name="description_1"
-              multiline
-              rows={4}
-              required
-            />
-            <TextField
-              margin="dense"
-              id="description_2"
-              label="Description_2"
-              variant="outlined"
-              fullWidth
-              onChange={onChangeStoreData}
-              value={blogState?.description_2}
-              name="description_2"
-              multiline
-              rows={4}
-              required
-            />
-            <TextField
-              margin="dense"
-              id="description_3"
-              label="description_3"
-              variant="outlined"
-              fullWidth
-              onChange={onChangeStoreData}
-              value={blogState?.description_3}
-              name="description_3"
+              value={blogState?.end_Text}
+              name="end_Text"
               multiline
               rows={4}
               required
@@ -547,7 +585,7 @@ function BlogPageCMS(props) {
                 <TextField
                   {...params}
                   variant="outlined"
-                  label="Align"
+                  label="Third Image Align Position"
                   required
                   margin="dense"
                 />
@@ -599,7 +637,7 @@ function BlogPageCMS(props) {
                     component="span"
                     startIcon={<CloudUploadIcon />}
                   >
-                    Second Image
+                    Second Banner Image
                   </Button>
                 </label>
               </Grid>

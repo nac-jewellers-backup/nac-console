@@ -1,8 +1,9 @@
-import { TableCell, TableRow, Button } from "@material-ui/core";
+import { TableCell, TableRow, Button, Typography } from "@material-ui/core";
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import parse from "html-react-parser";
+import moment from "moment";
 
 const getComponent = (data) => {
   switch (data.type) {
@@ -18,10 +19,8 @@ const getComponent = (data) => {
         </div>
       );
     }
-    case "HTMLTEXT":{
-      return(
-        <div>{parse(data.rowData)}</div>
-      )
+    case "HTMLTEXT": {
+      return <div>{parse(data.rowData)}</div>;
     }
     case "INCREMENT": {
       return <div>{data.rowIndex + 1}</div>;
@@ -32,7 +31,11 @@ const getComponent = (data) => {
     case "VIEW_STORES": {
       return (
         <div
-          style={{ color: "blue", cursor: "pointer",textDecoration:"underline" }}
+          style={{
+            color: "blue",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
           onClick={data?.handleViewStores}
         >
           View Stores
@@ -66,23 +69,41 @@ const getComponent = (data) => {
             gap: 6,
           }}
         >
-          <EditIcon onClick={data?.handleEdit} style={{cursor:"pointer"}} />
-          <DeleteIcon onClick={data?.handleDelete} style={{color:"red",cursor:"pointer"}} />
+          <EditIcon onClick={data?.handleEdit} style={{ cursor: "pointer" }} />
+          <DeleteIcon
+            onClick={data?.handleDelete}
+            style={{ color: "red", cursor: "pointer" }}
+          />
         </div>
       );
     }
     case "EDIT": {
-      return (<EditIcon style={{cursor:"pointer"}} onClick={data?.handleEdit} />)
+      return (
+        <EditIcon style={{ cursor: "pointer" }} onClick={data?.handleEdit} />
+      );
     }
-    case "BUTTON_ARRAY" :{
-      return <div>
-        {data.rowData.map((val) => (
-          <div style={{paddingBottom:"4px"}}>
-            <div>{val.name}</div>
-            {val.url.length > 0 && <div style={{color:"blue"}}>{val.url}</div>}
-          </div>
-        ))}
-      </div>
+    case "BUTTON_ARRAY": {
+      return (
+        <div>
+          {data.rowData.map((val) => (
+            <div style={{ paddingBottom: "4px" }}>
+              <div>{val.name}</div>
+              {val.url.length > 0 && (
+                <div style={{ color: "blue" }}>{val.url}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    case "DATE_PICKER": {
+      return (
+        <div>
+          <Typography>
+            {data.rowData ? moment(data.rowData).format("MMMM DD, YYYY") : "-"}
+          </Typography>
+        </div>
+      );
     }
   }
 };
@@ -93,7 +114,7 @@ const TableBodyRow = ({
   rowIndex = null,
   handleViewStores = () => null,
   handleDelete = () => null,
-  handleEdit = () => null
+  handleEdit = () => null,
 }) => {
   return (
     <TableRow>
