@@ -58,21 +58,22 @@ const CmsHome = (props) => {
       .then((res) => res.json())
       .then((data) => {
         // debugger;
+
         const dataRecieved = data.data.allCdns.nodes;
         setState(dataRecieved);
       });
   }
 
   const getThePageTitle = (name) => {
-    let createdName =  name.replace(/[A-Z]/g, val => " "  + `${val.toLowerCase()}`);
-    if(name === "loc"){
+    let createdName = name.replace(/[A-Z]/g, val => " " + `${val.toLowerCase()}`);
+    if (name === "loc") {
       return createdName = "Store Locator Details"
-    }else{
+    } else {
       return createdName
     }
   };
 
-  const handleChangeActive = (page,isActive) => {
+  const handleChangeActive = (page, isActive) => {
     fetch(`${API_URL}/graphql`, {
       method: "post",
       headers: {
@@ -181,10 +182,10 @@ const CmsHome = (props) => {
                     margin: "8px 0px",
                     textTransform: "capitalize",
                     cursor: "pointer",
-                    borderRadius:"8px",
-                    backgroundColor:"#3f51b5",
-                    padding:"8px",
-                    color:"#fff"
+                    borderRadius: "8px",
+                    backgroundColor: "#3f51b5",
+                    padding: "8px",
+                    color: "#fff"
                   }}
                   component="h6"
                   variant="h5"
@@ -193,11 +194,11 @@ const CmsHome = (props) => {
                   {getThePageTitle(val.page)}
                 </Typography>
                 <FormControlLabel
-                  style={{ display:"flex", alignItems:"center",justifyContent:"center" }}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
                   control={
                     <Switch
                       checked={val.isActive}
-                      onChange={() => handleChangeActive(val.page,val.isActive)}
+                      onChange={() => handleChangeActive(val.page, val.isActive)}
                       name="checkedB"
                       color="primary"
                     />

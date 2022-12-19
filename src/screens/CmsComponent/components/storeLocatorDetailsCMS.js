@@ -73,7 +73,7 @@ const StoreLocatorDetailsCMS = (props) => {
       state.title &&
       state.address &&
       state.contactNo &&
-      state.key  
+      state.key
     ) {
       if (editData.isEdit) {
         const editContent = props?.data?.props;
@@ -91,7 +91,7 @@ const StoreLocatorDetailsCMS = (props) => {
         let getData = [];
         getData = {
           component: props?.data?.component,
-          props:  [...props?.data?.props, state],
+          props: [...props?.data?.props, state],
         };
         setOpen(false);
         setState(initialState);

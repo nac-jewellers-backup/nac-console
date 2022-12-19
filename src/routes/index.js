@@ -176,7 +176,7 @@ const MainApp = () => {
             component={OrderManagementDetails}
           />
 
-         <PrivateRoute
+          <PrivateRoute
             path={route.appointmentdetails}
             component={AppointmentManagementDetails}
           />

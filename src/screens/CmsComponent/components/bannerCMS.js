@@ -43,7 +43,7 @@ const BannerCMS = (props) => {
     urlParam: null,
     mobile: "",
     web: "",
-    url: "",  
+    url: "",
   };
   const initialEdit = {
     isEdit: false,
@@ -115,9 +115,8 @@ const BannerCMS = (props) => {
         if (res?.data?.web) {
           setState({
             ...state,
-            [name]: res?.data?.web,
+            img: res?.data?.web,
           });
-          // setDisable({ ...disableButton, [name]: true });
 
           alert.setSnack({
             open: true,
@@ -162,7 +161,7 @@ const BannerCMS = (props) => {
         data={props?.data?.props?.banners}
         handleDelete={handleDelete}
         handleEdit={handleEdit}
-      />  
+      />
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle id="form-dialog-title">Add New Banner Item</DialogTitle>
@@ -209,7 +208,6 @@ const BannerCMS = (props) => {
                   variant="outlined"
                   component="span"
                   startIcon={<CloudUploadIcon />}
-                  disabled={disableButton.mobile}
                 >
                   Mobile Image
                 </Button>

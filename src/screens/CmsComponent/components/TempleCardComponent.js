@@ -1,50 +1,75 @@
+
 import React from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Paper, TextField } from "@material-ui/core"
-import { TableComp } from "../../../components"
-import TableHeaderComp from "./TableHeadComp"
+import { TableComp } from "../../../components";
 import { useStyles } from "./styles";
-import { UploadImage } from "../../../utils/imageUpload";
-import { AlertContext } from "../../../context";
+import TableHeaderComp from "./TableHeadComp";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Paper,
+    TextField,
+} from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { AlertContext } from "../../../context";
+import { useContext } from "react";
+import { UploadImage } from "../../../utils/imageUpload";
 
 
 
 const header = [
     "S.No",
-    "Title",
     "Image",
-    "Content",
-    "Action"
-
+    "Title",
+    "Details",
+    "Action",
 ];
 const tableData = [
     { type: "INCREMENT", name: "" },
+    { type: "WEB_IMAGE", name: "img" },
     { type: "TEXT", name: "title" },
-    { type: "WEB_IMAGE", name: "image" },
     { type: "TEXT", name: "content" },
-    { type: "EDIT", name: "" },
-
-
+    { type: "ACTION", name: "" },
 ];
-const initialEdit = {
-    isEdit: false,
-    editIndex: null,
-};
-const initialState = {
-    title: "",
-    image: null,
-    content: "",
-}
 
-const BookYourAppointmentCMS = (props) => {
+const TempleCardComponent = (props) => {
     const { data } = props
-    const classes = useStyles();
-    console.log(data?.props, "data?.props")
-    const alert = React.useContext(AlertContext);
-    const [open, setOpen] = React.useState(false);
-    const [editData, setEditData] = React.useState(initialEdit);
-    const [state, setState] = React.useState(initialState)
 
+    console.log(data?.props?.detailData, "data?.props?.CardData")
+    const classes = useStyles();
+    const initialState = {
+        img: "",
+        title: "",
+        content: "",
+    };
+    const initialEdit = {
+        isEdit: false,
+        editIndex: null,
+    };
+    const alert = useContext(AlertContext);
+    const [open, setOpen] = React.useState(false);
+    const [state, setState] = React.useState(initialState);
+    const [editData, setEditData] = React.useState(initialEdit);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setState(initialState);
+        setEditData(initialEdit);
+    };
+
+    const onChangeData = (event) => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.value,
+        });
+    };
 
     const handleChange = (file, name) => {
         UploadImage(file)
@@ -52,8 +77,9 @@ const BookYourAppointmentCMS = (props) => {
                 if (res?.data?.web) {
                     setState({
                         ...state,
-                        image: res?.data?.web
+                        img: res?.data?.web,
                     });
+
                     alert.setSnack({
                         open: true,
                         severity: "success",
@@ -66,31 +92,16 @@ const BookYourAppointmentCMS = (props) => {
             });
     };
 
-
-    const onChangeData = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.value,
-        });
-
-    };
-
-
     const handleEdit = (e, rowData, rowIndex) => {
         setOpen(true);
         setEditData({ ...editData, isEdit: true, editIndex: rowIndex });
         setState(rowData);
-    }
-
-
-    const handleClose = () => {
-        setOpen(false);
-    }
+    };
 
     const validate = () => {
         if (
+            state.img &&
             state.title &&
-            state.image &&
             state.content
         ) {
             return true;
@@ -98,30 +109,35 @@ const BookYourAppointmentCMS = (props) => {
             return false;
         }
     };
+
     const onsubmitvalue = async () => {
-        if (validate()) {
+        if (validate) {
             if (editData.isEdit) {
-                const values = data?.props;
+                debugger
+                const values = data?.props?.CardData;
                 values.splice(editData.editIndex, 1, state);
                 let getData = [];
                 getData = {
                     component: props?.data?.component,
-                    props: values,
+                    props: {
+                        CardData: values
+                    }
                 };
+                setState(initialState);
+                setEditData(initialEdit);
+                props.handleSubmit(getData, "TempleCardComponent", "CardData");
                 setOpen(false);
-                props.handleSubmit(getData, "AboutBookAppointment", "props");
             } else {
-                console.log(editData, "isaddd")
-
                 let getData = [];
                 getData = {
                     component: props?.data?.component,
-                    props:
-                        [...data?.props, state],
-
+                    props: {
+                        CardData: [...data?.props.CardData, state],
+                    }
                 };
                 setOpen(false);
-                props.handleSubmit(getData, "AboutBookAppointment", "props");
+                setState(initialState);
+                props.handleSubmit(getData, "TempleCardComponent", "CardData");
             }
         } else {
             alert.setSnack({
@@ -130,86 +146,100 @@ const BookYourAppointmentCMS = (props) => {
                 msg: "Please fill all the fields in the form ",
             });
         }
+
     };
+
+    const handleDelete = (e, rowData, rowIndex) => {
+        debugger
+        let getData = [];
+        const content = data?.props?.CardData;
+        content.splice(rowIndex, 1);
+        getData = {
+            component: props?.data?.component,
+            props: {
+                CardData: content,
+            },
+        };
+        props.handleSubmit(getData, "TempleCardComponent", "CardData");
+    };
+
+
     return (
         <>
             <Paper className={classes.root}>
                 <TableHeaderComp
-                    name={"Book Your Appointment Component"}
-                    noAddNew
+                    name={"Temple Card Component"}
+                    handleAddNew={handleClickOpen}
                 />
                 <TableComp
                     header={header}
                     tableData={tableData}
-                    data={data?.props}
+                    data={data?.props?.CardData}
                     handleEdit={handleEdit}
+                    handleDelete={handleDelete}
                 />
-                <Dialog
-                    classes={{ paper: classes.dialogPaperMid }}
-                    open={open}
-                    onClose={handleClose}
-                >
-                    <DialogTitle id="form-dialog-title">
-                        Edit Book Your Appointment Component
-                    </DialogTitle>
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle id="form-dialog-title">Add New Card Item</DialogTitle>
                     <DialogContent>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="title"
-                            label="Title"
+                            label="title"
                             variant="outlined"
                             fullWidth
                             onChange={onChangeData}
                             value={state.title}
                             name="title"
+                            required
+                        />
+                        <TextField
+                            margin="dense"
+                            id="content"
+                            label="content"
+                            variant="outlined"
+                            fullWidth
+                            onChange={onChangeData}
+                            value={state.content}
+                            name="content"
+                            required
                         />
                         <Grid
                             container
-                            justifyContent="flex-start"
+                            justifyContent="space-around"
                             style={{ padding: "16px 0px" }}
-                            spacing={3}
                         >
                             <Grid item>
                                 <input
                                     accept="image/*"
+                                    className={classes.input}
                                     style={{ display: "none" }}
-                                    id="button-file"
+                                    id="button-files"
                                     multiple
                                     type="file"
-                                    onChange={(e) => handleChange(e.target.files[0], "mobile")}
+                                    onChange={(e) => handleChange(e.target.files[0], "web")}
                                 />
-                                <label htmlFor="button-file">
+                                <label htmlFor="button-files">
                                     <Button
                                         variant="outlined"
                                         component="span"
                                         startIcon={<CloudUploadIcon />}
-                                    // disabled={disableButton.mobile}
-                                    >
-                                        Image Upload
+                                    >Image
                                     </Button>
                                 </label>
                             </Grid>
-                            {state.image && <Grid item>
+                        </Grid>
+                        {state.img.length > 0 && (
+                            <Grid style={{ textAlign: "center" }} xs={6} md={6} item>
                                 <img
                                     alt="nacimages"
-                                    src={state.image}
+                                    src={state.img}
                                     style={{ width: "100px", height: "auto" }}
                                 />
-                            </Grid>}
-                        </Grid>
-                        <TextField
-                            margin="dense"
-                            id="content"
-                            label="Details"
-                            variant="outlined"
-                            fullWidth
-                            multiline
-                            rows={3}
-                            onChange={onChangeData}
-                            value={state.content}
-                            name="content"
-                        />
+                            </Grid>
+                        )}
+
+
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={onsubmitvalue}>Add</Button>
@@ -218,6 +248,6 @@ const BookYourAppointmentCMS = (props) => {
                 </Dialog>
             </Paper>
         </>
-    )
-}
-export default BookYourAppointmentCMS
+    );
+};
+export default TempleCardComponent;

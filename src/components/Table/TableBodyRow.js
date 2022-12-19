@@ -1,4 +1,4 @@
-import { TableCell, TableRow, Button } from "@material-ui/core";
+import { TableCell, TableRow, Button, Typography } from "@material-ui/core";
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -7,6 +7,7 @@ import parse from "html-react-parser";
 const getComponent = (data) => {
   switch (data.type) {
     case "TEXT": {
+
       return (
         <div
           style={{
@@ -18,8 +19,8 @@ const getComponent = (data) => {
         </div>
       );
     }
-    case "HTMLTEXT":{
-      return(
+    case "HTMLTEXT": {
+      return (
         <div>{parse(data.rowData)}</div>
       )
     }
@@ -32,7 +33,7 @@ const getComponent = (data) => {
     case "VIEW_STORES": {
       return (
         <div
-          style={{ color: "blue", cursor: "pointer",textDecoration:"underline" }}
+          style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
           onClick={data?.handleViewStores}
         >
           View Stores
@@ -66,23 +67,107 @@ const getComponent = (data) => {
             gap: 6,
           }}
         >
-          <EditIcon onClick={data?.handleEdit} style={{cursor:"pointer"}} />
-          <DeleteIcon onClick={data?.handleDelete} style={{color:"red",cursor:"pointer"}} />
+          <EditIcon onClick={data?.handleEdit} style={{ cursor: "pointer" }} />
+          <DeleteIcon onClick={data?.handleDelete} style={{ color: "red", cursor: "pointer" }} />
         </div>
       );
     }
     case "EDIT": {
-      return (<EditIcon style={{cursor:"pointer"}} onClick={data?.handleEdit} />)
+      return (<EditIcon style={{ cursor: "pointer" }} onClick={data?.handleEdit} />)
     }
-    case "BUTTON_ARRAY" :{
+
+    case "BUTTON_ARRAY": {
       return <div>
         {data.rowData.map((val) => (
-          <div style={{paddingBottom:"4px"}}>
+          <div style={{ paddingBottom: "4px" }}>
             <div>{val.name}</div>
-            {val.url.length > 0 && <div style={{color:"blue"}}>{val.url}</div>}
+            {val.url.length > 0 && <div style={{ color: "blue" }}>{val.url}</div>}
           </div>
         ))}
       </div>
+    }
+    case "ARRAYTEXT": {
+      return (
+        data?.rowData?.map((_) => {
+          return <Typography>
+            <div>{_.name}</div>
+            {_.url.length > 0 && <div style={{ color: "blue" }}>{_.url}</div>}
+          </Typography>
+        })
+      )
+    }
+    case "DETAILED_ARR": {
+      debugger
+      return (
+        data?.rowData?.map((_) => {
+          return <Typography>
+            <div>{_?.title}</div>
+            <div style={{ color: "blue" }}>{_?.ContentOne}</div>
+            <div style={{ color: "blue" }}>{_?.ContentTwo}</div>
+
+          </Typography>
+        })
+      )
+    }
+    case "ARR_IMAGE": {
+      debugger
+      return (
+        data?.rowData?.map((_) => {
+          return (
+            < img
+              alt="nacimages"
+              src={_}
+              style={{ width: "150px", height: "auto" }
+              }
+            />
+          )
+        }))
+    }
+    // case "ARRAY_IMAGES": {
+    //   return (
+    //     data?.rowData?.map((_) => {
+    //       return (
+    //         < img
+    //           alt="nacimages"
+    //           src={_?.img}
+    //           style={{ width: "150px", height: "auto" }
+    //           }
+    //         />
+    //       )
+    //     }))
+    // }
+    case "ARR_TEXT": {
+      return (
+        data?.rowData?.map((_) => {
+          return (
+            <Typography>
+              <div style={{ color: "blue", textTransform: "capitalize" }}>{_?.products}</div>
+              <div style={{ textTransform: "capitalize" }}>{_.location}</div>
+            </Typography>
+          )
+
+        })
+      )
+    }
+    case "ARRAY_IMAGES": {
+      debugger
+      return (
+        data.rowData?.map((_) => {
+          return (
+            <>
+              < img
+                alt="nacimages"
+                src={_?.img}
+                style={{ width: "150px", height: "auto" }
+                }
+              />
+              {_.text && <Typography>{_?.text}</Typography>}
+              {_.weigh && <Typography>{_?.weigh}</Typography>}
+
+
+            </>
+          )
+        }))
     }
   }
 };
