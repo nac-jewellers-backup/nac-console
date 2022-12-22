@@ -36,6 +36,7 @@ import ExperienceCardCMS from "./components/experienceCardCMS";
 import ExperienceTableCardCMS from "./components/experienceTableCards";
 import StoreLocatorDetailsCMS from "./components/storeLocatorDetailsCMS";
 import BlogPageCMS from "./components/blogPageCMS";
+import ContactUsCMS from "./components/contactUsCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -234,6 +235,10 @@ const CmsComponent = (props) => {
           <StoreLocatorDetailsCMS data={val} handleSubmit={handleSubmit}/>
         )
       }
+      case "formContent": {
+        return <ContactUsCMS data={val} handleSubmit={handleSubmit} />;
+      }
+
       default: {
         return <h1></h1>;
       }
