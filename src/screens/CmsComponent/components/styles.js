@@ -101,4 +101,9 @@ export const useStyles = makeStyles((theme) => ({
       fontWeight: 500,
     },
   },
+  dialogTitle: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center"
+  }
 }));

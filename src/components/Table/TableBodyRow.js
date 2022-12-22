@@ -31,11 +31,7 @@ const getComponent = (data) => {
     case "VIEW_STORES": {
       return (
         <div
-          style={{
-            color: "blue",
-            cursor: "pointer",
-            textDecoration: "underline",
-          }}
+          style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
           onClick={data?.handleViewStores}
         >
           View Stores
@@ -70,10 +66,7 @@ const getComponent = (data) => {
           }}
         >
           <EditIcon onClick={data?.handleEdit} style={{ cursor: "pointer" }} />
-          <DeleteIcon
-            onClick={data?.handleDelete}
-            style={{ color: "red", cursor: "pointer" }}
-          />
+          <DeleteIcon onClick={data?.handleDelete} style={{ color: "red", cursor: "pointer" }} />
         </div>
       );
     }
@@ -103,6 +96,16 @@ const getComponent = (data) => {
             {data.rowData ? moment(data.rowData).format("MMMM DD, YYYY") : "-"}
           </Typography>
         </div>
+      );
+    }
+    case "ARRAYTEXT": {
+      return (
+        data?.rowData?.map((_) => {
+          return <Typography>
+            <div>{_.name}</div>
+            {_.url.length > 0 && <div style={{ color: "blue" }}>{_.url}</div>}
+          </Typography>
+        })
       );
     }
   }

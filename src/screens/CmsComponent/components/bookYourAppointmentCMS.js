@@ -39,7 +39,7 @@ const initialState = {
 const BookYourAppointmentCMS = (props) => {
     const { data } = props
     const classes = useStyles();
-
+    console.log(data?.props, "data?.props")
     const alert = React.useContext(AlertContext);
     const [open, setOpen] = React.useState(false);
     const [editData, setEditData] = React.useState(initialEdit);
@@ -111,6 +111,8 @@ const BookYourAppointmentCMS = (props) => {
                 setOpen(false);
                 props.handleSubmit(getData, "AboutBookAppointment", "props");
             } else {
+                console.log(editData, "isaddd")
+
                 let getData = [];
                 getData = {
                     component: props?.data?.component,

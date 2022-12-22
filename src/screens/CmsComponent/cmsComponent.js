@@ -22,6 +22,7 @@ import AboutCollection from "./components/aboutCollectionCMS";
 import TitleComp from "./components/titleCompCMS";
 import TitleWithDescription from "./components/titleWithDescription";
 import CustomAdvertisementCMS from "./components/customAdvertisementCMS";
+import SiteMapCMS from "./components/siteMapCMS";
 import {
   Button,
   Dialog,
@@ -84,7 +85,7 @@ const CmsComponent = (props) => {
             msg: "Page Created Successfully",
           });
         });
-    }else{
+    } else {
       snack.setSnack({
         open: true,
         msg: "Please enter the page Route",
@@ -104,7 +105,7 @@ const CmsComponent = (props) => {
   };
 
   const fetchCall = () => {
-    const pageName = location.state.name;
+    const pageName = location?.state?.name;
     fetch(`${API_URL}/graphql`, {
       method: "post",
       headers: {
@@ -117,7 +118,8 @@ const CmsComponent = (props) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        const dataRecieved = JSON.parse(data.data.cdnByPage.data);
+        const dataRecieved = JSON.parse(data?.data?.cdnByPage?.data);
+        console.log("dataRecieved", dataRecieved)
         setState(dataRecieved);
       });
   };
@@ -142,6 +144,7 @@ const CmsComponent = (props) => {
     })
       .then((res) => res.json())
       .then((data) => {
+
         snack.setSnack({
           open: true,
           msg: "Successfully Updated!",
@@ -168,6 +171,7 @@ const CmsComponent = (props) => {
         return <QueryFormCMS data={val} handleSubmit={handleSubmit} />;
       }
       case "SlideImgMediaCard": {
+
         return <SlidingImageCardCMS data={val} handleSubmit={handleSubmit} />;
       }
       case "CustomBanner": {
@@ -214,6 +218,12 @@ const CmsComponent = (props) => {
           <CustomAdvertisementCMS data={val} handleSubmit={handleSubmit} />
         );
       }
+      case "siteMap": {
+        return (
+
+          <SiteMapCMS data={val} handleSubmit={handleSubmit} />
+        );
+      }
       case "ExperienceCard": {
         return <ExperienceCardCMS data={val} handleSubmit={handleSubmit} />;
       }
@@ -230,9 +240,9 @@ const CmsComponent = (props) => {
         return <BlogPageCMS data={val} handleSubmit={handleSubmit} />;
       }
 
-      case "StoreDetailsComponent":{
-        return(
-          <StoreLocatorDetailsCMS data={val} handleSubmit={handleSubmit}/>
+      case "StoreDetailsComponent": {
+        return (
+          <StoreLocatorDetailsCMS data={val} handleSubmit={handleSubmit} />
         )
       }
       case "formContent": {
@@ -262,7 +272,8 @@ const CmsComponent = (props) => {
 
       {state.map((val, i) => {
         return getTheTable(val);
-      })}
+      })
+      }
       <Dialog
         classes={{ paper: classes.dialogPaperMid }}
         open={cloneDialog}
@@ -287,7 +298,7 @@ const CmsComponent = (props) => {
           <Button onClick={handleCloneDialogClose}>Cancel</Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </div >
   );
 };
 

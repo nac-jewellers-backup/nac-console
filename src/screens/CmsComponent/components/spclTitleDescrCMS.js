@@ -24,7 +24,6 @@ const initialState = {
 }
 const SpclTitleDescr = (props) => {
     const { data } = props
-    console.log(data?.props, "propssssss")
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(false)
@@ -94,8 +93,6 @@ const SpclTitleDescr = (props) => {
         }
     };
 
-
-    console.log("spclTitleDescr", spclTitleDescr);
     return (
         <>
             <Paper className={classes.root}>
