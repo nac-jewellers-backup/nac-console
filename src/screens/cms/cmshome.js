@@ -193,18 +193,20 @@ const CmsHome = (props) => {
                 >
                   {getThePageTitle(val.page)}
                 </Typography>
-                <FormControlLabel
-                  style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-                  control={
-                    <Switch
-                      checked={val.isActive}
-                      onChange={() => handleChangeActive(val.page, val.isActive)}
-                      name="checkedB"
-                      color="primary"
-                    />
-                  }
-                  label="Is Page Active?"
-                />
+                <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
+                  <Typography>Is page active:</Typography>
+                  <FormControlLabel
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                    control={
+                      <Switch
+                        checked={val.isActive}
+                        onChange={() => handleChangeActive(val.page, val.isActive)}
+                        name="checkedB"
+                        color="primary"
+                      />
+                    }
+                  />
+                </div>
               </CardContent>
             </Card>
           </div>

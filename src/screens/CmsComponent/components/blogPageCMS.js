@@ -22,6 +22,8 @@ import { Autocomplete } from "@material-ui/lab";
 import EditorConvertToHTML from "./richTextEditor";
 import { DatePickerComp } from "../../../components";
 import moment from "moment";
+import Edit from "@material-ui/icons/Edit";
+import { Delete } from "@material-ui/icons";
 
 const header = [
   "S.No",
@@ -39,12 +41,12 @@ const tableData = [
   { type: "INCREMENT", name: "S.No" },
   { type: "WEB_IMAGE", name: "image" },
   { type: "TEXT", name: "header" },
-  { type: "TEXT", name: "header_Bottom" },
+  { type: "HTMLTEXT", name: "header_Bottom" },
   { type: "TEXT", name: "heading" },
   { type: "TEXT", name: "content" },
   { type: "DATE_PICKER", name: "date" },
   { type: "TEXT", name: "bottomText" },
-  { type: "VIEW_STORES", name: "blogs" },
+  { type: "VIEW_STORES", name: "blogs",customName:"View Details" },
   { type: "ACTION", name: "" },
 ];
 
@@ -117,7 +119,8 @@ function BlogPageCMS(props) {
     });
   };
 
-  const handleChange = (file, name) => {
+  const handleChange = (file, name,i) => {
+    debugger;
     UploadImage(file)
       .then((res) => {
         console.log(res?.data, "ll");
@@ -144,6 +147,23 @@ function BlogPageCMS(props) {
               third_Image: {
                 ...blogState?.third_Image,
                 image: res?.data?.web,
+              },
+            });
+          }else if(name === "editBanners"){
+            debugger;
+            const newBanner = {
+              position: i+1,
+              url: "",
+              urlParam: "",
+              web: res?.data?.web,
+              mobile: res?.data?.web,
+            }
+            const editBanners = [...blogState?.second_Image?.banners];
+            editBanners.splice(i,1,newBanner)
+            setBlogState({
+              ...blogState,
+              second_Image: {
+                banners:editBanners
               },
             });
           } else {
@@ -311,6 +331,16 @@ function BlogPageCMS(props) {
   const handleDate = (value) => {
     setBlogState({ ...blogState, date: value });
   };
+  const handleDeleteBanner =(i) => {
+    const editBanners = [...blogState?.second_Image?.banners];
+    editBanners.splice(i,1)
+    setBlogState({
+      ...blogState,
+      second_Image: {
+        banners:editBanners
+      },
+    });
+  }
   return (
     <Paper className={classes.root}>
       <TableHeaderComp
@@ -344,23 +374,23 @@ function BlogPageCMS(props) {
         </DialogTitle>
         <DialogContent>
           <div className={classes.innerDialog}>
+          <Grid>
+            <div className={classes.imageText}>
+              <Typography>Second Image</Typography>
+            </div>
+          </Grid>
             <Grid container>
-              {blogs?.second_Image?.banners?.map((val) => {
-                return (
-                  <div className={classes.border}>
-                    <Grid>
-                      <div className={classes.imageText}>
-                        <Typography>Second Image</Typography>
-                      </div>
-                    </Grid>
-                    <Grid>
-                      <div className={classes.blogInnerImage}>
-                        <img src={val?.web} alt="Second Image" />
-                      </div>
-                    </Grid>
-                  </div>
-                );
-              })}
+              <Grid container spacing={2} style={{padding:"10px 10px 20px"}}>
+                {blogs?.second_Image?.banners?.map((val) => {
+                  return (
+                      <Grid md={4} xs={4}>
+                        <div>
+                          <img src={val?.web} alt="Second Image" width={"90%"} />
+                        </div>
+                      </Grid>
+                  );
+                })}
+              </Grid>
               <div className={classes.border}>
                 <Grid>
                   <div className={classes.imageText}>
@@ -641,18 +671,35 @@ function BlogPageCMS(props) {
                   </Button>
                 </label>
               </Grid>
-              {blogState?.second_Image?.banners.length > 0 && (
-                <Grid item>
-                  {blogState?.second_Image?.banners?.map((img) => {
+              {blogState?.second_Image?.banners.length > 0 && blogState?.second_Image?.banners?.map((img,index) => {
                     return (
+                      <Grid item style={{position:"relative"}}>
+                      <div style={{position:"absolute",width:"150px"}}>
+                        <div style={{display:"flex",justifyContent:"space-between"}}>
+                          <input
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            id={`button-file-edit${index}`}
+                            multiple
+                            type="file"
+                            onChange={(e) => {handleChange(e.target.files[0],"editBanners",index)}}
+                          />
+                          <label htmlFor={`button-file-edit${index}`}>
+                            <Edit style={{fontSize:"12px",color:"#fff",backgroundColor:"#000",cursor:"pointer"}} />
+                          </label>
+                          <div style={{backgroundColor:"#000"}}>
+                            <Delete style={{fontSize:"12px",color:"#fff",cursor:"pointer"}} onClick={() => handleDeleteBanner(index)} />
+                          </div>
+                        </div>
+                      </div>
                       <img
                         alt="nacimages"
                         src={img?.web}
-                        style={{ width: "100px", height: "auto" }}
+                        style={{ width: "150px", height: "auto" }}
                       />
+                      </Grid>
                     );
-                  })}
-                </Grid>
+                  }
               )}
             </Grid>
             <Grid container spacing={8} style={{ paddingTop: "8px" }}>

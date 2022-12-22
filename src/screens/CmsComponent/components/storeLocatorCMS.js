@@ -24,7 +24,7 @@ const tableData = [
   { type: "INCREMENT", name: "S.No" },
   { type: "TEXT", name: "city" },
   { type: "TOTAL_STORES", name: "stores" },
-  { type: "VIEW_STORES", name: "stores" },
+  { type: "VIEW_STORES", name: "stores",customName:"View Stores" },
   { type: "ACTION", name: "" },
 ];
 

@@ -34,7 +34,7 @@ const getComponent = (data) => {
           style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
           onClick={data?.handleViewStores}
         >
-          View Stores
+          {data?.customText ?? "View Details"}
         </div>
       );
     }
@@ -137,6 +137,7 @@ const TableBodyRow = ({
               handleEdit(e, rowData, rowIndex);
             },
             customWidth: val?.width,
+            customText:val?.customName
           })}
         </TableCell>
       ))}
