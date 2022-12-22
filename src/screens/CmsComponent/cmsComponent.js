@@ -35,6 +35,7 @@ import ExperienceBannerCMS from "./components/experienceBannerCMS";
 import ExperienceCardCMS from "./components/experienceCardCMS";
 import ExperienceTableCardCMS from "./components/experienceTableCards";
 import StoreLocatorDetailsCMS from "./components/storeLocatorDetailsCMS";
+import BlogPageCMS from "./components/blogPageCMS";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -222,6 +223,10 @@ const CmsComponent = (props) => {
 
       case "experienceCard": {
         return <ExperienceTableCardCMS data={val} handleSubmit={handleSubmit} />;
+      }
+      
+      case "blogPageCard": {
+        return <BlogPageCMS data={val} handleSubmit={handleSubmit} />;
       }
 
       case "StoreDetailsComponent":{
