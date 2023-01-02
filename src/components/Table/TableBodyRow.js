@@ -8,6 +8,7 @@ import moment from "moment";
 const getComponent = (data) => {
   switch (data.type) {
     case "TEXT": {
+
       return (
         <div
           style={{
@@ -75,6 +76,7 @@ const getComponent = (data) => {
         <EditIcon style={{ cursor: "pointer" }} onClick={data?.handleEdit} />
       );
     }
+
     case "BUTTON_ARRAY": {
       return (
         <div>
@@ -106,7 +108,80 @@ const getComponent = (data) => {
             {_.url.length > 0 && <div style={{ color: "blue" }}>{_.url}</div>}
           </Typography>
         })
-      );
+      )
+    }
+    case "DETAILED_ARR": {
+      debugger
+      return (
+        data?.rowData?.map((_) => {
+          return <Typography>
+            <div>{_?.title}</div>
+            <div style={{ color: "blue" }}>{_?.ContentOne}</div>
+            <div style={{ color: "blue" }}>{_?.ContentTwo}</div>
+
+          </Typography>
+        })
+      )
+    }
+    case "ARR_IMAGE": {
+      debugger
+      return (
+        data?.rowData?.map((_) => {
+          return (
+            < img
+              alt="nacimages"
+              src={_}
+              style={{ width: "150px", height: "auto" }
+              }
+            />
+          )
+        }))
+    }
+    // case "ARRAY_IMAGES": {
+    //   return (
+    //     data?.rowData?.map((_) => {
+    //       return (
+    //         < img
+    //           alt="nacimages"
+    //           src={_?.img}
+    //           style={{ width: "150px", height: "auto" }
+    //           }
+    //         />
+    //       )
+    //     }))
+    // }
+    case "ARR_TEXT": {
+      return (
+        data?.rowData?.map((_) => {
+          return (
+            <Typography>
+              <div style={{ color: "blue", textTransform: "capitalize" }}>{_?.products}</div>
+              <div style={{ textTransform: "capitalize" }}>{_.location}</div>
+            </Typography>
+          )
+
+        })
+      )
+    }
+    case "ARRAY_IMAGES": {
+      debugger
+      return (
+        data.rowData?.map((_) => {
+          return (
+            <>
+              < img
+                alt="nacimages"
+                src={_?.img}
+                style={{ width: "150px", height: "auto" }
+                }
+              />
+              {_.text && <Typography>{_?.text}</Typography>}
+              {_.weigh && <Typography>{_?.weigh}</Typography>}
+
+
+            </>
+          )
+        }))
     }
   }
 };

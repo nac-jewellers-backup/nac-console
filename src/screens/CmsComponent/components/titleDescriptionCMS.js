@@ -50,6 +50,7 @@ const TitleDescriptionCMS = (props) => {
     setOpen(false);
   };
   const onChangeData = (event) => {
+    debugger
     setState({
       ...state,
       [event.target.name]: event.target.value,
@@ -87,6 +88,7 @@ const TitleDescriptionCMS = (props) => {
   };
 
   const handleChangeState = (data) => {
+    debugger
     setState({
       ...state,richEditor:data
     })

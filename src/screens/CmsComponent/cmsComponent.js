@@ -38,6 +38,11 @@ import ExperienceTableCardCMS from "./components/experienceTableCards";
 import StoreLocatorDetailsCMS from "./components/storeLocatorDetailsCMS";
 import BlogPageCMS from "./components/blogPageCMS";
 import ContactUsCMS from "./components/contactUsCMS";
+import TempleBannerCMS from "./components/TempleBannerCMS";
+import TempleFooterCMS from "./components/templeFooterCMS";
+import TempleCardDetailComp from "./components/TempleCardDetailComponent";
+import TempleCardComponent from "./components/TempleCardComponent";
+import TempleProducts from "./components/templeProducts";
 
 const CmsComponent = (props) => {
   const classes = useStyles();
@@ -79,10 +84,27 @@ const CmsComponent = (props) => {
       })
         .then((res) => res.json())
         .then((data) => {
-          handleCloneDialogClose()
+          console.log("catch data",data);
+          if(data?.errors?.length > 0){
+            snack.setSnack({
+              open: true,
+              msg: "Something went wrong. Please provide a unique route",
+              severity:"error"
+            });
+          }else{
+            handleCloneDialogClose()
+            snack.setSnack({
+              open: true,
+              msg: "Page Created Successfully",
+            });   
+          }
+          
+        })
+        .catch((err) => {
           snack.setSnack({
             open: true,
-            msg: "Page Created Successfully",
+            msg: "Something went wrong",
+            severity:"error"
           });
         });
     } else {
@@ -119,7 +141,6 @@ const CmsComponent = (props) => {
       .then((res) => res.json())
       .then((data) => {
         const dataRecieved = JSON.parse(data?.data?.cdnByPage?.data);
-        console.log("dataRecieved", dataRecieved)
         setState(dataRecieved);
       });
   };
@@ -249,6 +270,30 @@ const CmsComponent = (props) => {
         return <ContactUsCMS data={val} handleSubmit={handleSubmit} />;
       }
 
+
+      case "TempleWorkBannerComponent": {
+        return (
+          <TempleBannerCMS data={val} handleSubmit={handleSubmit} />
+        )
+      }
+
+      case "FooterComponent": {
+        return (
+          <TempleFooterCMS data={val} handleSubmit={handleSubmit} />
+        )
+      }
+
+      case "TempleCardDetailsComponent": {
+        return (
+          <TempleCardDetailComp data={val} handleSubmit={handleSubmit} />
+        )
+      }
+
+      case "TempleCardComponent": {
+        return (
+          <TempleCardComponent data={val} handleSubmit={handleSubmit} />
+        )
+      }
       default: {
         return <h1></h1>;
       }

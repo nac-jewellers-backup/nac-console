@@ -115,9 +115,8 @@ const BannerCMS = (props) => {
         if (res?.data?.web) {
           setState({
             ...state,
-            [name]: res?.data?.web,
+            img: res?.data?.web,
           });
-          // setDisable({ ...disableButton, [name]: true });
 
           alert.setSnack({
             open: true,

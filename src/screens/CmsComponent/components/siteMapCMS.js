@@ -45,6 +45,7 @@ const SiteMapCMS = (props) => {
     const [data1, setData1] = React.useState(initialData)
 
     const handleChange = (key, val, i, parentKey) => {
+        debugger
         let tempState = data1
         tempState[parentKey][i][key] = val
         setData1({ ...tempState })
@@ -119,7 +120,6 @@ const SiteMapCMS = (props) => {
         const delRow = [...data1?.categoryList]
         delRow.splice(i, 1);
         setData1({ ...data1, categoryList: delRow })
-
     }
 
     const handleAddItem = (key, value) => {
@@ -150,6 +150,7 @@ const SiteMapCMS = (props) => {
     }
 
     const updateState = (key, value) => {
+        debugger
         setData1({ ...data1, [key]: value })
     }
 
