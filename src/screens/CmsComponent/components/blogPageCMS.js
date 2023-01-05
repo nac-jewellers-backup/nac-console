@@ -89,7 +89,6 @@ function BlogPageCMS(props) {
     blogs: [],
   });
 
-  const [value, setValue] = React.useState({ ...initialBlogDetails });
   const [blogState, setBlogState] = useState({ ...initialBlogDetails });
   const [editData, setEditData] = useState(initialEdit);
 
@@ -183,8 +182,6 @@ function BlogPageCMS(props) {
         console.log(err);
       });
   };
-
-  console.log(blogState, "blogState");
 
   const onsubmitvalue = () => {
     if (

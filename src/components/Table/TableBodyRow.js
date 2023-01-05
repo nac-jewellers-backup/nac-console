@@ -8,7 +8,6 @@ import moment from "moment";
 const getComponent = (data) => {
   switch (data.type) {
     case "TEXT": {
-
       return (
         <div
           style={{
@@ -32,7 +31,11 @@ const getComponent = (data) => {
     case "VIEW_STORES": {
       return (
         <div
-          style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
+          style={{
+            color: "blue",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
           onClick={data?.handleViewStores}
         >
           {data?.customText ?? "View Details"}
@@ -67,7 +70,10 @@ const getComponent = (data) => {
           }}
         >
           <EditIcon onClick={data?.handleEdit} style={{ cursor: "pointer" }} />
-          <DeleteIcon onClick={data?.handleDelete} style={{ color: "red", cursor: "pointer" }} />
+          <DeleteIcon
+            onClick={data?.handleDelete}
+            style={{ color: "red", cursor: "pointer" }}
+          />
         </div>
       );
     }
@@ -101,41 +107,38 @@ const getComponent = (data) => {
       );
     }
     case "ARRAYTEXT": {
-      return (
-        data?.rowData?.map((_) => {
-          return <Typography>
+      return data?.rowData?.map((_) => {
+        return (
+          <Typography>
             <div>{_.name}</div>
             {_.url.length > 0 && <div style={{ color: "blue" }}>{_.url}</div>}
           </Typography>
-        })
-      )
+        );
+      });
     }
     case "DETAILED_ARR": {
-      debugger
-      return (
-        data?.rowData?.map((_) => {
-          return <Typography>
+      // debugger
+      return data?.rowData?.map((_) => {
+        return (
+          <Typography>
             <div>{_?.title}</div>
             <div style={{ color: "blue" }}>{_?.ContentOne}</div>
             <div style={{ color: "blue" }}>{_?.ContentTwo}</div>
-
           </Typography>
-        })
-      )
+        );
+      });
     }
     case "ARR_IMAGE": {
-      debugger
-      return (
-        data?.rowData?.map((_) => {
-          return (
-            < img
-              alt="nacimages"
-              src={_}
-              style={{ width: "150px", height: "auto" }
-              }
-            />
-          )
-        }))
+      // debugger
+      return data?.rowData?.map((_) => {
+        return (
+          <img
+            alt="nacimages"
+            src={_}
+            style={{ width: "150px", height: "auto" }}
+          />
+        );
+      });
     }
     // case "ARRAY_IMAGES": {
     //   return (
@@ -151,37 +154,32 @@ const getComponent = (data) => {
     //     }))
     // }
     case "ARR_TEXT": {
-      return (
-        data?.rowData?.map((_) => {
-          return (
-            <Typography>
-              <div style={{ color: "blue", textTransform: "capitalize" }}>{_?.products}</div>
-              <div style={{ textTransform: "capitalize" }}>{_.location}</div>
-            </Typography>
-          )
-
-        })
-      )
+      return data?.rowData?.map((_) => {
+        return (
+          <Typography>
+            <div style={{ color: "blue", textTransform: "capitalize" }}>
+              {_?.products}
+            </div>
+            <div style={{ textTransform: "capitalize" }}>{_.location}</div>
+          </Typography>
+        );
+      });
     }
     case "ARRAY_IMAGES": {
-      debugger
-      return (
-        data.rowData?.map((_) => {
-          return (
-            <>
-              < img
-                alt="nacimages"
-                src={_?.img}
-                style={{ width: "150px", height: "auto" }
-                }
-              />
-              {_.text && <Typography>{_?.text}</Typography>}
-              {_.weigh && <Typography>{_?.weigh}</Typography>}
-
-
-            </>
-          )
-        }))
+      // debugger
+      return data.rowData?.map((_) => {
+        return (
+          <>
+            <img
+              alt="nacimages"
+              src={_?.img}
+              style={{ width: "150px", height: "auto" }}
+            />
+            {_.text && <Typography>{_?.text}</Typography>}
+            {_.weigh && <Typography>{_?.weigh}</Typography>}
+          </>
+        );
+      });
     }
   }
 };
@@ -212,7 +210,7 @@ const TableBodyRow = ({
               handleEdit(e, rowData, rowIndex);
             },
             customWidth: val?.width,
-            customText:val?.customName
+            customText: val?.customName,
           })}
         </TableCell>
       ))}
