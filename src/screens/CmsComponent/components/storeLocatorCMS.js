@@ -24,12 +24,29 @@ const tableData = [
   { type: "INCREMENT", name: "S.No" },
   { type: "TEXT", name: "city" },
   { type: "TOTAL_STORES", name: "stores" },
-  { type: "VIEW_STORES", name: "stores",customName:"View Stores" },
+  { type: "VIEW_STORES", name: "stores", customName: "View Stores" },
   { type: "ACTION", name: "" },
 ];
 
-const storeHeader = ["S.No", "Title", "Address","Store Id", "Location", "Image", "Button","Action"];
-const viewStoreHeader = ["S.No", "Title", "Address","Store Id", "Location", "Image", "Button"];
+const storeHeader = [
+  "S.No",
+  "Title",
+  "Address",
+  "Store Id",
+  "Location",
+  "Image",
+  "Button",
+  "Action",
+];
+const viewStoreHeader = [
+  "S.No",
+  "Title",
+  "Address",
+  "Store Id",
+  "Location",
+  "Image",
+  "Button",
+];
 
 const tableStoreData = [
   { type: "INCREMENT", name: "S.No" },
@@ -103,6 +120,7 @@ function StoreLocatorCMS(props) {
       stores: [],
     });
     setEditData(initialEdit);
+    setStoreState(initialStoreDetails);
   };
 
   const onChangeData = (event) => {

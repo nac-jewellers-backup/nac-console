@@ -58,7 +58,7 @@ const ExperienceCardCMS = (props) => {
   const classes = useStyles();
   const alert = useContext(AlertContext);
   const [sendData, setSendData] = React.useState([]);
-  const [state, setState] = React.useState(initialState);
+  const [state, setState] = React.useState({ ...initialState });
   const [open, setOpen] = React.useState(false);
   const [editData, setEditData] = React.useState(initialEdit);
   const [disableButton, setDisable] = React.useState({
@@ -72,10 +72,13 @@ const ExperienceCardCMS = (props) => {
     setSendData([data?.props]);
     setState(data?.props);
   }, [data?.props]);
+
   const handleClose = () => {
     setOpen(false);
+    setEditData(initialEdit);
     setState(initialState);
   };
+
   const onChangeData = (event) => {
     setState({
       ...state,
@@ -139,7 +142,7 @@ const ExperienceCardCMS = (props) => {
   const handleEdit = (e, rowData, rowIndex) => {
     setOpen(true);
     setEditData({ ...editData, isEdit: true, editIndex: rowIndex });
-    console.log("rowData", rowData);
+    setState(rowData);
   };
   const handleChangeState = (data) => {
     setState({

@@ -20,7 +20,7 @@ const getComponent = (data) => {
       );
     }
     case "HTMLTEXT": {
-      return <div>{parse(data.rowData)}</div>;
+      return <div>{parse(data?.rowData)}</div>;
     }
     case "INCREMENT": {
       return <div>{data.rowIndex + 1}</div>;
@@ -31,7 +31,11 @@ const getComponent = (data) => {
     case "VIEW_STORES": {
       return (
         <div
-          style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
+          style={{
+            color: "blue",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
           onClick={data?.handleViewStores}
         >
           {data?.customText ?? "View Details"}
@@ -66,7 +70,10 @@ const getComponent = (data) => {
           }}
         >
           <EditIcon onClick={data?.handleEdit} style={{ cursor: "pointer" }} />
-          <DeleteIcon onClick={data?.handleDelete} style={{ color: "red", cursor: "pointer" }} />
+          <DeleteIcon
+            onClick={data?.handleDelete}
+            style={{ color: "red", cursor: "pointer" }}
+          />
         </div>
       );
     }
@@ -75,6 +82,7 @@ const getComponent = (data) => {
         <EditIcon style={{ cursor: "pointer" }} onClick={data?.handleEdit} />
       );
     }
+
     case "BUTTON_ARRAY": {
       return (
         <div>
@@ -99,14 +107,81 @@ const getComponent = (data) => {
       );
     }
     case "ARRAYTEXT": {
-      return (
-        data?.rowData?.map((_) => {
-          return <Typography>
+      return data?.rowData?.map((_) => {
+        return (
+          <Typography>
             <div>{_.name}</div>
             {_.url.length > 0 && <div style={{ color: "blue" }}>{_.url}</div>}
           </Typography>
-        })
-      );
+        );
+      });
+    }
+    case "DETAILED_ARR": {
+      // debugger
+      return data?.rowData?.map((_) => {
+        return (
+          <Typography>
+            <div>{parse(_?.title)}</div>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
+            <div>{_?.subtitle}</div>
+            <div>{_?.weigh}</div></div>
+            <div>{parse(_?.about)}</div>
+          </Typography>
+        );
+      });
+    }
+    case "ARR_IMAGE": {
+      // debugger
+      return data?.rowData?.map((_) => {
+        return (
+          <img
+            alt="nacimages"
+            src={_}
+            style={{ width: "150px", height: "auto" }}
+          />
+        );
+      });
+    }
+    // case "ARRAY_IMAGES": {
+    //   return (
+    //     data?.rowData?.map((_) => {
+    //       return (
+    //         < img
+    //           alt="nacimages"
+    //           src={_?.img}
+    //           style={{ width: "150px", height: "auto" }
+    //           }
+    //         />
+    //       )
+    //     }))
+    // }
+    case "ARR_TEXT": {
+      return data?.rowData?.map((_) => {
+        return (
+          <Typography>
+            <div style={{ color: "blue", textTransform: "capitalize" }}>
+              {_?.products}
+            </div>
+            <div style={{ textTransform: "capitalize" }}>{_.location}</div>
+          </Typography>
+        );
+      });
+    }
+    case "ARRAY_IMAGES": {
+      // debugger
+      return data.rowData?.map((_) => {
+        return (
+          <>
+            <img
+              alt="nacimages"
+              src={_?.img}
+              style={{ width: "150px", height: "auto" }}
+            />
+            {_.text && <Typography>{_?.text}</Typography>}
+            {_.weigh && <Typography>{_?.weigh}</Typography>}
+          </>
+        );
+      });
     }
   }
 };
@@ -137,7 +212,7 @@ const TableBodyRow = ({
               handleEdit(e, rowData, rowIndex);
             },
             customWidth: val?.width,
-            customText:val?.customName
+            customText: val?.customName,
           })}
         </TableCell>
       ))}

@@ -61,3 +61,14 @@ mutation updateStatus($isActive: Boolean!, $page: String!){
     }
   }
 }`;
+
+export const UPDATE_URL = `
+mutation updateStatus($changePage: String!, $page: String!){
+  updateCdnByPage(input: {cdnPatch: {page: $changePage}, page: $page}){
+    cdn {
+      data
+      isActive
+      page
+    }
+  }
+}`;

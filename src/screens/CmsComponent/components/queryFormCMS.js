@@ -77,9 +77,9 @@ const QueryFormCMS = (props) => {
     let getData = [];
     getData = {
       component: props?.data?.component,
-      props: state
+      props: state,
     };
-    setImage([getData.props])
+    setImage([getData.props]);
     setOpen(false);
     props.handleSubmit(getData, "QueryForm", "");
   };
@@ -87,6 +87,8 @@ const QueryFormCMS = (props) => {
   const handleEdit = (e, rowData, rowIndex) => {
     handleClickOpen();
   };
+
+  console.log("-------1", image);
   return (
     <Paper className={classes.root}>
       <TableHeaderComp
@@ -123,6 +125,20 @@ const QueryFormCMS = (props) => {
                 Store Image
               </Button>
             </label>
+            {image.length > 0 &&
+              image.map((e, i) => {
+                return (
+                  <>
+                    <Grid style={{ textAlign: "center" }} xs={6} md={6} item>
+                      <img
+                        alt="nacimages"
+                        src={e?.image}
+                        style={{ width: "100px", height: "auto" }}
+                      />
+                    </Grid>
+                  </>
+                );
+              })}
           </Grid>
         </DialogContent>
         <DialogActions>
