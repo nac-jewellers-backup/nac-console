@@ -19,12 +19,12 @@ import { AlertContext } from "../../../context";
 import { useContext } from "react";
 import { UploadImage } from "../../../utils/imageUpload";
 
-const header = ["S.No", "Images", "Description", "View", "Action"];
+const header = ["S.No", "Images", "Description", "Action"];
 const tableData = [
   { type: "INCREMENT", name: "" },
   { type: "ARR_IMAGE", name: "images" },
   { type: "DETAILED_ARR", name: "content" },
-  { type: "VIEW_STORES", name: "" },
+  // { type: "VIEW_STORES", name: "" },
   { type: "EDIT", name: "" },
 ];
 
@@ -260,7 +260,7 @@ const TempleCardDetailComp = (props) => {
                         name="subtitle"
                         required
                       />
-                      <TextField
+                      {/* <TextField
                         margin="dense"
                         id="ContentOne"
                         label="Content One"
@@ -276,12 +276,12 @@ const TempleCardDetailComp = (props) => {
                         value={e.ContentOne}
                         name="ContentOne"
                         required
-                      />
+                      /> */}
                       <EditorConvertToHTML
                         handleChangeState={handleChangeAbout}
                         parentState={e.about}
                       />
-                      <TextField
+                      {/* <TextField
                         margin="dense"
                         id="contentTwo"
                         label="Content Two"
@@ -297,7 +297,7 @@ const TempleCardDetailComp = (props) => {
                         value={e.contentTwo}
                         name="contentTwo"
                         required
-                      />
+                      /> */}
                     </>
                   );
                 })}

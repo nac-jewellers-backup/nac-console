@@ -20,7 +20,7 @@ const getComponent = (data) => {
       );
     }
     case "HTMLTEXT": {
-      return <div>{parse(data.rowData)}</div>;
+      return <div>{parse(data?.rowData)}</div>;
     }
     case "INCREMENT": {
       return <div>{data.rowIndex + 1}</div>;
@@ -121,9 +121,11 @@ const getComponent = (data) => {
       return data?.rowData?.map((_) => {
         return (
           <Typography>
-            <div>{_?.title}</div>
-            <div style={{ color: "blue" }}>{_?.ContentOne}</div>
-            <div style={{ color: "blue" }}>{_?.ContentTwo}</div>
+            <div>{parse(_?.title)}</div>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4px"}}>
+            <div>{_?.subtitle}</div>
+            <div>{_?.weigh}</div></div>
+            <div>{parse(_?.about)}</div>
           </Typography>
         );
       });
