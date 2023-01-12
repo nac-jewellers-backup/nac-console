@@ -9,7 +9,7 @@ import {
   MenuItem,
   Button,
   Backdrop,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
 import moment from "moment";
 import uuid from "uuid/v1";
@@ -21,19 +21,30 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { GRAPHQL_DEV_CLIENT } from "../../config";
 import SheduleModal from "./shedulemodal";
 import SheduleModalShow from "./shedulemodalshow";
-import { ALL_APPOINTMENTS_DATE,APPOINTMENTS_TYPE,ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS ,CHECK_APPOINTMENT,CHECK_TIMESLOT} from "../../graphql/query";
+import {
+  ALL_APPOINTMENTS_DATE,
+  APPOINTMENTS_TYPE,
+  ALL_APPOINTMENTS_TIMESLOT,
+  FILTER_APPOINTEMENTS,
+  CHECK_APPOINTMENT,
+  CHECK_TIMESLOT,
+} from "../../graphql/query";
 import {
   CREATE_APPOINTMENT_DATE,
   CREATE_APPOINTMENT_TIME,
   DELETE_APPOINTMENT_TIME,
   DELETE_APPOINTMENT_DATE,
 } from "../../graphql/mutation";
-import { TimePicker, MuiPickersUtilsProvider,DatePicker,KeyboardDatePicker} from "@material-ui/pickers";
+import {
+  TimePicker,
+  MuiPickersUtilsProvider,
+  DatePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import axios from "axios";
 import { API_URL } from "../../config";
 // import timeGridPlugin from "@fullcalendar/timegrid";
-
 
 export const ManageShedule = (props) => {
   // States
@@ -51,12 +62,12 @@ export const ManageShedule = (props) => {
   const [timeValue, setTimeValue] = useState({
     startTime: new Date(),
     endTime: new Date(),
-    type: 1
+    type: 1,
   });
   const [filterDate, setFilterDate] = useState({
-    startTime: moment(new Date()).startOf('month').format("YYYY-MM-DD"),
-    endTime: moment(new Date()).endOf('month').format("YYYY-MM-DD"),
-    date: new Date()
+    startTime: moment(new Date()).startOf("month").format("YYYY-MM-DD"),
+    endTime: moment(new Date()).endOf("month").format("YYYY-MM-DD"),
+    date: new Date(),
   });
 
   const client = useApolloClient();
@@ -68,9 +79,9 @@ export const ManageShedule = (props) => {
       cursor: "pointer",
       border: "1px solid black",
       boxShadow: "0px 3px 6px #c1c1c1",
-      width:"140px",
-      height:"130px",
-      margin:5,
+      width: "140px",
+      height: "130px",
+      margin: 5,
       "&:hover": {
         borderTop: "5px solid #3F51B5",
         boxShadow: "0px 3px 6px #c1c1c1",
@@ -81,16 +92,18 @@ export const ManageShedule = (props) => {
     },
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,
-      color: '#fff',
+      color: "#fff",
     },
-    calenderCard:{
-      display:"flex",flexWrap:"wrap",marginLeft:"14px"
+    calenderCard: {
+      display: "flex",
+      flexWrap: "wrap",
+      marginLeft: "14px",
     },
     inputField: {
       marginBottom: theme.spacing(1),
-      "& .MuiOutlinedInput-input":{
-        padding: "12.5px 14px"
-      }
+      "& .MuiOutlinedInput-input": {
+        padding: "12.5px 14px",
+      },
     },
     closedCard: {
       backgroundColor: "white",
@@ -98,9 +111,9 @@ export const ManageShedule = (props) => {
       cursor: "pointer",
       border: "1px solid black",
       boxShadow: "0px 3px 6px #c1c1c1",
-      width:"140px",
-      height:"130px",
-      margin:5,
+      width: "140px",
+      height: "130px",
+      margin: 5,
       "&:hover": {
         borderTop: "5px solid red",
         boxShadow: "0px 3px 6px #c1c1c1",
@@ -116,11 +129,10 @@ export const ManageShedule = (props) => {
     },
   }));
 
- 
   // LifeCycles
   useEffect(() => {
     GetAllAppointmentTypes();
-    FilterDates(filterDate.startTime,filterDate.endTime)
+    FilterDates(filterDate.startTime, filterDate.endTime);
   }, []);
 
   // Handle Funcs
@@ -131,8 +143,8 @@ export const ManageShedule = (props) => {
     setOpen(false);
     setType(null);
   };
-  const handlemodalshow = (id) => {  
-    GetAllAppointment_TimeSlots(id,1)
+  const handlemodalshow = (id) => {
+    GetAllAppointment_TimeSlots(id, 1);
   };
 
   const handleTimeValue = (value, name) => {
@@ -141,7 +153,7 @@ export const ManageShedule = (props) => {
 
   // Query Func
   const GetAllAppointment = async () => {
-    setLoading(true)
+    setLoading(true);
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
@@ -154,7 +166,7 @@ export const ManageShedule = (props) => {
       .then((res) => res.json())
       .then((res) => {
         setAppointmentDate(res.data.allAppointmentDates.nodes);
-        setLoading(false)
+        setLoading(false);
       })
       .catch(console.error);
   };
@@ -166,43 +178,46 @@ export const ManageShedule = (props) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: CHECK_APPOINTMENT,
-        variables:{ startDate: moment(date).format('YYYY-MM-DD'), endDate: moment(date).format('YYYY-MM-DD')}
+        variables: {
+          startDate: moment(date).format("YYYY-MM-DD"),
+          endDate: moment(date).format("YYYY-MM-DD"),
+        },
       }),
     };
     await fetch(url, opts)
       .then((res) => res.json())
-      .then(async(res) => {
-        if(res?.data?.allAppointmentDateTimeSlots?.nodes.length > 0){
+      .then(async (res) => {
+        if (res?.data?.allAppointmentDateTimeSlots?.nodes.length > 0) {
           snack.setSnack({
             open: true,
-            severity: 'warning',
+            severity: "warning",
             msg: "Date already available!",
-          });   
-        }
-        else{
-         await handleSave();
+          });
+        } else {
+          await handleSave();
         }
       })
       .catch(console.error);
   };
 
-  const GetAllAppointment_TimeSlots = async (id,type) => {
-    setModalLoading(true)
+  const GetAllAppointment_TimeSlots = async (id, type) => {
+    setModalLoading(true);
     const url = GRAPHQL_DEV_CLIENT;
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: ALL_APPOINTMENTS_TIMESLOT(id ? id : appointmentDateId,type).loc.source.body,
-      })
+        query: ALL_APPOINTMENTS_TIMESLOT(id ? id : appointmentDateId, type).loc
+          .source.body,
+      }),
     };
     await fetch(url, opts)
       .then((res) => res.json())
       .then((res) => {
-         setAppointmentSlots(res.data.allAppointmentDateTimeSlots.nodes)
-         setOpenAppointmentTime(true);
-         setAppointmentDateId(id);
-         setModalLoading(false)
+        setAppointmentSlots(res.data.allAppointmentDateTimeSlots.nodes);
+        setOpenAppointmentTime(true);
+        setAppointmentDateId(id);
+        setModalLoading(false);
       })
       .catch(console.error);
   };
@@ -219,13 +234,13 @@ export const ManageShedule = (props) => {
     await fetch(url, opts)
       .then((res) => res.json())
       .then((res) => {
-          setAppointmentTypes(res.data.allAppointmentTypeMasters.nodes)
+        setAppointmentTypes(res.data.allAppointmentTypeMasters.nodes);
       })
       .catch(console.error);
   };
 
-  const handleSave = async () => {  
-    setLoading(true)
+  const handleSave = async () => {
+    setLoading(true);
     await client
       .mutate({
         mutation: CREATE_APPOINTMENT_DATE,
@@ -238,9 +253,9 @@ export const ManageShedule = (props) => {
           isActive: true,
         },
       })
-      .then((res) => {         
-          FilterDates(filterDate.startTime,filterDate.endTime);
-          onClose();
+      .then((res) => {
+        FilterDates(filterDate.startTime, filterDate.endTime);
+        onClose();
       })
       .catch((err) => {
         console.log(err);
@@ -253,76 +268,79 @@ export const ManageShedule = (props) => {
       });
   };
 
-  const CheckTimeslot = async (id,date,endDate)=>{
-    await client.query({
-      query : CHECK_TIMESLOT,
-      variables:{
-        startTime: moment(timeValue.startTime).format("HH:mm"),
-        endTime: moment(timeValue.endTime).format("HH:mm"),
-      },
-      fetchPolicy:"no-cache"
-    }).then((res)=>{
-      if(res?.data?.allAppointmentDateTimeSlots?.nodes.length > 0){
-        snack.setSnack({
-          open: true,
-          severity: 'warning',
-          msg: "TimeSlot already available!",
-        });   
-      }
-      else{
-        handleSubmitTime(id,date,endDate);
-      }
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
-  }
-
-  const handleSubmitTime = async (id,date,endDate) => {
-    if(timeValue.type !== ''){
-      setModalLoading(true)
-      await client
-      .mutate({
-        mutation: CREATE_APPOINTMENT_TIME,
+  const CheckTimeslot = async (id, date, endDate) => {
+    await client
+      .query({
+        query: CHECK_TIMESLOT,
         variables: {
-          id: uuid(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          startDateTime: new Date(date),
-          endDateTime: new Date(endDate) ,
-          appointmentTypeId: timeValue.type,
           appointmentDateId: id,
-          startTime: moment(timeValue.startTime).format("HH:mm:ss"),
-          endTime: moment(timeValue.endTime).format("HH:mm:ss"),
+          appointmentTypeId: timeValue.type,
+          startTime: moment(timeValue.startTime).format("HH:mm:00"),
+          endTime: moment(timeValue.endTime).format("HH:mm:00"),
         },
-        fetchPolicy:"no-cache"
+        fetchPolicy: "no-cache",
       })
       .then((res) => {
-        if (res) {
-          GetAllAppointment_TimeSlots(appointmentDateId,timeValue.type);
+        if (res?.data?.allAppointmentDateTimeSlots?.nodes.length > 0) {
           snack.setSnack({
             open: true,
-            msg: "Successfully Updated!",
+            severity: "warning",
+            msg: "TimeSlot already available!",
           });
-          setModalLoading(false)
+        } else {
+          handleSubmitTime(id, date, endDate);
         }
       })
       .catch((err) => {
         console.log(err);
-        onClose();
-        snack.setSnack({
-          open: true,
-          severity: "error",
-          msg: "Some error occured!",
-        });
       });
-
-    setShowTime(!showTime);
-    }   
   };
-  
+
+  const handleSubmitTime = async (id, date, endDate) => {
+    if (timeValue.type !== "") {
+      setModalLoading(true);
+      await client
+        .mutate({
+          mutation: CREATE_APPOINTMENT_TIME,
+          variables: {
+            id: uuid(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            startDateTime: new Date(date),
+            endDateTime: new Date(endDate),
+            appointmentTypeId: timeValue.type,
+            appointmentDateId: id,
+            startTime: moment(timeValue.startTime).format("HH:mm:00"),
+            endTime: moment(timeValue.endTime).format("HH:mm:00"),
+          },
+          fetchPolicy: "no-cache",
+        })
+        .then((res) => {
+          if (res) {
+            GetAllAppointment_TimeSlots(appointmentDateId, timeValue.type);
+            snack.setSnack({
+              open: true,
+              msg: "Successfully Updated!",
+            });
+            setModalLoading(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          onClose();
+          snack.setSnack({
+            open: true,
+            severity: "error",
+            msg: "Some error occured!",
+          });
+        });
+
+      setShowTime(!showTime);
+    }
+  };
+
   const deleteTime = async (id) => {
-    setModalLoading(true)
+    setModalLoading(true);
     await client
       .mutate({
         mutation: DELETE_APPOINTMENT_TIME,
@@ -332,9 +350,9 @@ export const ManageShedule = (props) => {
       })
       .then((res) => {
         if (res) {
-          GetAllAppointment_TimeSlots(appointmentDateId,timeValue.type);
+          GetAllAppointment_TimeSlots(appointmentDateId, timeValue.type);
           onClose();
-          setModalLoading(false)
+          setModalLoading(false);
           snack.setSnack({
             open: true,
             msg: "Deleted Successfully!",
@@ -363,7 +381,7 @@ export const ManageShedule = (props) => {
       })
       .then((res) => {
         if (res) {
-          FilterDates(filterDate.startTime,filterDate.endTime)
+          FilterDates(filterDate.startTime, filterDate.endTime);
           snack.setSnack({
             open: true,
             msg: "Deleted Successfully!",
@@ -381,32 +399,37 @@ export const ManageShedule = (props) => {
       });
   };
 
-  const handleDateChange= async (date) =>{
-    var start = moment(date).startOf('month').format("YYYY-MM-DD");
+  const handleDateChange = async (date) => {
+    var start = moment(date).startOf("month").format("YYYY-MM-DD");
     var end = moment(date).endOf("month").format("YYYY-MM-DD");
-    setFilterDate({...filterDate,date:date,startTime:start,endTime:end}) 
-    FilterDates(start,end)   
-  }
-
-  const FilterDates = async (start,end) =>{
-    setLoading(true)
-    await client
-    .query({
-      query: FILTER_APPOINTEMENTS,
-      variables:{
-        startDate:start,
-        endDate:end 
-      },
-      fetchPolicy:'no-cache'
-    })
-    .then((res) => {
-      setAppointmentDate(res.data.allAppointmentDates.nodes);
-      setLoading(false)  
-    })
-    .catch((err) => {
-      console.error(err);
+    setFilterDate({
+      ...filterDate,
+      date: date,
+      startTime: start,
+      endTime: end,
     });
-  }
+    FilterDates(start, end);
+  };
+
+  const FilterDates = async (start, end) => {
+    setLoading(true);
+    await client
+      .query({
+        query: FILTER_APPOINTEMENTS,
+        variables: {
+          startDate: start,
+          endDate: end,
+        },
+        fetchPolicy: "no-cache",
+      })
+      .then((res) => {
+        setAppointmentDate(res.data.allAppointmentDates.nodes);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   const handleUpload = (file) => {
     var bodyFormData = new FormData();
@@ -420,7 +443,7 @@ export const ManageShedule = (props) => {
             open: true,
             msg: res.data.message || "Successfully uploaded!",
           });
-          FilterDates(filterDate.startTime,filterDate.endTime)
+          FilterDates(filterDate.startTime, filterDate.endTime);
         }
       })
       .catch((err) => {
@@ -433,19 +456,18 @@ export const ManageShedule = (props) => {
       });
   };
 
-  const FilterTimeSlotes=(type)=>{
-    GetAllAppointment_TimeSlots(appointmentDateId,type)
-    setTimeValue({...timeValue,type:type})
-  }
-
+  const FilterTimeSlotes = (type) => {
+    GetAllAppointment_TimeSlots(appointmentDateId, type);
+    setTimeValue({ ...timeValue, type: type });
+  };
 
   const classes = useStyles();
 
   return (
     <Grid container spacing={3}>
       <Backdrop className={classes.backdrop} open={loading}>
-                  <CircularProgress color="inherit"/>
-                </Backdrop>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Grid
         container
         item
@@ -502,29 +524,28 @@ export const ManageShedule = (props) => {
         justifyContent="center"
       >
         <Grid item xs={5}>
-        <Typography className={classes.available}>Month and Year :</Typography>
+          <Typography className={classes.available}>
+            Month and Year :
+          </Typography>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
               variant="inline"
               inputVariant="outlined"
               format="MM/yyyy"
               margin="normal"
-              views={['year', 'month']}
+              views={["year", "month"]}
               value={filterDate.date}
               onChange={(date) => handleDateChange(date)}
               style={{ marginTop: 0 }}
             />
           </MuiPickersUtilsProvider>
-          
         </Grid>
-
       </Grid>
       <div className={classes.calenderCard}>
-     
         {appointmentDate && appointmentDate.length > 0 ? (
           appointmentDate.map((val) => {
             return (
-              <Box  key={val.id}>
+              <Box key={val.id}>
                 <div
                   className={
                     moment(
@@ -556,9 +577,7 @@ export const ManageShedule = (props) => {
                     date={val.startDateTime}
                     endDate={val.endDateTime}
                     appointmentDateId={appointmentDateId}
-                    timing={
-                      appointmentSlots ? appointmentSlots : []
-                    }
+                    timing={appointmentSlots ? appointmentSlots : []}
                     close={() => setOpenAppointmentTime(false)}
                     showTime={showTime}
                     timeValue={timeValue}

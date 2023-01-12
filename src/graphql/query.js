@@ -2275,7 +2275,7 @@ mutation($id: Int!, $status: String) {
     clientMutationId
   }
 }
-`
+`;
 
 const MUTATE_MEETING = `
 mutation($id :Int!,$meetingLink: String!) {
@@ -2288,7 +2288,7 @@ mutation($id :Int!,$meetingLink: String!) {
     }
   }
 }
-`
+`;
 
 const GETORDERCOMMUNICATIONLOGS = `
 query MyQuery($id: UUID!) {
@@ -2386,36 +2386,36 @@ query($startDate: Date!,$endDate: Date!){
   }
 }
 
-`
-
-const FILTER_APPOINTEMENTS = gql`
-query($startDate: Date!, $endDate: Date!) {
-  allAppointmentDates(
-    filter: {
-      startDate: {
-        greaterThanOrEqualTo: $startDate
-        lessThanOrEqualTo: $endDate
-      }
-    }
-    orderBy: START_DATE_ASC
-  ) {
-    nodes {
-      createdAt
-      createdBy
-      endDate
-      id
-      isActive
-      startDate
-      startDateTime
-      endDateTime
-      updatedAt
-      updatedBy
-    }
-  }
-}
 `;
 
-const ALL_APPOINTMENTS_TIMESLOT =(appointmentDateId,appointmentTypeId) => gql`
+const FILTER_APPOINTEMENTS = gql`
+  query ($startDate: Date!, $endDate: Date!) {
+    allAppointmentDates(
+      filter: {
+        startDate: {
+          greaterThanOrEqualTo: $startDate
+          lessThanOrEqualTo: $endDate
+        }
+      }
+      orderBy: START_DATE_ASC
+    ) {
+      nodes {
+        createdAt
+        createdBy
+        endDate
+        id
+        isActive
+        startDate
+        startDateTime
+        endDateTime
+        updatedAt
+        updatedBy
+      }
+    }
+  }
+`;
+
+const ALL_APPOINTMENTS_TIMESLOT = (appointmentDateId, appointmentTypeId) => gql`
  query{  
    allAppointmentDateTimeSlots(
     condition: {
@@ -2433,34 +2433,42 @@ const ALL_APPOINTMENTS_TIMESLOT =(appointmentDateId,appointmentTypeId) => gql`
     }
   }
  }
-`
+`;
 
-const CHECK_TIMESLOT=gql`
-query($startTime: Time,$endTime: Time){
-  allAppointmentDateTimeSlots(
-    filter: {
-      startTime: {
-        greaterThanOrEqualTo: $startTime
-        lessThanOrEqualTo: $endTime
-      }
-      endTime:{
-       greaterThanOrEqualTo: $startTime
-       lessThanOrEqualTo:$endTime 
-      }
-    }
+const CHECK_TIMESLOT = gql`
+  query (
+    $startTime: Time
+    $endTime: Time
+    $appointmentDateId: UUID!
+    $appointmentTypeId: Int!
   ) {
-    nodes {
-      id
-      appointmentDateId
-      appointmentTypeId
-      startTime
-      endTime
-      isActive
+    allAppointmentDateTimeSlots(
+      filter: {
+        startTime: {
+          greaterThanOrEqualTo: $startTime
+          lessThanOrEqualTo: $endTime
+        }
+        endTime: {
+          greaterThanOrEqualTo: $startTime
+          lessThanOrEqualTo: $endTime
+        }
+      }
+      condition: {
+        appointmentDateId: $appointmentDateId
+        appointmentTypeId: $appointmentTypeId
+      }
+    ) {
+      nodes {
+        id
+        appointmentDateId
+        appointmentTypeId
+        startTime
+        endTime
+        isActive
+      }
     }
   }
-}
-`
-
+`;
 
 const APPOINTMENTS_TYPE = `
   query MyQuery {
@@ -2481,82 +2489,77 @@ const APPOINTMENTS_TYPE = `
   }
 `;
 
-
 const SHOW_APPOINMENT_DETAILS = gql`
-query(
-  $limit: Int
-  $offset: Int
-  $appointment_filter: AppointmentFilter!
-  $order_by: [AppointmentsOrderBy!]
-){
-  allAppointments(
-    first: $limit
-    offset: $offset
-    filter: $appointment_filter
-    orderBy: $order_by
+  query (
+    $limit: Int
+    $offset: Int
+    $appointment_filter: AppointmentFilter!
+    $order_by: [AppointmentsOrderBy!]
+  ) {
+    allAppointments(
+      first: $limit
+      offset: $offset
+      filter: $appointment_filter
+      orderBy: $order_by
     ) {
-    nodes {
-      id
-      mobile
-      mobileCountryCode
-      customerName
-      email
-      isActive
-      status
-      type: appointmentTypeMasterByAppointmentTypeId {
-        name
+      nodes {
+        id
+        mobile
+        mobileCountryCode
+        customerName
+        email
+        isActive
+        status
+        type: appointmentTypeMasterByAppointmentTypeId {
+          name
+        }
+        appointmentDateTimeSlotBySlotId {
+          startTime
+          startDateTime
+          endDateTime
+          createdBy
+          appointmentDateId
+          endTime
+        }
+        storeLocationByLocationId {
+          address
+          name
+        }
+        locationId
       }
-      appointmentDateTimeSlotBySlotId{
-        startTime
-        startDateTime
-        endDateTime
-        createdBy
-        appointmentDateId
-        endTime
-      }
-      storeLocationByLocationId {
-        address
-        name
-      }
-      locationId
+      totalCount
     }
-    totalCount
   }
-}
-
 `;
 
 const SHOW_ALL_PPOINMENT_DETAILS = gql`
-query(
-  $id: Int
-){
-  allAppointments(filter: {id: {equalTo: $id}}) {
-    nodes {
-      isVerified
-      isActive
-      email
-      customerName
-      status
-      locationId
-      storeLocationByLocationId {
-        address
-      }
-      specialRequests
-      productCategory
-      meetingLink
-      metalType
-      mobile
-      isOnline
-      isItRequired
-      id
-      areMoreMembersJoining
-      appointmentDateTimeSlotBySlotId {
-        appointmentTypeId
+  query ($id: Int) {
+    allAppointments(filter: { id: { equalTo: $id } }) {
+      nodes {
+        isVerified
+        isActive
+        email
+        customerName
+        status
+        locationId
+        storeLocationByLocationId {
+          address
+        }
+        specialRequests
+        productCategory
+        meetingLink
+        metalType
+        mobile
+        isOnline
+        isItRequired
+        id
+        areMoreMembersJoining
+        appointmentDateTimeSlotBySlotId {
+          appointmentTypeId
+        }
       }
     }
   }
-}
-
 `;
 
 const PRICE_RUN_LOGS = gql`
@@ -2695,11 +2698,12 @@ export {
   SHOW_APPOINMENT_DETAILS,
   PRICE_RUN_LOGS,
   APPOINTMENTS_TYPE,
-  ALL_APPOINTMENTS_TIMESLOT,FILTER_APPOINTEMENTS,
+  ALL_APPOINTMENTS_TIMESLOT,
+  FILTER_APPOINTEMENTS,
   SHOW_ALL_PPOINMENT_DETAILS,
   MUTATE_STATUS,
   GETAPPLICATIONCOMMUNICATIONLOGS,
   CHECK_APPOINTMENT,
   CHECK_TIMESLOT,
-  MUTATE_MEETING
+  MUTATE_MEETING,
 };
