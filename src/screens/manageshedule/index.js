@@ -45,6 +45,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import axios from "axios";
 import { API_URL } from "../../config";
 // import timeGridPlugin from "@fullcalendar/timegrid";
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 export const ManageShedule = (props) => {
   // States
@@ -500,7 +501,20 @@ export const ManageShedule = (props) => {
             </Tooltip>
           </IconButton>
         </label>
-
+        <IconButton
+          style={{ color: "#000" }}
+          onClick={() => {
+            var a = document.createElement("a");
+            a.href =
+              "https://s3.ap-southeast-1.amazonaws.com/media.nacjewellers.com/resources/assets/sample_appointment_schedule.csv";
+            a.setAttribute("download", "sample_appointment_schedule.csv");
+            a.click();
+          }}
+        >
+          <Tooltip title="Download sample file">
+            <GetAppIcon />
+          </Tooltip>
+        </IconButton>
         <IconButton
           style={{ color: "#000" }}
           onClick={() => {
@@ -508,7 +522,7 @@ export const ManageShedule = (props) => {
             setType("Add");
           }}
         >
-          <Tooltip title="Add Warehouse">
+          <Tooltip title="Add Date">
             <AddCircleIcon />
           </Tooltip>
         </IconButton>
