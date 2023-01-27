@@ -198,7 +198,7 @@ const EditDiamond = (props) => {
                 margin="dense"
                 variant="outlined"
                 fullWidth
-                label="Shape"
+                // label="Shape"
                 InputProps={{ ...params.InputProps, type: "search" }}
               />
             )}

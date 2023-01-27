@@ -6,7 +6,7 @@ import {
   DialogTitle,
   Paper,
   TextField,
-} from "@material-ui/core"; 
+} from "@material-ui/core";
 import React from "react";
 import { useContext } from "react";
 import { TableComp } from "../../../components";
@@ -14,7 +14,7 @@ import { AlertContext } from "../../../context";
 import EditorConvertToHTML from "./richTextEditor";
 import { useStyles } from "./styles";
 import TableHeaderComp from "./TableHeadComp";
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 
 const header = ["S.No", "Title", "Descriptiom", "Action"];
@@ -25,22 +25,23 @@ const tableData = [
   { type: "EDIT", name: "" },
 ];
 
+const initialState = {
+  title: "",
+  description: "",
+  richEditor: "",
+};
+
 const TitleDescriptionCMS = (props) => {
   const classes = useStyles();
   const alert = useContext(AlertContext);
   const [open, setOpen] = React.useState(false);
-  const [state, setState] = React.useState({
-    title: "",
-    description: "",
-    richEditor: "",
-  });
+  const [state, setState] = React.useState(initialState);
   const [titleDesc, setTitleDesc] = React.useState([]);
   React.useEffect(() => {
     setTitleDesc([props?.data?.props]);
     setState(props?.data?.props);
   }, []);
 
-  console.log("richEditorState",state);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -87,9 +88,10 @@ const TitleDescriptionCMS = (props) => {
 
   const handleChangeState = (data) => {
     setState({
-      ...state,richEditor:data
-    })
-  }
+      ...state,
+      richEditor: data,
+    });
+  };
   return (
     <Paper className={classes.root}>
       <TableHeaderComp
@@ -124,8 +126,17 @@ const TitleDescriptionCMS = (props) => {
             value={state.title}
             name="title"
           />
-          <div style={{border:"1px solid #c0c0c0",padding:"8px", borderRadius:"8px"}}>
-            <EditorConvertToHTML handleChangeState={handleChangeState} parentState={state.richEditor} />
+          <div
+            style={{
+              border: "1px solid #c0c0c0",
+              padding: "8px",
+              borderRadius: "8px",
+            }}
+          >
+            <EditorConvertToHTML
+              handleChangeState={handleChangeState}
+              parentState={state.richEditor}
+            />
           </div>
         </DialogContent>
         <DialogActions>

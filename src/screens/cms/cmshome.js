@@ -1,3 +1,13 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  Switch,
+  TextField,
+} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
@@ -7,22 +17,25 @@ import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { API_URL } from "../../config";
-import { ALLCDNPAGES } from "../../graphql/cmsQuery";
+import { AlertContext } from "../../context";
+import { ALLCDNPAGES, UPDATE_STATUS_CMS, UPDATE_URL } from "../../graphql/cmsQuery";
+import EditIcon from "@material-ui/icons/Edit";
+import { useStyles } from "./styles";
 
 const CmsHome = (props) => {
   let history = useHistory();
+  const snack = React.useContext(AlertContext);
+  const classes = useStyles();
 
   const [state, setState] = useState([]);
-  console.log("fetchedPages", state);
+  const [edit, setEdit] = useState({
+    open: false,
+    page: "",
+  });
+  console.log("edit",edit);
+  const [newPage, setNewPage] = useState("");
 
-  const handleClick = (name) => {
-    history.push({
-      pathname: "/cmsComponent",
-      state: {
-        name: name,
-      },
-    });
-  };
+  console.log("fetchedPages", state);
 
   useEffect(() => {
     fetch(`${API_URL}/graphql`, {
@@ -36,15 +49,117 @@ const CmsHome = (props) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        // debugger;
         const dataRecieved = data.data.allCdns.nodes;
         setState(dataRecieved);
       });
   }, []);
 
+  // Chnage the name of the new UrL
+  const handleChangeData = (value) => {
+    setNewPage(value);
+  };
+
+  // Load the particular page 
+  const handleClick = (name) => {
+    history.push({
+      pathname: "/cmsComponent",
+      state: {
+        name: name,
+      },
+    });
+  };
+
+  // Fetch the initial data
+  const fetchData = () => {
+    fetch(`${API_URL}/graphql`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: ALLCDNPAGES,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const dataRecieved = data.data.allCdns.nodes;
+        setState(dataRecieved);
+      });
+  };
+
+  // Open the Edit page 
+  const handleOpenEdit = (page) => {
+    setEdit({
+      open: true,
+      page:page
+    })
+  };
+
+  // Get the Name of the Page
   const getThePageTitle = (name) => {
-    const snakeCase =  name.replace(/[A-Z]/g, val => " "  + `${val.toLowerCase()}`);
-    return snakeCase
+    let createdName = name.replace(
+      /[A-Z]/g,
+      (val) => " " + `${val.toLowerCase()}`
+    );
+    if (name === "loc") {
+      return (createdName = "Store Locator Details");
+    } else {
+      return createdName;
+    }
+  };
+
+  // Update the Status
+  const handleChangeActive = (page, isActive) => {
+    fetch(`${API_URL}/graphql`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: UPDATE_STATUS_CMS,
+        variables: {
+          isActive: !isActive,
+          page: page,
+        },
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        snack.setSnack({
+          open: true,
+          msg: "Status Updated Successfully",
+        });
+        fetchData();
+      });
+  };
+
+  // Edit the URL
+  const handleEditSumbit = () => {
+    fetch(`${API_URL}/graphql`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: UPDATE_URL,
+        variables: {
+          page: edit.page,
+          changePage: newPage
+        },
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        snack.setSnack({
+          open: true,
+          msg: "Status Updated Successfully",
+        });
+        setEdit({
+          open:false,
+          page:""
+        })
+        fetchData();
+      });
   }
   return (
     <Grid container spacing={3}>
@@ -121,26 +236,87 @@ const CmsHome = (props) => {
       {/* cms page */}
       {state.map((val) => (
         <Grid item xs={6} sm={4} lg={3}>
-          {/* <Link underline="none" component={RouterLink} to="/cmsComponent"> */}
-          <div
-            onClick={() => handleClick(val.page)}
-            style={{ cursor: "pointer" }}
-          >
+          <div>
             <Card fullwidth className="card2">
               <CardContent>
                 <Typography
-                  style={{ textAlign: "center", marginTop: 8,textTransform:"capitalize" }}
+                  className={classes.cardButton}
                   component="h6"
                   variant="h5"
+                  onClick={() => handleClick(val.page)}
                 >
                   {getThePageTitle(val.page)}
                 </Typography>
+                <div className={classes.labelAlign}>
+                  <div className={classes.edit}>
+                    <Typography>Is page active:</Typography>
+                    <FormControlLabel
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      control={
+                        <Switch
+                          checked={val.isActive}
+                          onChange={() =>
+                            handleChangeActive(val.page, val.isActive)
+                          }
+                          name="checkedB"
+                          color="primary"
+                        />
+                      }
+                    />
+                  </div>
+                  <EditIcon
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleOpenEdit(val.page)}
+                  />
+                </div>
               </CardContent>
             </Card>
           </div>
           {/* </Link> */}
         </Grid>
       ))}
+      <Dialog
+        classes={{ paper: classes.dialogPaperMid }}
+        open={edit.open}
+        onClose={() => {
+          setEdit({
+            open: false,
+            page: "",
+          });
+        }}
+      >
+        <DialogTitle id="form-dialog-title">Change the URL</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="page"
+            label="Page Route"
+            variant="outlined"
+            fullWidth
+            onChange={(e) => handleChangeData(e.target.value)}
+            value={newPage}
+            name="page"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditSumbit}>Edit Url</Button>
+          <Button
+            onClick={() => {
+              setEdit({
+                open: false,
+                page: "",
+              });
+            }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 };
