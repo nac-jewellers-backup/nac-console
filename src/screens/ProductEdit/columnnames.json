@@ -50,18 +50,30 @@
     },
     {
       "id": 9,
+      "name": "Make an Order",
+      "isActive": true,
+      "disabled": false
+  },
+  {
+      "id": 10,
+      "name": "Make an Order-Shipping Days",
+      "isActive": true,
+      "disabled": false
+  },
+    {
+      "id": 11,
       "name": "Default",
       "isActive": true,
       "disabled": false
     },
     {
-      "id": 10,
+      "id": 12,
       "name": "Active",
       "isActive": false,
       "disabled": false
     },
     {
-      "id": 11,
+      "id": 13,
       "name": "Edit",
       "isActive": true,
       "disabled": true
@@ -118,24 +130,36 @@
     },
     {
       "id": 9,
+      "name": "Make an Order",
+      "isActive": true,
+      "disabled": false
+  },
+  {
+      "id": 10,
+      "name": "Make an Order-Shipping Days",
+      "isActive": true,
+      "disabled": false
+  },
+    {
+      "id": 11,
       "name": "Default",
       "isActive": true,
       "disabled": false
     },
     {
-      "id": 10,
+      "id": 12,
       "name": "Active",
       "isActive": true,
       "disabled": false
     },
     {
-      "id": 11,
+      "id": 13,
       "name": "Show PriceBreakup",
       "isActive": true,
       "disabled": false
     },
     {
-      "id": 12,
+      "id": 14,
       "name": "Edit",
       "isActive": true,
       "disabled": false
@@ -150,6 +174,8 @@
     "Vendor lead Time",
     "Discount",
     "Ready To Ship",
+    "Make an Order",
+    "Make an Order-Shipping Days",
     "Default",
     "Active",
     "Show PriceBreakup",

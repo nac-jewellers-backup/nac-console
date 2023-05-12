@@ -79,6 +79,8 @@ const productuploadCtxInitial = {
     editreadytoship: false,
     editisdefault: false,
     editisactive: null,
+    editisOrderable: false,
+    editorderShippingDays:0,
 
     editcostprice: 0,
     editsellingprice: 0,
@@ -125,6 +127,8 @@ const productuploadCtxInitial = {
     metals: [],
     error_message: {},
     showPriceBreakup: null,
+    isOrderable:false,
+    orderShippingDays:0
   },
   masterData: {},
   setProductCtx: () => null,

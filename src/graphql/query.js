@@ -1437,6 +1437,8 @@ const PRODUCTEDIT = gql`
           }
           maxOrderQty
           minOrderQty
+          isOrderable
+          orderShippingDays
         }
       }
       productCategory
