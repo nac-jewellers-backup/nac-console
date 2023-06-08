@@ -69,5 +69,6 @@ export * from "./MasterCountries";
 export * from "./DailyMetalPrice";
 export * from "./PriceLogs";
 export * from "./ImageUpload";
-export * from "./CmsComponent"
+export * from "./CmsComponent";
+export * from "./ComboOfferConfig";
 // export * from "./cms";

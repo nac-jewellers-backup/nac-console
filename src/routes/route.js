@@ -98,7 +98,9 @@ const route = {
   pricelogs: "/price-logs",
   imageUpload:"/imageUpload",
 
-  cmsComponents:"/cmsComponent"
+  cmsComponents:"/cmsComponent",
+  ComboOfferConfig:"/combo_offer_config"
+
 };
 
 export default route;
