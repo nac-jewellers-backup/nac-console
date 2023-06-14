@@ -30,6 +30,7 @@ import { NetworkContext } from "../../context/NetworkContext";
 import { PRODUCTLISTSTATUSEDIT } from "../../graphql/query";
 
 const columns = [
+  { id: "sku_id", label: "tag id" },
   { id: "product_id", label: "product id" },
   { id: "product_name", label: "product name" },
   { id: "product_type", label: "product type" },
@@ -476,14 +477,17 @@ const AddContact = (props) => {
               (row, index) => (
                 <TableRow key={row.product_id}>
                   <TableCell component="th" scope="row">
-                    {row?.trans_sku_lists?.[0].sku_id}
-                    <Button onClick={(e) => ProductEdit(row.product_id)}>
-                      <EditIcon />
-                    </Button>
-                    <Button onClick={(e) => showproductdetails(row.product_id)}>
-                      <VisibityIcon />
-                    </Button>
+                    <div style={{display:"flex",alignItems:"center"}}>
+                      {row?.trans_sku_lists?.[0].sku_id}
+                      <Button onClick={(e) => ProductEdit(row.product_id)}>
+                        <EditIcon />
+                      </Button>
+                      <Button onClick={(e) => showproductdetails(row.product_id)}>
+                        <VisibityIcon />
+                      </Button>
+                    </div>
                   </TableCell>
+                  <TableCell align="left">{row.product_id}</TableCell>
                   <TableCell
                     component="th"
                     scope="row"
