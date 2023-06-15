@@ -60,7 +60,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:dev": "env-cmd -f .env.development npm run start",
+    "start:staging": "env-cmd -f .env.staging npm run start",
+    "start:production": "env-cmd -f .env.production npm run start",
     "build": "react-scripts build",
+    "build:dev": "rm -rf build/ && env-cmd -f .env.development npm run build",
+    "build:staging": "rm -rf build/ && env-cmd -f .env.staging npm run build",
+    "build:production": "rm -rf build/ && env-cmd -f .env.production npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -78,5 +84,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0"
   }
 }
