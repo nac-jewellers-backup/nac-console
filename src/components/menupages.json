@@ -31,6 +31,11 @@
           "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/DiscountSetupNSS.svg"
         },
         {
+          "name": "Combo Offer",
+          "url": "/combo_offer_config",
+          "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/DiscountSetupNSS.svg"
+        },
+        {
           "name": "Price Run",
           "url": "/priceupdate",
           "icons": "https://styloriimages-staging.s3.ap-south-1.amazonaws.com/menu_icons/Styroli+Menu+Icons/Pricing++-+Sub+Menu+Icons/PricerunNSS.svg"

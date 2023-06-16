@@ -115,7 +115,7 @@ const BannerCMS = (props) => {
         if (res?.data?.web) {
           setState({
             ...state,
-            [name] : res?.data?.web,
+            [name]: res?.data?.web,
           });
 
           alert.setSnack({

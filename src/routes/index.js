@@ -79,7 +79,8 @@ import {
   PriceLogs,
   ImageUpload,
   AppointmentManagementDetails,
-  CmsComponent
+  CmsComponent,
+  ComboOfferConfig
 } from "../screens";
 import Editcategory from "../screens/CategoryList/components/editpage/editcategory";
 import newmaterial from "../screens/CategoryList/components/newmaterial/newmaterial";
@@ -314,6 +315,10 @@ const MainApp = () => {
           <PrivateRoute
             path={route.cmsComponents}
             component={CmsComponent}
+          />
+          <PrivateRoute
+            path={route.ComboOfferConfig}
+            component={ComboOfferConfig}
           />
         </Switch>
       </NetworkProvider>

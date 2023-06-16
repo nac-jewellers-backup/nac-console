@@ -270,6 +270,8 @@ export default function Variants(props) {
       editreadytoship: diamondData.isReadyToShip,
       editisdefault: diamondData.isdefault,
       editisactive: diamondData.isActive,
+      editisOrderable:  diamondData.isOrderable,
+      editorderShippingDays: diamondData.orderShippingDays
     });
     setBtnEdit({ ...btnEdit, id: diamondData.generatedSku, action: true });
   }
@@ -284,11 +286,16 @@ export default function Variants(props) {
         skulistdata.isActive = productCtx.editisactive;
         skulistdata.isReadyToShip = productCtx.editreadytoship;
         skulistdata.discountDesc = productCtx.discount;
+        skulistdata.isOrderable = productCtx.editisOrderable;
+        skulistdata.orderShippingDays = productCtx.editorderShippingDays;
+
         bodydata["vendorDeliveryTime"] = productCtx.editleadtime;
         bodydata["isdefault"] = productCtx.editisdefault;
         bodydata["isActive"] = productCtx.editisactive;
         bodydata["discount"] = productCtx.discount;
         bodydata["isReadyToShip"] = productCtx.editreadytoship;
+        bodydata["isOrderable"] = productCtx.editisOrderable;
+        bodydata["orderShippingDays"] = productCtx.editorderShippingDays;
         bodydata["generatedSku"] = id;
         bodydata["showPriceBreakup"] = productCtx.showPriceBreakup;
 
@@ -472,6 +479,38 @@ export default function Variants(props) {
                         />
                       </TableCell>
                     ) : null}
+                    {props.displycolumns.indexOf("Make an Order") > -1 ? (
+                    <TableCell align="center" style={{ width: 40 }} component="th" scope="row">
+                      <Switch
+                        checked={
+                          btnEdit.action && btnEdit.id == row.generatedSku ? productCtx.editisOrderable : row.isOrderable
+                        }
+                        value="checkedA"
+                        onChange={btnEdit.action && btnEdit.id == row.generatedSku ? handleChangeswitch("editisOrderable") : null}
+                        inputProps={{ "aria-label": "secondary checkbox" }}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {props.displycolumns.indexOf("Make an Order-Shipping Days") > -1 ? (
+                    <TableCell align="center" style={{ width: 40,minWidth:"180px" }} component="th" scope="row">
+                    {btnEdit.action && btnEdit.id == row.generatedSku ? (
+                      <Input
+                        className={classes.helperinput}
+                        variant="outlined"
+                        margin="dense"
+                        style={{ width: 40 }}
+                        value={productCtx.editorderShippingDays}
+                        id="qty"
+                        error={productCtx && productCtx.error_message && productCtx.error_message.productname}
+                        name="Qty"
+                        label="Quantity"
+                        onChange={handleinputChange("editorderShippingDays")}
+                      />
+                    ) : (
+                      <Typography className={classes.heading}>{row.orderShippingDays}</Typography>
+                    )}{" "}
+                  </TableCell>
+                  ) : null}
                     {props.displycolumns.indexOf("Default") > -1 ? (
                       <TableCell
                         align="center"

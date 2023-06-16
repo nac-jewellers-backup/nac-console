@@ -1437,6 +1437,8 @@ const PRODUCTEDIT = gql`
           }
           maxOrderQty
           minOrderQty
+          isOrderable
+          orderShippingDays
         }
       }
       productCategory
@@ -2588,6 +2590,102 @@ const PRICE_RUN_LOGS = gql`
   }
 `;
 
+const UPDATE_COMBO_BY_MAIN_PRODUCT = gql`
+  mutation updateCombo(
+    $offeredProducts: [String]
+    $discountType: String!
+    $discountValue: Int!
+    $mainProduct: String!
+    $isActive: Boolean!
+  ) {
+    updateProductComboOfferByMainProduct(
+      input: {
+        mainProduct: $mainProduct
+        productComboOfferPatch: {
+          offeredProducts: $offeredProducts
+          discountValue: $discountValue
+          discountType: $discountType
+          isActive: $isActive
+        }
+      }
+    ) {
+      productComboOffer {
+        mainProduct
+        discountValue
+        discountType
+        offeredProducts
+        isActive
+      }
+    }
+  }
+`;
+
+const LIST_COMBO_PRODUCTS = gql`
+  query ($after: Cursor, $first: Int) {
+    allProductComboOffers(after: $after, first: $first) {
+      nodes {
+        id
+        mainProduct
+        offeredProducts
+        discountType
+        discountValue
+        productListByMainProduct {
+          id
+          productName
+          productImagesByProductId(condition: { imagePosition: 1 }) {
+            nodes {
+              imageUrl
+            }
+          }
+          transSkuListsByProductId(condition: { isdefault: true }) {
+            nodes {
+              markupPrice
+            }
+          }
+        }
+        isActive
+      }
+      totalCount
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+    }
+  }
+`;
+
+const FETCH_COMBO_OFFERED_PRODUCTS = gql`
+  query ($offeredProducts: [String!]) {
+    allProductLists(filter: { productId: { in: $offeredProducts } }) {
+      nodes {
+        productId
+        productName
+        productImagesByProductId(condition: { imagePosition: 1 }) {
+          nodes {
+            imageUrl
+          }
+        }
+        transSkuListsByProductId(condition: { isdefault: true }) {
+          nodes {
+            sellingPrice
+            markupPrice
+          }
+        }
+      }
+    }
+  }
+`;
+
+const GET_UNIQUE_PRODUCT = gql`
+  query ($productId: String!) {
+    product: productListByProductId(productId: $productId) {
+      id
+    }
+  }
+`;
+
 export {
   ALLBANNERS,
   ALLLISTINGBANNERS,
@@ -2706,4 +2804,8 @@ export {
   CHECK_APPOINTMENT,
   CHECK_TIMESLOT,
   MUTATE_MEETING,
+  FETCH_COMBO_OFFERED_PRODUCTS,
+  GET_UNIQUE_PRODUCT,
+  LIST_COMBO_PRODUCTS,
+  UPDATE_COMBO_BY_MAIN_PRODUCT
 };
