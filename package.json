@@ -19,6 +19,7 @@
     "axios": "^0.21.4",
     "date-fns": "^2.21.3",
     "draft-js": "^0.11.7",
+    "draft-js-export-html": "^1.4.1",
     "draftjs-to-html": "^0.9.1",
     "export-from-json": "^1.4.0",
     "filepond": "^4.27.1",
@@ -29,6 +30,7 @@
     "fullcalendar": "^5.11.3",
     "graphql": "^14.7.0",
     "html-react-parser": "^3.0.4",
+    "html-to-draftjs": "^1.5.0",
     "material-ui-chip-input": "^2.0.0-beta.2",
     "material-ui-image": "^3.3.2",
     "moment": "^2.29.4",
@@ -59,7 +61,7 @@
     "validate.js": "^0.13.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --openssl-legacy-provider start",
     "start:dev": "env-cmd -f .env.development npm run start",
     "start:staging": "env-cmd -f .env.staging npm run start",
     "start:production": "env-cmd -f .env.production npm run start",
@@ -86,6 +88,7 @@
     ]
   },
   "devDependencies": {
-    "env-cmd": "^10.1.0"
+    "env-cmd": "^10.1.0",
+    "immutable": "^4.3.0"
   }
 }
