@@ -24,7 +24,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 const FullCSVData = (props) => {
   const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState([]);
+  const [options, setOptions] = React.useState(["All"]);
   const [loader, setLoader] = React.useState(false);
   const [productType, setProductType] = React.useState("");
   const [include, setInclude] = React.useState(false);
@@ -53,8 +53,10 @@ const FullCSVData = (props) => {
         `,
       })
       .then((res) => {
+        var Muruga=res.data.type.nodes.filter((i) => i.name).map((i) => i.name)        
+        var newArray=[...options,...Muruga]
         setOptions(
-          res.data.type.nodes.filter((i) => i.name).map((i) => i.name)
+          newArray          
         );
       })
       .catch((err) => {

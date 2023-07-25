@@ -57,7 +57,7 @@ export const Productlist = withRouter(
         query: PRODUCTFILTERMASTER,
         fetchPolicy: "network-only",
       })
-        .then((data) => {
+        .then((data) => {          
           if (data) {
             let product_categories = data.data.allMasterProductCategories.nodes;
             let product_types = data.data.allMasterProductTypes.nodes;
